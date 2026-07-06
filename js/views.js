@@ -235,6 +235,11 @@ function placeForm(place = {}) {
     <label>Parking<input name="parking" placeholder="On-site, public or TBC" value="${e(place.parking || '')}"></label>
     <label>Check-in<input name="checkIn" placeholder="From 15:00" value="${e(place.checkIn || '')}"></label>
     <label>Check-out<input name="checkOut" placeholder="By 11:00" value="${e(place.checkOut || '')}"></label>` : '';
+  const restaurantFields = place.type === 'restaurant' ? `
+    <label>Cuisine<input name="cuisine" value="${e(place.cuisine || '')}"></label>
+    <label>Reservation reference<input name="reservationReference" value="${e(place.reservationReference || '')}"></label>
+    <label>Reservation date<input type="date" name="reservationDate" value="${e(place.reservationDate || '')}"></label>
+    <label>Reservation time<input type="time" name="reservationTime" value="${e(place.reservationTime || '')}"></label>` : '';
   return `<div class="form-grid">
     <label>Name<input name="name" required value="${e(place.name || '')}"></label>
     <label>Type<select name="type">${['hotel', 'attraction', 'restaurant', 'transport'].map(type => `<option value="${type}" ${place.type === type ? 'selected' : ''}>${titleCase(type)}</option>`).join('')}</select></label>
@@ -245,8 +250,25 @@ function placeForm(place = {}) {
     <label>Phone<input type="tel" name="phone" value="${e(place.phone || '')}"></label>
     <label class="full">Website<input type="url" name="website" placeholder="https://" value="${e(place.website || '')}"></label>
     ${hotelFields}
+    ${restaurantFields}
     <label class="full">Notes<textarea name="notes">${e(place.notes || '')}</textarea></label>
   </div>`;
+}
+
+function renderRestaurants(main) {
+  const data = store.data;
+  const restaurants = data.places.filter(place => place.type === 'restaurant');
+  const cities = [...new Set(restaurants.map(place => place.city))];
+  main.innerHTML = `<div class="page">
+    ${pageHeader('Dining', 'Restaurants and reservations', 'Keep shortlists, confirmed tables and meal estimates together.', `<button class="btn btn-primary" id="add-restaurant">${icon('plus', 'icon-sm')}<span>Add restaurant</span></button>`)}
+    <div class="itinerary-toolbar"><div class="segmented" id="restaurant-filters"><button class="segment active" data-city="all">All</button>${cities.map(city => `<button class="segment" data-city="${e(city)}">${e(city)}</button>`).join('')}</div><span class="muted">${restaurants.length} saved</span></div>
+    <div class="place-grid" id="restaurant-list">${restaurants.map(restaurant => `<article class="place-card restaurant-card" data-city="${e(restaurant.city)}"><div class="place-card-head"><span class="place-type-icon tone-coral">${icon('restaurant')}</span>${statusTag(restaurant.status)}</div><div class="place-card-body"><h3>${e(restaurant.name)}</h3><p>${e(restaurant.city)} · ${e(restaurant.cuisine || 'Cuisine TBC')}</p><div class="hotel-details"><span><small>Reservation</small>${e(restaurant.reservationDate ? formatDate(restaurant.reservationDate) : 'Date TBC')} ${e(restaurant.reservationTime || '')}</span><span><small>Reference</small>${e(restaurant.reservationReference || 'TBC')}</span><span><small>Notes</small>${e(restaurant.notes || 'No notes yet.')}</span></div>${Number(restaurant.price) ? `<strong>${formatMoney(restaurant.price, data.trip.homeCurrency)}</strong>` : ''}</div><div class="place-card-foot"><a class="btn btn-ghost" href="${e(mapUrl(restaurant))}" target="_blank" rel="noopener">${icon('pin', 'icon-sm')} Map</a><div class="card-actions"><button class="icon-btn edit-restaurant" data-id="${e(restaurant.id)}" aria-label="Edit ${e(restaurant.name)}">${icon('edit', 'icon-sm')}</button><button class="icon-btn delete-restaurant" data-id="${e(restaurant.id)}" aria-label="Delete ${e(restaurant.name)}">${icon('trash', 'icon-sm')}</button></div></div></article>`).join('') || emptyState('restaurant', 'No restaurants yet', 'Add dining ideas or confirmed reservations.')}</div>
+  </div>`;
+  const cards = [...main.querySelectorAll('.restaurant-card')];
+  main.querySelectorAll('#restaurant-filters .segment').forEach(button => button.addEventListener('click', () => { main.querySelectorAll('#restaurant-filters .segment').forEach(item => item.classList.toggle('active', item === button)); cards.forEach(card => { card.hidden = button.dataset.city !== 'all' && card.dataset.city !== button.dataset.city; }); }));
+  main.querySelector('#add-restaurant').addEventListener('click', () => openModal({ title: 'Add restaurant', body: placeForm({ type: 'restaurant', status: 'researching' }), onSubmit: form => { const values = formObject(form); store.update(next => next.places.push({ id: uid('restaurant'), lat: null, lng: null, ...values, type: 'restaurant', price: Number(values.price || 0) })); } }));
+  main.querySelectorAll('.edit-restaurant').forEach(button => button.addEventListener('click', () => { const restaurant = restaurants.find(item => item.id === button.dataset.id); openModal({ title: 'Edit restaurant', body: placeForm(restaurant), onSubmit: form => { const values = formObject(form); store.update(next => Object.assign(next.places.find(item => item.id === restaurant.id), values, { type: 'restaurant', price: Number(values.price || 0) })); } }); }));
+  main.querySelectorAll('.delete-restaurant').forEach(button => button.addEventListener('click', () => { const restaurant = restaurants.find(item => item.id === button.dataset.id); confirmAction({ title: 'Delete restaurant?', message: `${restaurant.name} will be removed from places and linked activities.`, onConfirm: () => removePlace(restaurant) }); }));
 }
 
 function removePlace(place) {
@@ -457,7 +479,7 @@ function renderNotFound(main) {
 }
 
 export function renderView(main, route) {
-  const renderers = { dashboard: renderDashboard, today: renderToday, itinerary: renderItinerary, day: renderDay, places: renderPlaces, hotels: renderHotels, budget: renderBudget, checklist: renderChecklist, settings: renderSettings };
+  const renderers = { dashboard: renderDashboard, today: renderToday, itinerary: renderItinerary, day: renderDay, places: renderPlaces, hotels: renderHotels, restaurants: renderRestaurants, budget: renderBudget, checklist: renderChecklist, settings: renderSettings };
   (renderers[route.name] || renderNotFound)(main, route.id);
   main.focus({ preventScroll: true });
 }

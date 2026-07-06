@@ -15,6 +15,7 @@ All notable changes to UK Road Trip 2027 are documented here. The project follow
 - Focused Today view with travel-phase context, schedule, overnight details and emergency contacts.
 - Country-filtered full itinerary with route metrics and adjacent-day navigation.
 - Dedicated hotel management with overnight linkage, references, parking and booking status.
+- Restaurant shortlist and reservation workspace with cuisine, date, time and city filters.
 
 ## [0.1.0] - 2026-07-06
 

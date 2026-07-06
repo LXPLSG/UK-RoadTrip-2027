@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "dataRevision": 2,
+  "dataRevision": 3,
   "lastUpdated": "2026-07-06T00:00:00.000Z",
   "trip": {
     "id": "uk-road-trip-2027",
@@ -93,7 +93,9 @@
     { "id": "windsor-castle", "type": "attraction", "name": "Windsor Castle", "city": "Windsor", "address": "Windsor SL4 1NJ", "lat": 51.4839, "lng": -0.6044, "phone": "", "website": "https://www.rct.uk/visit/windsor-castle", "status": "planned", "price": 64, "notes": "Check opening arrangements before booking." },
     { "id": "stay-bourton", "type": "hotel", "name": "Cotswolds inn", "city": "Bourton-on-the-Water", "address": "TBC", "lat": 51.8857, "lng": -1.7581, "phone": "", "website": "", "status": "researching", "price": 360, "notes": "Two-night stay; parking essential." },
     { "id": "bourton", "type": "attraction", "name": "Bourton-on-the-Water", "city": "Cotswolds", "address": "Bourton-on-the-Water GL54", "lat": 51.8857, "lng": -1.7581, "phone": "", "website": "", "status": "planned", "price": 0, "notes": "Village base for the Cotswolds." },
-    { "id": "wild-rabbit", "type": "restaurant", "name": "The Wild Rabbit", "city": "Kingham", "address": "Church Street, Kingham OX7 6YA", "lat": 51.9145, "lng": -1.6257, "phone": "", "website": "https://thewildrabbit.co.uk", "status": "idea", "price": 90, "notes": "Potential special lunch; verify menu and reserve." },
+    { "id": "wild-rabbit", "type": "restaurant", "name": "The Wild Rabbit", "city": "Kingham", "address": "Church Street, Kingham OX7 6YA", "lat": 51.9145, "lng": -1.6257, "phone": "", "website": "https://thewildrabbit.co.uk", "status": "idea", "price": 90, "cuisine": "Modern British", "reservationDate": "2027-06-07", "reservationTime": "13:00", "reservationReference": "TBC", "notes": "Potential special lunch; verify menu and reserve." },
+    { "id": "dinner-edinburgh", "type": "restaurant", "name": "Edinburgh dinner candidate", "city": "Edinburgh", "address": "TBC", "lat": null, "lng": null, "phone": "", "website": "", "status": "researching", "price": 80, "cuisine": "Scottish", "reservationDate": "2027-06-17", "reservationTime": "19:30", "reservationReference": "TBC", "notes": "Choose a relaxed Old Town option after sightseeing." },
+    { "id": "dinner-york", "type": "restaurant", "name": "York dinner candidate", "city": "York", "address": "TBC", "lat": null, "lng": null, "phone": "", "website": "", "status": "researching", "price": 70, "cuisine": "Seasonal British", "reservationDate": "2027-06-18", "reservationTime": "19:00", "reservationReference": "TBC", "notes": "Keep within walking distance of the hotel." },
     { "id": "broadway-tower", "type": "attraction", "name": "Broadway Tower", "city": "Broadway", "address": "Middle Hill, Broadway WR12 7LB", "lat": 52.0244, "lng": -1.8368, "phone": "", "website": "https://broadwaytower.co.uk", "status": "planned", "price": 28, "notes": "Panoramic viewpoint." },
     { "id": "stay-bath", "type": "hotel", "name": "Bath hotel", "city": "Bath", "address": "TBC", "lat": 51.3811, "lng": -2.3590, "phone": "", "website": "", "status": "researching", "price": 210, "notes": "Look for parking or park-and-ride access." },
     { "id": "roman-baths", "type": "attraction", "name": "The Roman Baths", "city": "Bath", "address": "Abbey Churchyard, Bath BA1 1LZ", "lat": 51.3809, "lng": -2.3595, "phone": "", "website": "https://www.romanbaths.co.uk", "status": "planned", "price": 58, "notes": "Timed entry." },
