@@ -3,10 +3,10 @@ import { store } from './store.js';
 import { router } from './router.js';
 import { renderNav, toast } from './components.js';
 import { renderView } from './views.js';
-import { validateTripData } from './validator.js';
 import { formatDateRange } from './utils.js';
 import { themeManager } from './theme.js';
 import { navigationRoute } from './navigation.js';
+import { modeManager } from './mode.js';
 
 const main = document.querySelector('#main');
 const app = document.querySelector('#app');
@@ -76,8 +76,6 @@ function bindImport() {
     if (!file) return;
     try {
       const data = JSON.parse(await file.text());
-      const result = validateTripData(data);
-      if (!result.valid) throw new Error(result.errors.join(' '));
       store.replace(data, 'Trip imported');
     } catch (error) {
       toast(`Import failed: ${error.message}`, 6000);
@@ -89,9 +87,11 @@ async function start() {
   try {
     await store.initialise();
     themeManager.initialise(store.preferences.theme || 'system');
-    store.addEventListener('change', event => { render(); toast(event.detail.message); });
+    modeManager.initialise(store.preferences.mode || 'automatic', store.data);
+    store.addEventListener('change', event => { modeManager.set(modeManager.choice, store.data, false); render(); toast(event.detail.message); });
     store.addEventListener('preference', event => {
       if (event.detail.key === 'theme') themeManager.set(event.detail.value);
+      if (event.detail.key === 'mode') modeManager.set(event.detail.value, store.data);
       render();
     });
     router.addEventListener('route', event => render(event.detail));

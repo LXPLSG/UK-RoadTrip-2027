@@ -1,10 +1,12 @@
 /** Domain view renderers and event bindings for the current application route. */
 import { store } from './store.js';
 import { repository } from './repository.js';
-import { validateTripData } from './validator.js';
 import { icon } from './icons.js';
 import { pageHeader, statusTag, emptyState, openModal, confirmAction, toast } from './components.js';
 import { escapeHtml as e, formatDate, formatDateRange, formatMoney, formatDuration, daysUntil, titleCase, uid, formObject, mapUrl, downloadJson } from './utils.js';
+import { themeManager } from './theme.js';
+import { modeManager } from './mode.js';
+import { APP_VERSION } from './config.js';
 
 const typeTone = { hotel: 'green', attraction: 'sky', restaurant: 'coral', transport: 'purple', drive: 'amber', walk: 'green' };
 const typeIcon = type => ({ hotel: 'hotel', attraction: 'attraction', restaurant: 'restaurant', transport: 'transport', drive: 'car', walk: 'walk' })[type] || 'pin';
@@ -15,10 +17,12 @@ function activeDay(data) {
 }
 
 function tripPhase(data) {
+  const selectedMode = modeManager.effective(data);
+  if (selectedMode === 'travel') return 'travel';
   const today = new Date().toISOString().slice(0, 10);
   if (today < data.trip.startDate) return 'preview';
   if (today > data.trip.endDate) return 'complete';
-  return 'travel';
+  return 'preview';
 }
 
 function totals(data) {
@@ -541,54 +545,36 @@ function renderNotes(main) {
   draw();
 }
 
+function tripSettingsForm(trip) {
+  return `<div class="form-grid"><label class="full">Trip name<input name="name" required value="${e(trip.name)}"></label><label>Start date<input type="date" name="startDate" required value="${e(trip.startDate)}"></label><label>End date<input type="date" name="endDate" required value="${e(trip.endDate)}"></label><label>Home currency<input name="homeCurrency" maxlength="3" required value="${e(trip.homeCurrency)}"></label><label>Total budget<input type="number" min="0" name="budget" value="${Number(trip.budget || 0)}"></label><label class="full">Subtitle<input name="subtitle" value="${e(trip.subtitle || '')}"></label><label class="full">Travelers<input name="travelers" value="${e((trip.travelers || []).join(', '))}"><span class="field-help">Separate names with commas.</span></label><label class="full">Trip notes<textarea name="notes">${e(trip.notes || '')}</textarea></label></div>`;
+}
+
 function renderSettings(main) {
   const data = store.data;
   const preferences = store.preferences;
   const compact = JSON.stringify(data, null, 2);
+  const bytes = new Blob([compact]).size;
+  const quickLinks = [
+    ['hotels', 'Hotels', 'bed'], ['restaurants', 'Restaurants', 'restaurant'], ['attractions', 'Attractions', 'attraction'],
+    ['driving', 'Driving guide', 'car'], ['tube', 'Tube planner', 'train'], ['budget', 'Budget', 'wallet'],
+    ['packing', 'Packing', 'list'], ['notes', 'Notes', 'note'], ['checklist', 'Checklist', 'check']
+  ];
   main.innerHTML = `<div class="page">
-    ${pageHeader('Control centre', 'Settings and trip data', 'Every trip-specific detail can be edited, exported and restored here.')}
-    <div class="settings-layout">
-      <section class="stack">
-        <div class="panel settings-section">
-          <h2>Appearance</h2>
-          <div class="setting-row"><div><strong>Dark mode</strong><span>Use a darker interface for low light.</span></div><button id="theme-toggle" class="toggle ${preferences.theme === 'dark' ? 'on' : ''}" role="switch" aria-checked="${preferences.theme === 'dark'}" aria-label="Dark mode"></button></div>
-          <div class="setting-row"><div><strong>Install app</strong><span id="install-copy">Add this trip to your home screen.</span></div><button class="btn" id="install-app">${icon('download', 'icon-sm')} Install</button></div>
-        </div>
-        <div class="panel settings-section">
-          <div class="section-header" style="margin:0 0 14px"><div><h2>Trip JSON</h2><p class="muted" style="margin:4px 0 0">The complete working dataset.</p></div><button class="btn btn-primary" id="save-json">${icon('save', 'icon-sm')} Save JSON</button></div>
-          <textarea id="json-editor" class="json-editor" spellcheck="false" aria-label="Trip JSON editor">${e(compact)}</textarea>
-        </div>
-      </section>
-      <aside class="stack">
-        <div class="panel settings-section">
-          <h2>Data tools</h2><div class="stack">
-            <button class="btn" id="export-json">${icon('download', 'icon-sm')} Export backup</button>
-            <button class="btn" id="import-json">${icon('upload', 'icon-sm')} Import JSON</button>
-            <button class="btn" id="restore-backup" ${repository.hasBackup() ? '' : 'disabled'}>${icon('refresh', 'icon-sm')} Restore last backup</button>
-            <button class="btn btn-danger" id="reset-data">${icon('trash', 'icon-sm')} Restore bundled trip</button>
-          </div>
-        </div>
-        <div class="panel settings-section">
-          <h2>Data health</h2><div class="data-health">
-            <div class="health-item"><span>Schema</span><strong>Version ${data.schemaVersion}</strong></div>
-            <div class="health-item"><span>Days</span><strong>${data.days.length}</strong></div>
-            <div class="health-item"><span>Places</span><strong>${data.places.length}</strong></div>
-            <div class="health-item"><span>Last saved</span><strong>${e(new Date(data.lastUpdated).toLocaleString('en-GB', { dateStyle: 'medium', timeStyle: 'short' }))}</strong></div>
-          </div>
-        </div>
-        <a class="panel settings-section" href="#/checklist"><h2>Planning checklist</h2><p class="muted" style="margin:0">Open tasks, packing and trip readiness.</p></a>
-      </aside>
-    </div>
+    ${pageHeader('Control centre', 'Settings and trip data', 'Manage the experience, working data, backups and installation.')}
+    <div class="settings-layout"><section class="stack">
+      <div class="panel settings-section"><div class="section-header" style="margin:0"><div><h2>Trip details</h2><p class="muted" style="margin:4px 0 0">${e(formatDateRange(data.trip.startDate, data.trip.endDate))}</p></div><button class="btn" id="edit-trip">${icon('edit', 'icon-sm')} Edit</button></div></div>
+      <div class="panel settings-section"><h2>Experience</h2><div class="setting-row"><div><strong>Appearance</strong><span>Follow your device or choose a fixed theme.</span></div><div class="segmented" id="theme-options">${['system', 'light', 'dark'].map(theme => `<button class="segment ${themeManager.choice === theme ? 'active' : ''}" data-theme-choice="${theme}">${titleCase(theme)}</button>`).join('')}</div></div><div class="setting-row"><div><strong>Trip mode</strong><span>Automatic uses the trip date range.</span></div><div class="segmented" id="mode-options">${['automatic', 'planning', 'travel'].map(mode => `<button class="segment ${(preferences.mode || 'automatic') === mode ? 'active' : ''}" data-mode-choice="${mode}">${titleCase(mode)}</button>`).join('')}</div></div><div class="setting-row"><div><strong>Install app</strong><span>Add this trip to your home screen.</span></div><button class="btn" id="install-app">${icon('download', 'icon-sm')} Install</button></div></div>
+      <div class="panel settings-section"><div class="section-header" style="margin:0 0 14px"><div><h2>Trip JSON</h2><p class="muted" style="margin:4px 0 0">Advanced editing of the complete working dataset.</p></div><button class="btn btn-primary" id="save-json">${icon('save', 'icon-sm')} Save JSON</button></div><textarea id="json-editor" class="json-editor" spellcheck="false" aria-label="Trip JSON editor">${e(compact)}</textarea></div>
+    </section><aside class="stack">
+      <div class="panel settings-section"><h2>All tools</h2><div class="settings-links">${quickLinks.map(([route, label, iconName]) => `<a href="#/${route}">${icon(iconName, 'icon-sm')}<span>${label}</span>${icon('chevronRight', 'icon-sm')}</a>`).join('')}</div></div>
+      <div class="panel settings-section"><h2>Data tools</h2><div class="stack"><button class="btn" id="export-json">${icon('download', 'icon-sm')} Export backup</button><button class="btn" id="import-json">${icon('upload', 'icon-sm')} Import JSON</button><button class="btn" id="restore-backup" ${repository.hasBackup() ? '' : 'disabled'}>${icon('refresh', 'icon-sm')} Restore last backup</button><button class="btn btn-danger" id="reset-data">${icon('trash', 'icon-sm')} Restore bundled trip</button></div></div>
+      <div class="panel settings-section"><h2>Data health</h2><div class="data-health"><div class="health-item"><span>App</span><strong>v${APP_VERSION}</strong></div><div class="health-item"><span>Schema</span><strong>v${data.schemaVersion}</strong></div><div class="health-item"><span>Working copy</span><strong>${Math.max(1, Math.round(bytes / 1024))} KB</strong></div><div class="health-item"><span>Last saved</span><strong>${e(new Date(data.lastUpdated).toLocaleString('en-GB', { dateStyle: 'medium', timeStyle: 'short' }))}</strong></div></div></div>
+    </aside></div>
   </div>`;
-  main.querySelector('#theme-toggle').addEventListener('click', event => { const on = !event.currentTarget.classList.contains('on'); store.setPreference('theme', on ? 'dark' : 'light'); event.currentTarget.classList.toggle('on', on); event.currentTarget.setAttribute('aria-checked', on); });
-  main.querySelector('#save-json').addEventListener('click', () => {
-    try {
-      const next = JSON.parse(main.querySelector('#json-editor').value);
-      const result = validateTripData(next);
-      if (!result.valid) throw new Error(result.errors.join('\n'));
-      store.replace(next, 'JSON saved');
-    } catch (error) { toast(`Could not save: ${error.message}`, 5000); }
-  });
+  main.querySelector('#edit-trip').addEventListener('click', () => openModal({ title: 'Edit trip details', body: tripSettingsForm(data.trip), onSubmit: form => { const values = formObject(form); if (values.endDate < values.startDate) { toast('End date must be after the start date'); return false; } store.update(next => Object.assign(next.trip, values, { budget: Number(values.budget), homeCurrency: values.homeCurrency.toUpperCase(), travelers: values.travelers.split(',').map(name => name.trim()).filter(Boolean) })); } }));
+  main.querySelectorAll('[data-theme-choice]').forEach(button => button.addEventListener('click', () => store.setPreference('theme', button.dataset.themeChoice)));
+  main.querySelectorAll('[data-mode-choice]').forEach(button => button.addEventListener('click', () => store.setPreference('mode', button.dataset.modeChoice)));
+  main.querySelector('#save-json').addEventListener('click', () => { try { store.replace(JSON.parse(main.querySelector('#json-editor').value), 'JSON saved'); } catch (error) { toast(`Could not save: ${error.message}`, 5000); } });
   main.querySelector('#export-json').addEventListener('click', () => { downloadJson(data, `uk-road-trip-${new Date().toISOString().slice(0, 10)}.json`); toast('Backup exported'); });
   main.querySelector('#import-json').addEventListener('click', () => document.querySelector('#file-import').click());
   main.querySelector('#restore-backup').addEventListener('click', () => confirmAction({ title: 'Restore previous data?', message: 'Your current working copy will be replaced by the most recent backup.', confirmLabel: 'Restore', onConfirm: () => { if (!store.restoreBackup()) toast('No valid backup was found'); } }));

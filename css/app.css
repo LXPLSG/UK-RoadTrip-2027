@@ -229,6 +229,10 @@
 .data-health { display: grid; gap: 12px; }
 .health-item { display: flex; align-items: center; justify-content: space-between; gap: 12px; color: var(--text-soft); font-size: 12px; }
 .health-item strong { color: var(--text); }
+.settings-links { display: grid; }
+.settings-links a { display: grid; grid-template-columns: 20px minmax(0, 1fr) 16px; align-items: center; gap: 10px; min-height: 42px; border-bottom: 1px solid var(--line); color: var(--text-soft); font-size: 13px; font-weight: 650; }
+.settings-links a:last-child { border-bottom: 0; }
+.settings-links a:hover { color: var(--green); }
 
 .modal-backdrop { position: fixed; inset: 0; z-index: 100; display: grid; place-items: center; background: rgba(12, 18, 15, .48); padding: 18px; backdrop-filter: blur(5px); }
 .modal { width: min(100%, 620px); max-height: min(88vh, 820px); overflow: auto; border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); box-shadow: var(--shadow-md); }
@@ -314,4 +318,6 @@
   .tube-notice .btn { grid-column: 1 / -1; }
   .tube-journey { grid-template-columns: 55px minmax(0, 1fr); gap: 10px; }
   .tube-actions { grid-column: 2; }
+  .setting-row { align-items: flex-start; flex-direction: column; }
+  .setting-row .segmented { width: 100%; }
 }

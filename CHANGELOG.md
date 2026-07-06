@@ -22,6 +22,7 @@ All notable changes to UK Road Trip 2027 are documented here. The project follow
 - JSON-defined budget categories, editable expenses and linked-place de-duplication.
 - Dedicated packing workspace backed by typed JSON checklist groups.
 - Searchable, categorized and pinnable trip notes with optional day links.
+- Complete settings centre with structured trip editing, System theme, trip modes, migrations and mobile tool access.
 
 ## [0.1.0] - 2026-07-06
 

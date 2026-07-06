@@ -23,8 +23,9 @@ class Store extends EventTarget {
   }
 
   replace(data, message = 'Trip data updated') {
-    repository.save(data);
-    this.#data = clone(data);
+    const prepared = repository.prepare(data);
+    repository.save(prepared);
+    this.#data = clone(prepared);
     this.dispatchEvent(new CustomEvent('change', { detail: { message } }));
   }
 

@@ -52,21 +52,34 @@ export const repository = {
     localStorage.setItem(KEYS.data, JSON.stringify(data));
   },
 
+  prepare(data) {
+    if (!bundledData) throw new Error('Bundled data is not available for migration.');
+    const prepared = migrateTripData(data, bundledData);
+    const result = validateTripData(prepared);
+    if (!result.valid) throw new Error(result.errors.join(' '));
+    return prepared;
+  },
+
   import(data) {
-    const result = validateTripData(data);
-    if (!result.valid) return result;
-    this.save(data, true);
-    return { valid: true, errors: [] };
+    try {
+      const prepared = this.prepare(data);
+      this.save(prepared, true);
+      return { valid: true, errors: [], data: prepared };
+    } catch (error) {
+      return { valid: false, errors: [error.message], data: null };
+    }
   },
 
   restoreBackup() {
     const backup = localStorage.getItem(KEYS.backup);
     if (!backup) return null;
-    const data = JSON.parse(backup);
-    const result = validateTripData(data);
-    if (!result.valid) return null;
-    this.save(data, false);
-    return clone(data);
+    try {
+      const data = this.prepare(JSON.parse(backup));
+      this.save(data, false);
+      return clone(data);
+    } catch {
+      return null;
+    }
   },
 
   reset() {
