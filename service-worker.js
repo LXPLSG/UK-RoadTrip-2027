@@ -1,5 +1,5 @@
 /** Offline application-shell cache and same-origin runtime request strategy. */
-const VERSION = 'ukrt-2027-v10';
+const VERSION = 'ukrt-2027-v11';
 const APP_SHELL = [
   './',
   './index.html',
@@ -14,6 +14,7 @@ const APP_SHELL = [
   './js/validator.js',
   './js/theme.js',
   './js/navigation.js',
+  './js/migrations.js',
   './js/utils.js',
   './js/icons.js',
   './js/components.js',

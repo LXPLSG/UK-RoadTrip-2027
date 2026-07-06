@@ -3,12 +3,13 @@
   "$id": "https://uk-road-trip.local/schemas/trip.schema.json",
   "title": "UK Road Trip document",
   "type": "object",
-  "required": ["schemaVersion", "dataRevision", "lastUpdated", "trip", "days", "places", "bookings", "expenses", "checklists", "contacts"],
+  "required": ["schemaVersion", "dataRevision", "lastUpdated", "trip", "drivingGuide", "days", "places", "bookings", "expenses", "checklists", "contacts"],
   "properties": {
-    "schemaVersion": { "const": 1 },
+    "schemaVersion": { "const": 2 },
     "dataRevision": { "type": "integer", "minimum": 1 },
     "lastUpdated": { "type": "string", "format": "date-time" },
     "trip": { "$ref": "#/$defs/trip" },
+    "drivingGuide": { "$ref": "#/$defs/drivingGuide" },
     "days": { "type": "array", "items": { "$ref": "#/$defs/day" }, "minItems": 1 },
     "places": { "type": "array", "items": { "$ref": "#/$defs/place" } },
     "bookings": { "type": "array", "items": { "$ref": "#/$defs/booking" } },
@@ -20,6 +21,16 @@
   "$defs": {
     "id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$" },
     "status": { "type": "string", "enum": ["idea", "researching", "planned", "confirmed", "paid", "cancelled"] },
+    "drivingGuide": {
+      "type": "object",
+      "required": ["units", "emergencyNumber", "lastReviewed", "sourceUrl", "rules"],
+      "properties": {
+        "units": { "type": "string" }, "emergencyNumber": { "type": "string" }, "breakdownNumber": { "type": "string" },
+        "lastReviewed": { "type": "string", "format": "date" }, "sourceUrl": { "type": "string" },
+        "rules": { "type": "array", "items": { "type": "object", "required": ["id", "title", "detail"], "properties": { "id": { "$ref": "#/$defs/id" }, "title": { "type": "string" }, "detail": { "type": "string" } }, "additionalProperties": false } }
+      },
+      "additionalProperties": false
+    },
     "trip": {
       "type": "object",
       "required": ["id", "name", "startDate", "endDate", "homeCurrency", "budget"],

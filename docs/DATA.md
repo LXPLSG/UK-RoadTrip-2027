@@ -18,3 +18,5 @@ Edit common records through the application. Use the raw JSON editor or import/e
 ## Schema Evolution
 
 `schemaVersion` changes only when document structure changes. `dataRevision` changes when bundled content changes. Future migrations must be sequential, deterministic and backed up before execution.
+
+Schema version 2 adds `drivingGuide`. Version 1 working copies are migrated automatically using the reviewed guide bundled with the application.

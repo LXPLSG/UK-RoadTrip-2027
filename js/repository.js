@@ -1,6 +1,7 @@
 /** Validated persistence boundary for bundled data, working copies and backups. */
 import { clone } from './utils.js';
 import { validateTripData } from './validator.js';
+import { migrateTripData } from './migrations.js';
 
 const KEYS = {
   data: 'ukrt:data:v1',
@@ -29,9 +30,11 @@ export const repository = {
       return clone(defaults);
     }
     try {
-      const parsed = JSON.parse(saved);
+      const original = JSON.parse(saved);
+      const parsed = migrateTripData(original, defaults);
       const result = validateTripData(parsed);
       if (!result.valid) throw new Error(result.errors.join(' '));
+      if (original.schemaVersion !== parsed.schemaVersion) this.save(parsed, true);
       return parsed;
     } catch (error) {
       localStorage.setItem(KEYS.backup, saved);

@@ -1,10 +1,12 @@
 /** Structural and semantic validation for complete trip documents. */
+import { CURRENT_SCHEMA_VERSION } from './migrations.js';
+
 const REQUIRED_ARRAYS = ['days', 'places', 'bookings', 'expenses', 'checklists', 'contacts'];
 
 export function validateTripData(data) {
   const errors = [];
   if (!data || typeof data !== 'object' || Array.isArray(data)) return { valid: false, errors: ['The JSON root must be an object.'] };
-  if (data.schemaVersion !== 1) errors.push('schemaVersion must be 1.');
+  if (data.schemaVersion !== CURRENT_SCHEMA_VERSION) errors.push(`schemaVersion must be ${CURRENT_SCHEMA_VERSION}.`);
   if (!data.trip || typeof data.trip !== 'object') errors.push('trip is required.');
   ['id', 'name', 'startDate', 'endDate', 'homeCurrency'].forEach(key => {
     if (!data.trip?.[key]) errors.push(`trip.${key} is required.`);
@@ -12,6 +14,7 @@ export function validateTripData(data) {
   REQUIRED_ARRAYS.forEach(key => {
     if (!Array.isArray(data[key])) errors.push(`${key} must be an array.`);
   });
+  if (!data.drivingGuide || !Array.isArray(data.drivingGuide.rules)) errors.push('drivingGuide.rules must be an array.');
   if (Array.isArray(data.days)) {
     const ids = new Set();
     data.days.forEach((day, index) => {

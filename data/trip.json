@@ -1,6 +1,6 @@
 {
-  "schemaVersion": 1,
-  "dataRevision": 3,
+  "schemaVersion": 2,
+  "dataRevision": 4,
   "lastUpdated": "2026-07-06T00:00:00.000Z",
   "trip": {
     "id": "uk-road-trip-2027",
@@ -14,6 +14,20 @@
     "travelers": ["Alex", "Sam"],
     "vehicle": { "label": "Rental car", "registration": "TBC", "provider": "TBC", "pickup": "London Heathrow", "dropoff": "London Heathrow" },
     "notes": "A relaxed loop through England, Wales and Scotland. All bookings marked TBC should be reviewed before departure."
+  },
+  "drivingGuide": {
+    "units": "Miles and miles per hour",
+    "emergencyNumber": "999",
+    "breakdownNumber": "TBC",
+    "lastReviewed": "2026-07-06",
+    "sourceUrl": "https://www.gov.uk/guidance/the-highway-code",
+    "rules": [
+      { "id": "drive-left", "title": "Keep left", "detail": "Drive on the left and keep to the left-hand lane on multi-lane roads unless overtaking or signs direct otherwise." },
+      { "id": "speed-limits", "title": "Read every speed sign", "detail": "For cars, national limits are generally 60 mph on single carriageways and 70 mph on dual carriageways and motorways. Built-up defaults differ: generally 30 mph in England and Scotland and 20 mph in Wales, unless signs show another limit." },
+      { "id": "seat-belts", "title": "Seat belts for every occupant", "detail": "Use a seat belt whenever one is fitted and ensure each passenger has their own belted seat." },
+      { "id": "phones", "title": "No hand-held phone use", "detail": "Do not hold and use a phone or similar interactive device while driving. Set navigation before moving and stop safely if changes are needed." },
+      { "id": "breakdown", "title": "Move to relative safety", "detail": "For a breakdown, leave the live carriageway when possible, use hazard lights and follow motorway emergency guidance. Never place a warning triangle on a motorway." }
+    ]
   },
   "days": [
     { "id": "day-01", "date": "2027-06-05", "title": "Arrival in London", "region": "London", "country": "England", "summary": "Land, collect the car and settle in near Windsor.", "distanceMiles": 18, "driveMinutes": 45, "overnightPlaceId": "stay-windsor", "activities": [

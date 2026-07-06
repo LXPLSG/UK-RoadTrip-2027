@@ -287,6 +287,23 @@ function renderAttractions(main) {
   draw();
 }
 
+function renderDriving(main) {
+  const data = store.data;
+  const guide = data.drivingGuide;
+  const roadDays = data.days.filter(day => Number(day.distanceMiles) > 0);
+  const stats = totals(data);
+  main.innerHTML = `<div class="page">
+    ${pageHeader('On the road', 'Driving guide', `${guide.units} · Guidance reviewed ${formatDate(guide.lastReviewed)}`)}
+    <section class="route-overview">${metric('Route distance', `${stats.miles.toLocaleString()} mi`, 'road', 'green')}${metric('Wheel time', formatDuration(stats.driveMinutes), 'clock', 'amber')}${metric('Road days', `${roadDays.length}`, 'car', 'sky')}</section>
+    <div class="driving-layout">
+      <section><div class="section-header"><h2>Daily drives</h2></div><div class="panel drive-list">${roadDays.map(day => `<a class="drive-row" href="#/day/${e(day.id)}"><span class="drive-day">${e(formatDate(day.date, { day: 'numeric', month: 'short' }))}</span><div><strong>${e(day.title)}</strong><span>${e(day.country)} · ${e(day.region)}</span></div><div class="drive-numbers"><strong>${Number(day.distanceMiles)} mi</strong><span>${e(formatDuration(day.driveMinutes))}</span></div>${icon('chevronRight')}</a>`).join('')}</div></section>
+      <aside class="stack"><div><div class="section-header"><h2>Rental vehicle</h2></div><article class="panel panel-body"><h3>${e(data.trip.vehicle.label)}</h3><div class="hotel-details"><span><small>Provider</small>${e(data.trip.vehicle.provider)}</span><span><small>Registration</small>${e(data.trip.vehicle.registration)}</span><span><small>Pickup</small>${e(data.trip.vehicle.pickup)}</span><span><small>Drop-off</small>${e(data.trip.vehicle.dropoff)}</span></div></article></div><article class="panel panel-body"><p class="page-eyebrow">Emergency</p><div class="emergency-number"><span>Emergency services</span><a href="tel:${e(guide.emergencyNumber)}">${e(guide.emergencyNumber)}</a></div><div class="emergency-number"><span>Breakdown assistance</span><strong>${e(guide.breakdownNumber)}</strong></div></article></aside>
+    </div>
+    <div class="section-header"><h2>UK road essentials</h2><a class="btn btn-ghost" href="${e(guide.sourceUrl)}" target="_blank" rel="noopener">Official guidance ${icon('external', 'icon-sm')}</a></div>
+    <section class="rule-grid">${guide.rules.map((rule, index) => `<article class="panel rule-card"><span>${String(index + 1).padStart(2, '0')}</span><div><h3>${e(rule.title)}</h3><p>${e(rule.detail)}</p></div></article>`).join('')}</section>
+  </div>`;
+}
+
 function renderRestaurants(main) {
   const data = store.data;
   const restaurants = data.places.filter(place => place.type === 'restaurant');
@@ -511,7 +528,7 @@ function renderNotFound(main) {
 }
 
 export function renderView(main, route) {
-  const renderers = { dashboard: renderDashboard, today: renderToday, itinerary: renderItinerary, day: renderDay, places: renderPlaces, hotels: renderHotels, restaurants: renderRestaurants, attractions: renderAttractions, budget: renderBudget, checklist: renderChecklist, settings: renderSettings };
+  const renderers = { dashboard: renderDashboard, today: renderToday, itinerary: renderItinerary, day: renderDay, places: renderPlaces, hotels: renderHotels, restaurants: renderRestaurants, attractions: renderAttractions, driving: renderDriving, budget: renderBudget, checklist: renderChecklist, settings: renderSettings };
   (renderers[route.name] || renderNotFound)(main, route.id);
   main.focus({ preventScroll: true });
 }
