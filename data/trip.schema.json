@@ -3,15 +3,17 @@
   "$id": "https://uk-road-trip.local/schemas/trip.schema.json",
   "title": "UK Road Trip document",
   "type": "object",
-  "required": ["schemaVersion", "dataRevision", "lastUpdated", "trip", "drivingGuide", "tubePlan", "budgetCategories", "days", "places", "bookings", "expenses", "checklists", "contacts"],
+  "required": ["schemaVersion", "dataRevision", "lastUpdated", "trip", "drivingGuide", "tubePlan", "budgetCategories", "noteCategories", "notes", "days", "places", "bookings", "expenses", "checklists", "contacts"],
   "properties": {
-    "schemaVersion": { "const": 5 },
+    "schemaVersion": { "const": 6 },
     "dataRevision": { "type": "integer", "minimum": 1 },
     "lastUpdated": { "type": "string", "format": "date-time" },
     "trip": { "$ref": "#/$defs/trip" },
     "drivingGuide": { "$ref": "#/$defs/drivingGuide" },
     "tubePlan": { "$ref": "#/$defs/tubePlan" },
     "budgetCategories": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "type": "string", "minLength": 1 } },
+    "noteCategories": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "type": "string", "minLength": 1 } },
+    "notes": { "type": "array", "items": { "$ref": "#/$defs/note" } },
     "days": { "type": "array", "items": { "$ref": "#/$defs/day" }, "minItems": 1 },
     "places": { "type": "array", "items": { "$ref": "#/$defs/place" } },
     "bookings": { "type": "array", "items": { "$ref": "#/$defs/booking" } },
@@ -113,6 +115,11 @@
     "checklistItem": {
       "type": "object", "required": ["id", "label", "done"],
       "properties": { "id": { "$ref": "#/$defs/id" }, "label": { "type": "string", "minLength": 1 }, "done": { "type": "boolean" } },
+      "additionalProperties": false
+    },
+    "note": {
+      "type": "object", "required": ["id", "title", "body", "category", "pinned", "updatedAt"],
+      "properties": { "id": { "$ref": "#/$defs/id" }, "title": { "type": "string", "minLength": 1 }, "body": { "type": "string" }, "category": { "type": "string" }, "dayId": { "type": "string" }, "pinned": { "type": "boolean" }, "updatedAt": { "type": "string", "format": "date-time" } },
       "additionalProperties": false
     },
     "contact": {

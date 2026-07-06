@@ -19,4 +19,4 @@ Edit common records through the application. Use the raw JSON editor or import/e
 
 `schemaVersion` changes only when document structure changes. `dataRevision` changes when bundled content changes. Future migrations must be sequential, deterministic and backed up before execution.
 
-Schema version 2 adds `drivingGuide`; version 3 adds `tubePlan`; version 4 adds budget categories; version 5 types checklist groups. Older working copies are migrated sequentially using reviewed defaults bundled with the application.
+Schema version 2 adds `drivingGuide`; version 3 adds `tubePlan`; version 4 adds budget categories; version 5 types checklist groups; version 6 adds categorized notes. Older working copies are migrated sequentially using reviewed defaults bundled with the application.

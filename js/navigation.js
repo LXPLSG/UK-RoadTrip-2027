@@ -12,6 +12,7 @@ export const NAVIGATION_ITEMS = Object.freeze([
   { route: 'budget', label: 'Budget', icon: 'wallet', mobile: false },
   { route: 'checklist', label: 'Checklist', icon: 'check', mobile: false },
   { route: 'packing', label: 'Packing', icon: 'list', mobile: false },
+  { route: 'notes', label: 'Notes', icon: 'note', mobile: false },
   { route: 'settings', label: 'Settings', icon: 'settings', mobile: true }
 ]);
 

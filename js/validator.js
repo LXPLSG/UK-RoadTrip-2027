@@ -18,6 +18,7 @@ export function validateTripData(data) {
   if (!data.tubePlan || !Array.isArray(data.tubePlan.journeys)) errors.push('tubePlan.journeys must be an array.');
   if (!Array.isArray(data.budgetCategories) || !data.budgetCategories.length) errors.push('budgetCategories must be a non-empty array.');
   if (Array.isArray(data.checklists) && data.checklists.some(group => !['planning', 'packing'].includes(group.type))) errors.push('Every checklist requires a planning or packing type.');
+  if (!Array.isArray(data.noteCategories) || !Array.isArray(data.notes)) errors.push('noteCategories and notes must be arrays.');
   if (Array.isArray(data.days)) {
     const ids = new Set();
     data.days.forEach((day, index) => {

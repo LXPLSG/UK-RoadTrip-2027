@@ -514,6 +514,33 @@ function renderPacking(main) {
   main.querySelector('#add-packing-item')?.addEventListener('click', () => openModal({ title: 'Add packing item', body: `<div class="form-grid"><label class="full">Item<input name="label" required></label><label class="full">List<select name="groupId">${groups.map(group => `<option value="${e(group.id)}">${e(group.title)}</option>`).join('')}</select></label></div>`, onSubmit: form => { const values = formObject(form); store.update(next => next.checklists.find(group => group.id === values.groupId).items.push({ id: uid('pack'), label: values.label, done: false })); } }));
 }
 
+function noteForm(note = {}) {
+  return `<div class="form-grid"><label class="full">Title<input name="title" required value="${e(note.title || '')}"></label><label>Category<select name="category">${store.data.noteCategories.map(category => `<option ${note.category === category ? 'selected' : ''}>${e(category)}</option>`).join('')}</select></label><label>Linked day<select name="dayId"><option value="">None</option>${store.data.days.map((day, index) => `<option value="${e(day.id)}" ${note.dayId === day.id ? 'selected' : ''}>Day ${index + 1} · ${e(day.title)}</option>`).join('')}</select></label><label class="full">Note<textarea name="body" required>${e(note.body || '')}</textarea></label><label class="full"><span>Priority</span><select name="pinned"><option value="false" ${!note.pinned ? 'selected' : ''}>Standard</option><option value="true" ${note.pinned ? 'selected' : ''}>Pinned</option></select></label></div>`;
+}
+
+function renderNotes(main) {
+  const data = store.data;
+  main.innerHTML = `<div class="page">
+    ${pageHeader('Trip notebook', 'Notes', 'Capture decisions, reminders and context without losing them in the itinerary.', `<button class="btn btn-primary" id="add-note">${icon('plus', 'icon-sm')}<span>Add note</span></button>`)}
+    <div class="filter-bar"><div class="search-wrap">${icon('search')}<input id="note-search" type="search" placeholder="Search notes" aria-label="Search notes"></div><div class="segmented" id="note-filters"><button class="segment active" data-category="all">All</button>${data.noteCategories.map(category => `<button class="segment" data-category="${e(category)}">${e(category)}</button>`).join('')}</div></div>
+    <section class="note-grid" id="note-list"></section>
+  </div>`;
+  let category = 'all';
+  const search = main.querySelector('#note-search');
+  const list = main.querySelector('#note-list');
+  const draw = () => {
+    const term = search.value.trim().toLowerCase();
+    const notes = [...data.notes].filter(note => (category === 'all' || note.category === category) && `${note.title} ${note.body}`.toLowerCase().includes(term)).sort((a, b) => Number(b.pinned) - Number(a.pinned) || b.updatedAt.localeCompare(a.updatedAt));
+    list.innerHTML = notes.map(note => { const day = data.days.find(item => item.id === note.dayId); return `<article class="panel note-card ${note.pinned ? 'pinned' : ''}"><div class="note-card-head"><span class="tag ${note.pinned ? 'confirmed' : ''}">${note.pinned ? 'Pinned' : e(note.category)}</span><div class="card-actions"><button class="icon-btn edit-note" data-id="${e(note.id)}" aria-label="Edit ${e(note.title)}">${icon('edit', 'icon-sm')}</button><button class="icon-btn delete-note" data-id="${e(note.id)}" aria-label="Delete ${e(note.title)}">${icon('trash', 'icon-sm')}</button></div></div><h3>${e(note.title)}</h3><p>${e(note.body)}</p><footer>${day ? `<a href="#/day/${e(day.id)}">${icon('calendar', 'icon-sm')} ${e(day.title)}</a>` : `<span>${e(note.category)}</span>`}<time datetime="${e(note.updatedAt)}">${e(new Date(note.updatedAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' }))}</time></footer></article>`; }).join('') || emptyState('note', 'No matching notes', 'Add a note or adjust your filters.');
+    list.querySelectorAll('.edit-note').forEach(button => button.addEventListener('click', () => { const note = data.notes.find(item => item.id === button.dataset.id); openModal({ title: 'Edit note', body: noteForm(note), onSubmit: form => { const values = formObject(form); store.update(next => Object.assign(next.notes.find(item => item.id === note.id), values, { pinned: values.pinned === 'true', updatedAt: new Date().toISOString() })); } }); }));
+    list.querySelectorAll('.delete-note').forEach(button => button.addEventListener('click', () => { const note = data.notes.find(item => item.id === button.dataset.id); confirmAction({ title: 'Delete note?', message: `${note.title} will be permanently removed.`, onConfirm: () => store.update(next => { next.notes = next.notes.filter(item => item.id !== note.id); }, 'Note deleted') }); }));
+  };
+  main.querySelector('#add-note').addEventListener('click', () => openModal({ title: 'Add note', body: noteForm(), onSubmit: form => { const values = formObject(form); store.update(next => next.notes.push({ id: uid('note'), ...values, pinned: values.pinned === 'true', updatedAt: new Date().toISOString() })); } }));
+  search.addEventListener('input', draw);
+  main.querySelectorAll('#note-filters .segment').forEach(button => button.addEventListener('click', () => { category = button.dataset.category; main.querySelectorAll('#note-filters .segment').forEach(item => item.classList.toggle('active', item === button)); draw(); }));
+  draw();
+}
+
 function renderSettings(main) {
   const data = store.data;
   const preferences = store.preferences;
@@ -574,7 +601,7 @@ function renderNotFound(main) {
 }
 
 export function renderView(main, route) {
-  const renderers = { dashboard: renderDashboard, today: renderToday, itinerary: renderItinerary, day: renderDay, places: renderPlaces, hotels: renderHotels, restaurants: renderRestaurants, attractions: renderAttractions, driving: renderDriving, tube: renderTube, budget: renderBudget, checklist: renderChecklist, packing: renderPacking, settings: renderSettings };
+  const renderers = { dashboard: renderDashboard, today: renderToday, itinerary: renderItinerary, day: renderDay, places: renderPlaces, hotels: renderHotels, restaurants: renderRestaurants, attractions: renderAttractions, driving: renderDriving, tube: renderTube, budget: renderBudget, checklist: renderChecklist, packing: renderPacking, notes: renderNotes, settings: renderSettings };
   (renderers[route.name] || renderNotFound)(main, route.id);
   main.focus({ preventScroll: true });
 }

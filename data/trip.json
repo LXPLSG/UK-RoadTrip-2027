@@ -1,6 +1,6 @@
 {
-  "schemaVersion": 5,
-  "dataRevision": 7,
+  "schemaVersion": 6,
+  "dataRevision": 8,
   "lastUpdated": "2026-07-06T00:00:00.000Z",
   "trip": {
     "id": "uk-road-trip-2027",
@@ -39,6 +39,12 @@
     ]
   },
   "budgetCategories": ["Accommodation", "Activities", "Food", "Fuel", "Parking", "Transport", "Other"],
+  "noteCategories": ["General", "Booking", "Driving", "Food"],
+  "notes": [
+    { "id": "note-arrival", "title": "Arrival priorities", "body": "Collect the rental car only after everyone has eaten and rested. Photograph all sides of the vehicle before departure.", "category": "Driving", "dayId": "day-01", "pinned": true, "updatedAt": "2026-07-06T00:00:00.000Z" },
+    { "id": "note-bookings", "title": "Booking sequence", "body": "Confirm summer Highlands accommodation before making flexible restaurant reservations.", "category": "Booking", "dayId": "", "pinned": true, "updatedAt": "2026-07-06T00:00:00.000Z" },
+    { "id": "note-weather", "title": "Wet-weather alternatives", "body": "Keep one indoor museum option for each major city and avoid committing every afternoon to outdoor walks.", "category": "General", "dayId": "", "pinned": false, "updatedAt": "2026-07-06T00:00:00.000Z" }
+  ],
   "days": [
     { "id": "day-01", "date": "2027-06-05", "title": "Arrival in London", "region": "London", "country": "England", "summary": "Land, collect the car and settle in near Windsor.", "distanceMiles": 18, "driveMinutes": 45, "overnightPlaceId": "stay-windsor", "activities": [
       { "id": "a-001", "time": "10:30", "type": "transport", "title": "Arrive at Heathrow", "placeId": "heathrow", "status": "planned", "notes": "Allow time for immigration and baggage." },
