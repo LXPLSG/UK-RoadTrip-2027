@@ -6,12 +6,12 @@
 .brand strong, .brand small { display: block; }
 .brand strong { font-size: 15px; }
 .brand small { margin-top: 1px; color: var(--text-soft); font-size: 11px; }
-.desktop-nav { display: grid; gap: 4px; }
+.desktop-nav { min-height: 0; display: grid; align-content: start; flex: 1; gap: 4px; overflow-y: auto; padding-right: 2px; scrollbar-width: thin; }
 .nav-link { min-height: 44px; display: flex; align-items: center; gap: 12px; border-radius: 6px; padding: 8px 12px; color: var(--text-soft); font-weight: 600; }
 .nav-link:hover { background: var(--surface-muted); color: var(--text); }
 .nav-link.active { background: var(--green-soft); color: var(--green); }
 .nav-link .icon { width: 19px; height: 19px; }
-.sidebar-footer { margin-top: auto; padding: 12px; }
+.sidebar-footer { flex: 0 0 auto; padding: 12px; }
 .sync-status { display: flex; align-items: center; gap: 8px; color: var(--text-faint); font-size: 11px; }
 .status-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--green); }
 .sync-status.is-offline .status-dot { background: var(--amber); }

@@ -4,6 +4,8 @@ All notable changes to UK Road Trip 2027 are documented here. The project follow
 
 ## [Unreleased]
 
+## [1.0.0] - 2026-07-06
+
 ### Added
 
 - Initial offline-first project structure.
@@ -27,6 +29,7 @@ All notable changes to UK Road Trip 2027 are documented here. The project follow
 - Preloaded dimensioned hero media, bounded navigation fallback and fresh-first bundled data caching.
 - Keyboard-safe dialogs, valid checklist labeling, assistive segmented controls and forced-color support.
 - Hardened semantic validation, legacy country migration, deployment-relative manifest identity and presentation-data separation.
+- Scroll-safe desktop navigation for short laptop viewports.
 
 ## [0.1.0] - 2026-07-06
 
