@@ -5,7 +5,7 @@
   "type": "object",
   "required": ["schemaVersion", "dataRevision", "lastUpdated", "trip", "drivingGuide", "tubePlan", "budgetCategories", "days", "places", "bookings", "expenses", "checklists", "contacts"],
   "properties": {
-    "schemaVersion": { "const": 4 },
+    "schemaVersion": { "const": 5 },
     "dataRevision": { "type": "integer", "minimum": 1 },
     "lastUpdated": { "type": "string", "format": "date-time" },
     "trip": { "$ref": "#/$defs/trip" },
@@ -106,8 +106,8 @@
       }, "additionalProperties": false
     },
     "checklist": {
-      "type": "object", "required": ["id", "title", "items"],
-      "properties": { "id": { "$ref": "#/$defs/id" }, "title": { "type": "string" }, "items": { "type": "array", "items": { "$ref": "#/$defs/checklistItem" } } },
+      "type": "object", "required": ["id", "type", "title", "items"],
+      "properties": { "id": { "$ref": "#/$defs/id" }, "type": { "type": "string", "enum": ["planning", "packing"] }, "title": { "type": "string" }, "items": { "type": "array", "items": { "$ref": "#/$defs/checklistItem" } } },
       "additionalProperties": false
     },
     "checklistItem": {

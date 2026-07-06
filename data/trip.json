@@ -1,6 +1,6 @@
 {
-  "schemaVersion": 4,
-  "dataRevision": 6,
+  "schemaVersion": 5,
+  "dataRevision": 7,
   "lastUpdated": "2026-07-06T00:00:00.000Z",
   "trip": {
     "id": "uk-road-trip-2027",
@@ -153,14 +153,14 @@
     { "id": "expense-parking", "date": "2027-06-05", "category": "Parking", "description": "Parking and tolls estimate", "amount": 260, "status": "planned" }
   ],
   "checklists": [
-    { "id": "planning", "title": "Before booking", "items": [
+    { "id": "planning", "type": "planning", "title": "Before booking", "items": [
       { "id": "check-passports", "label": "Check passport validity", "done": true },
       { "id": "check-flights", "label": "Confirm flight times", "done": false },
       { "id": "check-car", "label": "Book automatic rental car", "done": false },
       { "id": "check-hotels", "label": "Book all accommodation", "done": false },
       { "id": "check-attractions", "label": "Reserve timed attractions", "done": false }
     ]},
-    { "id": "packing", "title": "Packing", "items": [
+    { "id": "packing", "type": "packing", "title": "Packing", "items": [
       { "id": "pack-licence", "label": "Driving licence and rental documents", "done": false },
       { "id": "pack-rain", "label": "Waterproof jackets", "done": false },
       { "id": "pack-adapter", "label": "UK power adapters", "done": false },

@@ -196,6 +196,10 @@
 .category-bar span { color: var(--text-soft); font-size: 12px; text-align: right; }
 
 .checklist-layout { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
+.packing-progress { display: grid; gap: 10px; margin-bottom: 24px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); padding: 18px; box-shadow: var(--shadow-sm); }
+.packing-progress > div:first-child { display: flex; align-items: center; justify-content: space-between; }
+.packing-progress span { color: var(--text-soft); font-size: 12px; }
+.packing-progress strong { font-size: 22px; }
 .checklist { overflow: hidden; }
 .check-row { display: grid; grid-template-columns: 24px 1fr 34px; align-items: center; gap: 10px; min-height: 52px; border-bottom: 1px solid var(--line); padding: 8px 12px 8px 18px; }
 .check-row:last-child { border-bottom: 0; }

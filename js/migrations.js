@@ -1,7 +1,7 @@
 /** Sequential trip-document migrations that preserve existing local working copies. */
 import { clone } from './utils.js';
 
-export const CURRENT_SCHEMA_VERSION = 4;
+export const CURRENT_SCHEMA_VERSION = 5;
 
 export function migrateTripData(input, defaults) {
   const data = clone(input);
@@ -18,6 +18,11 @@ export function migrateTripData(input, defaults) {
   if (data.schemaVersion === 3) {
     data.budgetCategories = clone(defaults.budgetCategories);
     data.schemaVersion = 4;
+  }
+  if (data.schemaVersion === 4) {
+    const defaultTypes = new Map(defaults.checklists.map(group => [group.id, group.type]));
+    data.checklists.forEach(group => { group.type = defaultTypes.get(group.id) || 'planning'; });
+    data.schemaVersion = 5;
   }
   return data;
 }

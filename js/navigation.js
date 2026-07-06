@@ -11,6 +11,7 @@ export const NAVIGATION_ITEMS = Object.freeze([
   { route: 'tube', label: 'Tube planner', icon: 'train', mobile: false },
   { route: 'budget', label: 'Budget', icon: 'wallet', mobile: false },
   { route: 'checklist', label: 'Checklist', icon: 'check', mobile: false },
+  { route: 'packing', label: 'Packing', icon: 'list', mobile: false },
   { route: 'settings', label: 'Settings', icon: 'settings', mobile: true }
 ]);
 

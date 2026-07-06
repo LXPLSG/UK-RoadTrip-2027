@@ -498,6 +498,22 @@ function renderChecklist(main) {
   }}));
 }
 
+function renderPacking(main) {
+  const data = store.data;
+  const groups = data.checklists.filter(group => group.type === 'packing');
+  const items = groups.flatMap(group => group.items);
+  const packed = items.filter(item => item.done).length;
+  const percent = items.length ? Math.round(packed / items.length * 100) : 0;
+  main.innerHTML = `<div class="page">
+    ${pageHeader('Travel ready', 'Packing list', `${packed} of ${items.length} packed`, groups.length ? `<button class="btn btn-primary" id="add-packing-item">${icon('plus', 'icon-sm')}<span>Add item</span></button>` : '')}
+    <section class="packing-progress"><div><span>Overall progress</span><strong>${percent}%</strong></div><div class="progress-track"><div class="progress-fill" style="width:${percent}%"></div></div></section>
+    <div class="checklist-layout">${groups.map(group => `<section class="panel checklist"><div class="panel-header"><h2>${e(group.title)}</h2><span class="tag">${group.items.filter(item => item.done).length}/${group.items.length}</span></div>${group.items.map(item => `<label class="check-row ${item.done ? 'done' : ''}"><input class="packing-toggle" type="checkbox" data-group="${e(group.id)}" data-id="${e(item.id)}" ${item.done ? 'checked' : ''}><span>${e(item.label)}</span><button type="button" class="icon-btn delete-packing" data-group="${e(group.id)}" data-id="${e(item.id)}" aria-label="Delete ${e(item.label)}">${icon('trash', 'icon-sm')}</button></label>`).join('') || '<div class="panel-body muted">This list is empty.</div>'}</section>`).join('') || emptyState('list', 'No packing lists', 'Add a packing checklist group in trip JSON.')}</div>
+  </div>`;
+  main.querySelectorAll('.packing-toggle').forEach(input => input.addEventListener('change', () => store.update(next => { next.checklists.find(group => group.id === input.dataset.group).items.find(item => item.id === input.dataset.id).done = input.checked; }, input.checked ? 'Packed' : 'Returned to packing list')));
+  main.querySelectorAll('.delete-packing').forEach(button => button.addEventListener('click', event => { event.preventDefault(); store.update(next => { const group = next.checklists.find(item => item.id === button.dataset.group); group.items = group.items.filter(item => item.id !== button.dataset.id); }, 'Packing item deleted'); }));
+  main.querySelector('#add-packing-item')?.addEventListener('click', () => openModal({ title: 'Add packing item', body: `<div class="form-grid"><label class="full">Item<input name="label" required></label><label class="full">List<select name="groupId">${groups.map(group => `<option value="${e(group.id)}">${e(group.title)}</option>`).join('')}</select></label></div>`, onSubmit: form => { const values = formObject(form); store.update(next => next.checklists.find(group => group.id === values.groupId).items.push({ id: uid('pack'), label: values.label, done: false })); } }));
+}
+
 function renderSettings(main) {
   const data = store.data;
   const preferences = store.preferences;
@@ -558,7 +574,7 @@ function renderNotFound(main) {
 }
 
 export function renderView(main, route) {
-  const renderers = { dashboard: renderDashboard, today: renderToday, itinerary: renderItinerary, day: renderDay, places: renderPlaces, hotels: renderHotels, restaurants: renderRestaurants, attractions: renderAttractions, driving: renderDriving, tube: renderTube, budget: renderBudget, checklist: renderChecklist, settings: renderSettings };
+  const renderers = { dashboard: renderDashboard, today: renderToday, itinerary: renderItinerary, day: renderDay, places: renderPlaces, hotels: renderHotels, restaurants: renderRestaurants, attractions: renderAttractions, driving: renderDriving, tube: renderTube, budget: renderBudget, checklist: renderChecklist, packing: renderPacking, settings: renderSettings };
   (renderers[route.name] || renderNotFound)(main, route.id);
   main.focus({ preventScroll: true });
 }
