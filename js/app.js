@@ -21,7 +21,7 @@ function render(route = router.current()) {
   document.title = `${store.data.trip.name} · ${active[0].toUpperCase()}${active.slice(1)}`;
   renderView(main, route);
   app.setAttribute('aria-busy', 'false');
-  window.scrollTo({ top: 0, behavior: 'instant' });
+  window.scrollTo({ top: 0, behavior: 'auto' });
 }
 
 function updateConnectivity() {

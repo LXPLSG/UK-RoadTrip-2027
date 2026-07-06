@@ -8,6 +8,8 @@ export function migrateTripData(input, defaults) {
   if (!Number.isInteger(data.schemaVersion) || data.schemaVersion < 1) throw new Error('Trip schema version is missing or invalid.');
   if (data.schemaVersion > CURRENT_SCHEMA_VERSION) throw new Error(`Trip schema version ${data.schemaVersion} requires a newer app.`);
   if (data.schemaVersion === 1) {
+    const defaultCountries = new Map(defaults.days.map(day => [day.id, day.country]));
+    data.days.forEach(day => { day.country = day.country || defaultCountries.get(day.id) || 'United Kingdom'; });
     data.drivingGuide = clone(defaults.drivingGuide);
     data.schemaVersion = 2;
   }

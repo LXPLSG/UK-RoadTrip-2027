@@ -1,8 +1,8 @@
 {
-  "id": "/",
+  "id": "./",
   "name": "UK Road Trip 2027",
   "short_name": "UK Road Trip",
-  "description": "Your complete offline companion for a 15-day UK self-drive holiday.",
+  "description": "Your complete offline companion for a UK self-drive holiday.",
   "start_url": "./#/dashboard",
   "scope": "./",
   "display": "standalone",

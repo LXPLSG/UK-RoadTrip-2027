@@ -12,6 +12,12 @@ python3 -m http.server 4173
 
 Then open `http://localhost:4173`.
 
+Run dependency-free production checks with:
+
+```sh
+node tests/validate-data.mjs
+```
+
 ## Trip data
 
 `data/trip.json` is the bundled canonical dataset. On first launch, the app copies it to namespaced Local Storage. Later edits are saved to that working copy so updating deployed files does not overwrite a traveler's changes.

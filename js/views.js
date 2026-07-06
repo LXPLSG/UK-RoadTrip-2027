@@ -136,7 +136,7 @@ function renderItinerary(main) {
   const stats = totals(data);
   const countries = [...new Set(data.days.map(day => day.country))];
   main.innerHTML = `<div class="page">
-    ${pageHeader('Your route', '15 days, one clear plan', `${formatDateRange(data.trip.startDate, data.trip.endDate)} · ${stats.miles.toLocaleString()} miles`, printButton('Print itinerary'))}
+    ${pageHeader('Your route', `${data.days.length} days, one clear plan`, `${formatDateRange(data.trip.startDate, data.trip.endDate)} · ${stats.miles.toLocaleString()} miles`, printButton('Print itinerary'))}
     <section class="route-overview">${metric('Countries', `${countries.length}`, 'pin', 'green')}${metric('Road days', `${data.days.filter(day => day.distanceMiles > 0).length}`, 'car', 'amber')}${metric('Activities', `${data.days.flatMap(day => day.activities).length}`, 'list', 'sky')}</section>
     <div class="itinerary-toolbar"><div class="segmented" id="country-filters"><button class="segment active" data-country="all">All</button>${countries.map(country => `<button class="segment" data-country="${e(country)}">${e(country)}</button>`).join('')}</div><span id="itinerary-count" class="muted"></span></div>
     <section class="panel timeline" id="itinerary-days">
