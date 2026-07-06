@@ -1,5 +1,5 @@
 /** Offline application-shell cache and same-origin runtime request strategy. */
-const VERSION = 'ukrt-2027-v21';
+const VERSION = 'ukrt-2027-v23';
 const APP_SHELL = [
   './',
   './index.html',
@@ -22,15 +22,25 @@ const APP_SHELL = [
   './js/icons.js',
   './js/components.js',
   './js/views.js',
-  './data/trip.json',
-  './data/trip.schema.json',
-  './assets/images/highlands-road.jpg',
-  './assets/icons/icon-192.png',
-  './assets/icons/icon-512.png'
+  '../data/versions.json',
+  '../data/versions.schema.json',
+  '../data/trip.schema.json',
+  '../assets/images/highlands-road.jpg',
+  '../assets/icons/icon-192.png',
+  '../assets/icons/icon-512.png'
 ];
 
+/** Cache the app shell and every immutable trip snapshot listed in the registry. */
+async function precache() {
+  const cache = await caches.open(VERSION);
+  await cache.addAll(APP_SHELL);
+  const registryResponse = await cache.match('../data/versions.json');
+  const registry = await registryResponse.json();
+  await cache.addAll(registry.versions.map(entry => `../data/${entry.file}`));
+}
+
 self.addEventListener('install', event => {
-  event.waitUntil(caches.open(VERSION).then(cache => cache.addAll(APP_SHELL)));
+  event.waitUntil(precache());
 });
 
 self.addEventListener('activate', event => {
@@ -55,7 +65,7 @@ self.addEventListener('fetch', event => {
     return;
   }
 
-  if (url.pathname.endsWith('/data/trip.json')) {
+  if (url.pathname.includes('/data/') && url.pathname.endsWith('.json')) {
     event.respondWith(fetch(request).then(response => {
       if (response.ok) caches.open(VERSION).then(cache => cache.put(request, response.clone()));
       return response;

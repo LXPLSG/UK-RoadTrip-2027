@@ -11,12 +11,35 @@ const KEYS = {
 
 let bundledData = null;
 
+/** Validate the deployment-owned registry before using it to construct a data URL. */
+function getActiveVersion(registry) {
+  if (!registry || registry.formatVersion !== 1 || !Array.isArray(registry.versions)) {
+    throw new Error('The trip version registry is invalid.');
+  }
+  const versions = new Set();
+  for (const entry of registry.versions) {
+    if (!/^v\d+\.\d+$/.test(entry?.version || '') ||
+        !/^versions\/trip-v\d+\.\d+\.json$/.test(entry?.file || '') ||
+        versions.has(entry.version)) {
+      throw new Error('The trip version registry contains an invalid entry.');
+    }
+    versions.add(entry.version);
+  }
+  const active = registry.versions.find(entry => entry.version === registry.activeVersion);
+  if (!active) throw new Error('The active trip version does not exist.');
+  return active;
+}
+
 async function loadBundled() {
-  const response = await fetch('./data/trip.json', { cache: 'no-store' });
-  if (!response.ok) throw new Error('Could not load the bundled trip data.');
-  const data = await response.json();
+  const registryResponse = await fetch('../data/versions.json', { cache: 'no-store' });
+  if (!registryResponse.ok) throw new Error('Could not load the trip version registry.');
+  const active = getActiveVersion(await registryResponse.json());
+  const dataResponse = await fetch(`../data/${active.file}`, { cache: 'no-store' });
+  if (!dataResponse.ok) throw new Error(`Could not load bundled trip data ${active.version}.`);
+  const data = await dataResponse.json();
   const result = validateTripData(data);
   if (!result.valid) throw new Error(`Bundled data is invalid: ${result.errors.join(' ')}`);
+  if (data.dataRevision !== active.dataRevision) throw new Error(`Bundled data ${active.version} has a mismatched revision.`);
   bundledData = data;
   return data;
 }

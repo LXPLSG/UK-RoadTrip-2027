@@ -4,6 +4,11 @@ All notable changes to UK Road Trip 2027 are documented here. The project follow
 
 ## [Unreleased]
 
+### Changed
+
+- Separated application code under `src/` from frequently edited trip content, assets and documentation.
+- Replaced the mutable bundled trip file with an immutable `v0.1` snapshot and a validated registry for future revisions and rollbacks.
+
 ## [1.0.0] - 2026-07-06
 
 ### Added

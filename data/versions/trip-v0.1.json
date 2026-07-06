@@ -10,7 +10,7 @@
     "endDate": "2027-06-19",
     "homeCurrency": "GBP",
     "budget": 6500,
-    "heroImage": "assets/images/highlands-road.jpg",
+    "heroImage": "../assets/images/highlands-road.jpg",
     "travelers": [],
     "vehicle": {
       "label": "UK rental car",

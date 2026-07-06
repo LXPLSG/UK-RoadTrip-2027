@@ -20,9 +20,9 @@ Serve the project root over HTTP. ES modules and service workers do not run reli
 python3 -m http.server 4173
 ```
 
-Then open `http://localhost:4173`.
+Then open `http://localhost:4173/src/`.
 
-For production, deploy the project directory to any HTTPS static host. No build step or server-side rewrite is required because navigation uses URL hashes.
+For production, deploy the project directory to any HTTPS static host and use `/src/` as the application URL. No build step or server-side rewrite is required because navigation uses URL hashes.
 
 Run dependency-free production checks with:
 
@@ -32,13 +32,22 @@ node tests/validate-data.mjs
 
 ## Trip data
 
-`data/trip.json` is the bundled canonical dataset. On first launch, the app copies it to namespaced Local Storage. Later edits are saved to that working copy so updating deployed files does not overwrite a traveler's changes.
+`data/versions.json` selects the active immutable snapshot under `data/versions/`. On first launch, the app validates and copies that snapshot to namespaced Local Storage. Later browser edits affect the working copy, so deploying a new snapshot does not silently overwrite a traveler's changes.
+
+To refine the itinerary, copy the active snapshot to the next filename such as `trip-v0.2.json`, update its `dataRevision` and `lastUpdated`, then register it and set `activeVersion` in `data/versions.json`. Revert by selecting an earlier registered version; existing devices can then activate it with **Settings → Restore bundled data**. Existing version files must not be edited after commit.
 
 Use **Settings → Trip JSON** for direct edits, or import/export a complete JSON backup. Restoring bundled data creates a backup of the current working copy first.
 
+## Repository boundaries
+
+- `src/` contains application code and PWA runtime files; it changes infrequently.
+- `data/` contains the version registry, immutable trip snapshots and schemas; it is the frequent-edit boundary.
+- `assets/` contains images, icons and future offline maps.
+- `docs/` contains architecture, data, accessibility, performance and review documentation.
+
 ## Offline behavior
 
-The service worker precaches the complete app shell, trip JSON, icons and local hero image. External map and website links remain optional online actions; all core itinerary, place, budget and checklist information stays available offline.
+The service worker precaches the complete app shell, every registered trip snapshot, icons and local hero image. External map and website links remain optional online actions; all core itinerary, place, budget and checklist information stays available offline.
 
 Install from the browser’s application menu on desktop. On iPhone or iPad, open the site in Safari and use **Share → Add to Home Screen**.
 

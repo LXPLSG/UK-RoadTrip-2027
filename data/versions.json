@@ -1,0 +1,14 @@
+{
+  "$schema": "./versions.schema.json",
+  "formatVersion": 1,
+  "activeVersion": "v0.1",
+  "versions": [
+    {
+      "version": "v0.1",
+      "file": "versions/trip-v0.1.json",
+      "createdAt": "2026-07-06",
+      "dataRevision": 9,
+      "summary": "Initial complete 15-day UK itinerary with provisional places and planning data."
+    }
+  ]
+}

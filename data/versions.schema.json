@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://uk-road-trip.local/schemas/versions.schema.json",
+  "title": "Trip data version registry",
+  "type": "object",
+  "required": ["formatVersion", "activeVersion", "versions"],
+  "properties": {
+    "$schema": { "type": "string" },
+    "formatVersion": { "const": 1 },
+    "activeVersion": { "type": "string", "pattern": "^v[0-9]+\\.[0-9]+$" },
+    "versions": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["version", "file", "createdAt", "dataRevision", "summary"],
+        "properties": {
+          "version": { "type": "string", "pattern": "^v[0-9]+\\.[0-9]+$" },
+          "file": { "type": "string", "pattern": "^versions/trip-v[0-9]+\\.[0-9]+\\.json$" },
+          "createdAt": { "type": "string", "format": "date" },
+          "dataRevision": { "type": "integer", "minimum": 1 },
+          "summary": { "type": "string", "minLength": 1 }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}
