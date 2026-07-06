@@ -85,6 +85,21 @@
 .rule-card { display: grid; grid-template-columns: 34px minmax(0, 1fr); gap: 12px; padding: 17px; }
 .rule-card > span { color: var(--green); font-size: 12px; font-weight: 800; }
 .rule-card p { margin: 0; color: var(--text-soft); font-size: 12px; }
+.tube-notice { display: grid; grid-template-columns: 42px minmax(0, 1fr) auto; align-items: center; gap: 14px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); padding: 16px; box-shadow: var(--shadow-sm); }
+.tube-notice > span { width: 42px; height: 42px; display: grid; place-items: center; border-radius: 50%; }
+.tube-notice strong, .tube-notice p { display: block; margin: 0; }
+.tube-notice p { color: var(--text-soft); font-size: 12px; }
+.tube-list { display: grid; gap: 12px; }
+.tube-journey { display: grid; grid-template-columns: 70px minmax(0, 1fr) auto; gap: 18px; padding: 18px; }
+.tube-time strong, .tube-time span { display: block; }
+.tube-time strong { font-size: 20px; }
+.tube-time span { color: var(--text-soft); font-size: 11px; text-transform: uppercase; }
+.tube-route { position: relative; display: grid; gap: 7px; }
+.tube-route > div { display: flex; align-items: center; gap: 9px; }
+.tube-route p, .tube-route small { margin: 0 0 0 18px; color: var(--text-soft); font-size: 12px; }
+.tube-station-dot { width: 10px; height: 10px; flex: 0 0 auto; border: 2px solid var(--purple); border-radius: 50%; background: var(--surface); }
+.tube-actions { display: flex; align-items: flex-start; gap: 4px; }
+.tube-actions .icon-btn { width: 34px; height: 34px; border: 0; background: transparent; }
 .panel { border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); box-shadow: var(--shadow-sm); }
 .panel-header { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 17px 18px; border-bottom: 1px solid var(--line); }
 .panel-header h2, .panel-header h3 { margin: 0; font-size: 15px; }
@@ -281,4 +296,8 @@
   .rule-grid { grid-template-columns: 1fr; }
   .drive-row { grid-template-columns: 48px minmax(0, 1fr) auto; }
   .drive-row > .icon { display: none; }
+  .tube-notice { grid-template-columns: 36px minmax(0, 1fr); }
+  .tube-notice .btn { grid-column: 1 / -1; }
+  .tube-journey { grid-template-columns: 55px minmax(0, 1fr); gap: 10px; }
+  .tube-actions { grid-column: 2; }
 }

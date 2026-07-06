@@ -3,13 +3,14 @@
   "$id": "https://uk-road-trip.local/schemas/trip.schema.json",
   "title": "UK Road Trip document",
   "type": "object",
-  "required": ["schemaVersion", "dataRevision", "lastUpdated", "trip", "drivingGuide", "days", "places", "bookings", "expenses", "checklists", "contacts"],
+  "required": ["schemaVersion", "dataRevision", "lastUpdated", "trip", "drivingGuide", "tubePlan", "days", "places", "bookings", "expenses", "checklists", "contacts"],
   "properties": {
-    "schemaVersion": { "const": 2 },
+    "schemaVersion": { "const": 3 },
     "dataRevision": { "type": "integer", "minimum": 1 },
     "lastUpdated": { "type": "string", "format": "date-time" },
     "trip": { "$ref": "#/$defs/trip" },
     "drivingGuide": { "$ref": "#/$defs/drivingGuide" },
+    "tubePlan": { "$ref": "#/$defs/tubePlan" },
     "days": { "type": "array", "items": { "$ref": "#/$defs/day" }, "minItems": 1 },
     "places": { "type": "array", "items": { "$ref": "#/$defs/place" } },
     "bookings": { "type": "array", "items": { "$ref": "#/$defs/booking" } },
@@ -30,6 +31,21 @@
         "rules": { "type": "array", "items": { "type": "object", "required": ["id", "title", "detail"], "properties": { "id": { "$ref": "#/$defs/id" }, "title": { "type": "string" }, "detail": { "type": "string" } }, "additionalProperties": false } }
       },
       "additionalProperties": false
+    },
+    "tubePlan": {
+      "type": "object", "required": ["lastReviewed", "sourceUrl", "paymentNote", "journeys"],
+      "properties": {
+        "lastReviewed": { "type": "string", "format": "date" }, "sourceUrl": { "type": "string" }, "paymentNote": { "type": "string" },
+        "journeys": { "type": "array", "items": { "$ref": "#/$defs/tubeJourney" } }
+      }, "additionalProperties": false
+    },
+    "tubeJourney": {
+      "type": "object", "required": ["id", "date", "time", "from", "to", "route", "durationMinutes", "status"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" }, "date": { "type": "string", "format": "date" }, "time": { "type": "string" },
+        "from": { "type": "string" }, "to": { "type": "string" }, "route": { "type": "string" }, "durationMinutes": { "type": "integer", "minimum": 0 },
+        "status": { "$ref": "#/$defs/status" }, "accessibility": { "type": "string" }, "notes": { "type": "string" }
+      }, "additionalProperties": false
     },
     "trip": {
       "type": "object",

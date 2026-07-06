@@ -8,6 +8,7 @@ export const NAVIGATION_ITEMS = Object.freeze([
   { route: 'restaurants', label: 'Restaurants', icon: 'restaurant', mobile: false },
   { route: 'attractions', label: 'Attractions', icon: 'attraction', mobile: false },
   { route: 'driving', label: 'Driving guide', icon: 'car', mobile: false },
+  { route: 'tube', label: 'Tube planner', icon: 'train', mobile: false },
   { route: 'budget', label: 'Budget', icon: 'wallet', mobile: false },
   { route: 'checklist', label: 'Checklist', icon: 'check', mobile: false },
   { route: 'settings', label: 'Settings', icon: 'settings', mobile: true }

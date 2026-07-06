@@ -14,6 +14,7 @@ const paths = {
   attraction: '<path d="M3 21h18M5 18h14M6 18V9M10 18V9M14 18V9M18 18V9M4 9h16L12 3 4 9Z"/>',
   restaurant: '<path d="M7 3v8M4 3v5a3 3 0 0 0 6 0V3M7 11v10M17 3v18M17 3a4 7 0 0 0 0 14"/>',
   transport: '<path d="M4 17h16M6 17l-2-5 2-7h12l2 7-2 5M8 21v-4M16 21v-4"/><circle cx="8" cy="12" r="1"/><circle cx="16" cy="12" r="1"/>',
+  train: '<rect x="4" y="3" width="16" height="15" rx="3"/><path d="M8 21l2-3M16 21l-2-3M8 7h8M7 12h.01M17 12h.01M8 15h8"/>',
   walk: '<circle cx="13" cy="4" r="2"/><path d="m10 21 2-6-3-3 2-5 4 3 3 1M12 15l4 6M9 12l-4 4"/>',
   plus: '<path d="M12 5v14M5 12h14"/>',
   edit: '<path d="M12 20h9M16.5 3.5a2.1 2.1 0 0 1 3 3L8 18l-4 1 1-4Z"/>',

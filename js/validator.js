@@ -15,6 +15,7 @@ export function validateTripData(data) {
     if (!Array.isArray(data[key])) errors.push(`${key} must be an array.`);
   });
   if (!data.drivingGuide || !Array.isArray(data.drivingGuide.rules)) errors.push('drivingGuide.rules must be an array.');
+  if (!data.tubePlan || !Array.isArray(data.tubePlan.journeys)) errors.push('tubePlan.journeys must be an array.');
   if (Array.isArray(data.days)) {
     const ids = new Set();
     data.days.forEach((day, index) => {

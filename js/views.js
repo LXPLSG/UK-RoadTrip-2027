@@ -304,6 +304,31 @@ function renderDriving(main) {
   </div>`;
 }
 
+function tubeJourneyForm(journey = {}) {
+  return `<div class="form-grid">
+    <label>From<input name="from" required value="${e(journey.from || '')}"></label><label>To<input name="to" required value="${e(journey.to || '')}"></label>
+    <label>Date<input type="date" name="date" required value="${e(journey.date || store.data.trip.startDate)}"></label><label>Departure time<input type="time" name="time" required value="${e(journey.time || '09:00')}"></label>
+    <label class="full">Route and lines<input name="route" required placeholder="Line, direction and interchange" value="${e(journey.route || '')}"></label>
+    <label>Estimated duration<input type="number" min="0" name="durationMinutes" required value="${Number(journey.durationMinutes || 0)}"></label><label>Status<select name="status">${['idea', 'planned', 'confirmed'].map(status => `<option value="${status}" ${journey.status === status ? 'selected' : ''}>${titleCase(status)}</option>`).join('')}</select></label>
+    <label class="full">Accessibility notes<textarea name="accessibility">${e(journey.accessibility || '')}</textarea></label><label class="full">Journey notes<textarea name="notes">${e(journey.notes || '')}</textarea></label>
+  </div>`;
+}
+
+function renderTube(main) {
+  const data = store.data;
+  const plan = data.tubePlan;
+  const journeys = [...plan.journeys].sort((a, b) => `${a.date}${a.time}`.localeCompare(`${b.date}${b.time}`));
+  main.innerHTML = `<div class="page">
+    ${pageHeader('London transport', 'Tube journey planner', 'Save the route you intend to take, then verify live service before leaving.', `<button class="btn btn-primary" id="add-tube-journey">${icon('plus', 'icon-sm')}<span>Add journey</span></button>`)}
+    <section class="tube-notice"><span class="tone-purple">${icon('train')}</span><div><strong>Offline plan, live-check ready</strong><p>${e(plan.paymentNote)}</p></div><a class="btn" href="${e(plan.sourceUrl)}" target="_blank" rel="noopener">Open TfL ${icon('external', 'icon-sm')}</a></section>
+    <div class="section-header"><h2>Saved journeys</h2><span class="muted">Reviewed ${e(formatDate(plan.lastReviewed))}</span></div>
+    <section class="tube-list">${journeys.map(journey => `<article class="panel tube-journey"><div class="tube-time"><strong>${e(journey.time)}</strong><span>${e(formatDate(journey.date, { day: 'numeric', month: 'short' }))}</span></div><div class="tube-route"><div><span class="tube-station-dot"></span><strong>${e(journey.from)}</strong></div><p>${e(journey.route)} · ${e(formatDuration(journey.durationMinutes))}</p><div><span class="tube-station-dot"></span><strong>${e(journey.to)}</strong></div><small>${e(journey.accessibility || journey.notes || '')}</small></div><div class="tube-actions">${statusTag(journey.status)}<button class="icon-btn edit-tube" data-id="${e(journey.id)}" aria-label="Edit journey from ${e(journey.from)}">${icon('edit', 'icon-sm')}</button><button class="icon-btn delete-tube" data-id="${e(journey.id)}" aria-label="Delete journey from ${e(journey.from)}">${icon('trash', 'icon-sm')}</button></div></article>`).join('') || emptyState('train', 'No Tube journeys saved', 'Add the routes you may need in London.')}</section>
+  </div>`;
+  main.querySelector('#add-tube-journey').addEventListener('click', () => openModal({ title: 'Add Tube journey', body: tubeJourneyForm(), onSubmit: form => { const values = formObject(form); store.update(next => next.tubePlan.journeys.push({ id: uid('tube'), ...values, durationMinutes: Number(values.durationMinutes) })); } }));
+  main.querySelectorAll('.edit-tube').forEach(button => button.addEventListener('click', () => { const journey = journeys.find(item => item.id === button.dataset.id); openModal({ title: 'Edit Tube journey', body: tubeJourneyForm(journey), onSubmit: form => { const values = formObject(form); store.update(next => Object.assign(next.tubePlan.journeys.find(item => item.id === journey.id), values, { durationMinutes: Number(values.durationMinutes) })); } }); }));
+  main.querySelectorAll('.delete-tube').forEach(button => button.addEventListener('click', () => { const journey = journeys.find(item => item.id === button.dataset.id); confirmAction({ title: 'Delete Tube journey?', message: `${journey.from} to ${journey.to} will be removed.`, onConfirm: () => store.update(next => { next.tubePlan.journeys = next.tubePlan.journeys.filter(item => item.id !== journey.id); }, 'Tube journey deleted') }); }));
+}
+
 function renderRestaurants(main) {
   const data = store.data;
   const restaurants = data.places.filter(place => place.type === 'restaurant');
@@ -528,7 +553,7 @@ function renderNotFound(main) {
 }
 
 export function renderView(main, route) {
-  const renderers = { dashboard: renderDashboard, today: renderToday, itinerary: renderItinerary, day: renderDay, places: renderPlaces, hotels: renderHotels, restaurants: renderRestaurants, attractions: renderAttractions, driving: renderDriving, budget: renderBudget, checklist: renderChecklist, settings: renderSettings };
+  const renderers = { dashboard: renderDashboard, today: renderToday, itinerary: renderItinerary, day: renderDay, places: renderPlaces, hotels: renderHotels, restaurants: renderRestaurants, attractions: renderAttractions, driving: renderDriving, tube: renderTube, budget: renderBudget, checklist: renderChecklist, settings: renderSettings };
   (renderers[route.name] || renderNotFound)(main, route.id);
   main.focus({ preventScroll: true });
 }

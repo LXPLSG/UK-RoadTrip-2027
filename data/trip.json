@@ -1,6 +1,6 @@
 {
-  "schemaVersion": 2,
-  "dataRevision": 4,
+  "schemaVersion": 3,
+  "dataRevision": 5,
   "lastUpdated": "2026-07-06T00:00:00.000Z",
   "trip": {
     "id": "uk-road-trip-2027",
@@ -27,6 +27,15 @@
       { "id": "seat-belts", "title": "Seat belts for every occupant", "detail": "Use a seat belt whenever one is fitted and ensure each passenger has their own belted seat." },
       { "id": "phones", "title": "No hand-held phone use", "detail": "Do not hold and use a phone or similar interactive device while driving. Set navigation before moving and stop safely if changes are needed." },
       { "id": "breakdown", "title": "Move to relative safety", "detail": "For a breakdown, leave the live carriageway when possible, use hazard lights and follow motorway emergency guidance. Never place a warning triangle on a motorway." }
+    ]
+  },
+  "tubePlan": {
+    "lastReviewed": "2026-07-06",
+    "sourceUrl": "https://tfl.gov.uk/plan-a-journey/",
+    "paymentNote": "Use the same contactless card or device to touch in and out. Recheck fares, disruptions and step-free availability with TfL before travel.",
+    "journeys": [
+      { "id": "tube-heathrow-paddington", "date": "2027-06-05", "time": "12:00", "from": "Heathrow Terminals 2 & 3", "to": "Paddington", "route": "Elizabeth line direct", "durationMinutes": 35, "status": "idea", "accessibility": "Step-free route; verify lift status on the day.", "notes": "Alternative airport transfer if the rental-car plan changes." },
+      { "id": "tube-westminster-tower", "date": "2027-06-05", "time": "15:00", "from": "Westminster", "to": "Tower Hill", "route": "District line eastbound", "durationMinutes": 12, "status": "idea", "accessibility": "Check current step-free status with TfL.", "notes": "Sample central London journey; replace if it is not needed." }
     ]
   },
   "days": [
