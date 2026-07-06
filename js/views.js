@@ -50,7 +50,7 @@ function renderDashboard(main) {
 
   main.innerHTML = `<div class="page">
     <section class="hero">
-      <img class="hero-image" src="${e(trip.heroImage)}" alt="A winding road through the Scottish Highlands">
+      <img class="hero-image" src="${e(trip.heroImage)}" width="1800" height="1013" fetchpriority="high" decoding="async" alt="A winding road through the Scottish Highlands">
       <div class="hero-content">
         <div><p class="hero-kicker">Planning dashboard · ${e(formatDateRange(trip.startDate, trip.endDate))}</p><h1>${e(trip.name)}</h1><p class="hero-meta">${e(trip.subtitle)} · ${data.days.length} days</p></div>
         <div class="countdown"><strong>${e(countdownCopy)}</strong><span>${countdown > 0 ? 'days to go' : countdown === 0 ? 'trip starts today' : 'trip complete'}</span></div>

@@ -25,3 +25,9 @@ The service worker precaches the complete app shell, trip JSON, icons and local 
 ## Printing
 
 Use the print action on the itinerary, day, driving guide or budget. Application navigation and editing controls are automatically removed from paper and PDF output.
+
+## Engineering documentation
+
+- `docs/ARCHITECTURE.md` explains module boundaries and data flow.
+- `docs/DATA.md` documents editing and schema migration conventions.
+- `docs/PERFORMANCE.md` defines the production performance budget.
