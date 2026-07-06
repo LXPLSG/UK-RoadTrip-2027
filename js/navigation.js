@@ -4,6 +4,7 @@ export const NAVIGATION_ITEMS = Object.freeze([
   { route: 'today', label: 'Today', icon: 'calendar', mobile: true },
   { route: 'itinerary', label: 'Itinerary', icon: 'calendar', mobile: true },
   { route: 'places', label: 'Places', icon: 'pin', mobile: true },
+  { route: 'hotels', label: 'Hotels', icon: 'bed', mobile: false },
   { route: 'budget', label: 'Budget', icon: 'wallet', mobile: false },
   { route: 'checklist', label: 'Checklist', icon: 'check', mobile: false },
   { route: 'settings', label: 'Settings', icon: 'settings', mobile: true }

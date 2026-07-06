@@ -122,6 +122,9 @@
 .place-card h3 { margin: 0 0 3px; overflow-wrap: anywhere; }
 .place-card p { margin: 0; color: var(--text-soft); font-size: 12px; overflow-wrap: anywhere; }
 .place-card-foot { display: flex; align-items: center; justify-content: space-between; gap: 10px; min-height: 48px; border-top: 1px solid var(--line); padding: 9px 12px 9px 17px; }
+.hotel-details { display: grid; gap: 8px; margin: 14px 0; }
+.hotel-details span { color: var(--text); font-size: 12px; overflow-wrap: anywhere; }
+.hotel-details small { display: block; margin-bottom: 1px; color: var(--text-faint); font-size: 10px; text-transform: uppercase; }
 .tag { display: inline-flex; align-items: center; min-height: 23px; border-radius: 4px; padding: 3px 7px; background: var(--surface-muted); color: var(--text-soft); font-size: 10px; font-weight: 800; text-transform: capitalize; }
 .tag.confirmed { background: var(--green-soft); color: var(--green); }
 .tag.researching { background: var(--amber-soft); color: var(--amber); }

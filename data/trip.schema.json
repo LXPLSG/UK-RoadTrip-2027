@@ -56,7 +56,8 @@
         "name": { "type": "string", "minLength": 1 }, "city": { "type": "string" }, "address": { "type": "string" },
         "lat": { "type": ["number", "null"], "minimum": -90, "maximum": 90 }, "lng": { "type": ["number", "null"], "minimum": -180, "maximum": 180 },
         "phone": { "type": "string" }, "website": { "type": "string" }, "status": { "$ref": "#/$defs/status" },
-        "price": { "type": "number", "minimum": 0 }, "notes": { "type": "string" }
+        "price": { "type": "number", "minimum": 0 }, "bookingReference": { "type": "string" },
+        "checkIn": { "type": "string" }, "checkOut": { "type": "string" }, "parking": { "type": "string" }, "notes": { "type": "string" }
       }, "additionalProperties": false
     },
     "booking": {

@@ -230,6 +230,11 @@ function renderDay(main, id) {
 }
 
 function placeForm(place = {}) {
+  const hotelFields = place.type === 'hotel' ? `
+    <label>Booking reference<input name="bookingReference" value="${e(place.bookingReference || '')}"></label>
+    <label>Parking<input name="parking" placeholder="On-site, public or TBC" value="${e(place.parking || '')}"></label>
+    <label>Check-in<input name="checkIn" placeholder="From 15:00" value="${e(place.checkIn || '')}"></label>
+    <label>Check-out<input name="checkOut" placeholder="By 11:00" value="${e(place.checkOut || '')}"></label>` : '';
   return `<div class="form-grid">
     <label>Name<input name="name" required value="${e(place.name || '')}"></label>
     <label>Type<select name="type">${['hotel', 'attraction', 'restaurant', 'transport'].map(type => `<option value="${type}" ${place.type === type ? 'selected' : ''}>${titleCase(type)}</option>`).join('')}</select></label>
@@ -239,8 +244,46 @@ function placeForm(place = {}) {
     <label>Estimated cost<input type="number" min="0" step="0.01" name="price" value="${Number(place.price || 0)}"></label>
     <label>Phone<input type="tel" name="phone" value="${e(place.phone || '')}"></label>
     <label class="full">Website<input type="url" name="website" placeholder="https://" value="${e(place.website || '')}"></label>
+    ${hotelFields}
     <label class="full">Notes<textarea name="notes">${e(place.notes || '')}</textarea></label>
   </div>`;
+}
+
+function removePlace(place) {
+  store.update(next => {
+    next.places = next.places.filter(item => item.id !== place.id);
+    next.days.forEach(day => {
+      if (day.overnightPlaceId === place.id) day.overnightPlaceId = null;
+      day.activities.forEach(activity => { if (activity.placeId === place.id) activity.placeId = ''; });
+    });
+  }, 'Place deleted');
+}
+
+function renderHotels(main) {
+  const data = store.data;
+  const hotels = data.places.filter(place => place.type === 'hotel');
+  const linkedNights = data.days.filter(day => day.overnightPlaceId).length;
+  const confirmed = hotels.filter(place => place.status === 'confirmed').length;
+  main.innerHTML = `<div class="page">
+    ${pageHeader('Accommodation', 'Hotels and overnight stays', `${linkedNights} itinerary nights linked · ${confirmed} confirmed`, `<button class="btn btn-primary" id="add-hotel">${icon('plus', 'icon-sm')}<span>Add hotel</span></button>`)}
+    <section class="route-overview">${metric('Properties', `${hotels.length}`, 'hotel', 'green')}${metric('Linked nights', `${linkedNights}`, 'calendar', 'sky')}${metric('Confirmed', `${confirmed}`, 'check', 'purple')}</section>
+    <div class="place-grid">${hotels.map(hotel => {
+      const nights = data.days.filter(day => day.overnightPlaceId === hotel.id);
+      return `<article class="place-card hotel-card"><div class="place-card-head"><span class="place-type-icon tone-green">${icon('hotel')}</span>${statusTag(hotel.status)}</div><div class="place-card-body"><h3>${e(hotel.name)}</h3><p>${e(hotel.city)} · ${nights.length} ${nights.length === 1 ? 'night' : 'nights'}</p><div class="hotel-details"><span><small>Address</small>${e(hotel.address || 'TBC')}</span><span><small>Parking</small>${e(hotel.parking || 'TBC')}</span><span><small>Reference</small>${e(hotel.bookingReference || 'TBC')}</span></div>${Number(hotel.price) ? `<strong>${formatMoney(hotel.price, data.trip.homeCurrency)}</strong>` : ''}</div><div class="place-card-foot"><a class="btn btn-ghost" href="${e(mapUrl(hotel))}" target="_blank" rel="noopener">${icon('pin', 'icon-sm')} Map</a><div class="card-actions"><button class="icon-btn edit-hotel" data-id="${e(hotel.id)}" aria-label="Edit ${e(hotel.name)}">${icon('edit', 'icon-sm')}</button><button class="icon-btn delete-hotel" data-id="${e(hotel.id)}" aria-label="Delete ${e(hotel.name)}">${icon('trash', 'icon-sm')}</button></div></div></article>`;
+    }).join('') || emptyState('hotel', 'No hotels yet', 'Add accommodation candidates and connect them to itinerary nights.')}</div>
+  </div>`;
+  main.querySelector('#add-hotel').addEventListener('click', () => openModal({ title: 'Add hotel', body: placeForm({ type: 'hotel', status: 'researching' }), onSubmit: form => {
+    const values = formObject(form);
+    store.update(next => next.places.push({ id: uid('hotel'), lat: null, lng: null, ...values, type: 'hotel', price: Number(values.price || 0) }));
+  }}));
+  main.querySelectorAll('.edit-hotel').forEach(button => button.addEventListener('click', () => {
+    const hotel = hotels.find(item => item.id === button.dataset.id);
+    openModal({ title: 'Edit hotel', body: placeForm(hotel), onSubmit: form => { const values = formObject(form); store.update(next => Object.assign(next.places.find(item => item.id === hotel.id), values, { type: 'hotel', price: Number(values.price || 0) })); } });
+  }));
+  main.querySelectorAll('.delete-hotel').forEach(button => button.addEventListener('click', () => {
+    const hotel = hotels.find(item => item.id === button.dataset.id);
+    confirmAction({ title: 'Delete hotel?', message: `${hotel.name} and its itinerary links will be removed.`, onConfirm: () => removePlace(hotel) });
+  }));
 }
 
 function renderPlaces(main) {
@@ -274,10 +317,7 @@ function renderPlaces(main) {
     results.querySelectorAll('.delete-place').forEach(button => button.addEventListener('click', () => {
       const place = data.places.find(item => item.id === button.dataset.id);
       const inUse = data.days.some(day => day.overnightPlaceId === place.id || day.activities.some(activity => activity.placeId === place.id));
-      confirmAction({ title: 'Delete place?', message: inUse ? `${place.name} is linked to the itinerary. Deleting it will also remove those links.` : `${place.name} will be removed.`, onConfirm: () => store.update(next => {
-        next.places = next.places.filter(item => item.id !== place.id);
-        next.days.forEach(day => { if (day.overnightPlaceId === place.id) day.overnightPlaceId = null; day.activities.forEach(activity => { if (activity.placeId === place.id) activity.placeId = ''; }); });
-      }, 'Place deleted') });
+      confirmAction({ title: 'Delete place?', message: inUse ? `${place.name} is linked to the itinerary. Deleting it will also remove those links.` : `${place.name} will be removed.`, onConfirm: () => removePlace(place) });
     }));
   };
   main.querySelector('#add-place').addEventListener('click', () => openModal({ title: 'Add place', body: placeForm(), onSubmit: form => {
@@ -417,7 +457,7 @@ function renderNotFound(main) {
 }
 
 export function renderView(main, route) {
-  const renderers = { dashboard: renderDashboard, today: renderToday, itinerary: renderItinerary, day: renderDay, places: renderPlaces, budget: renderBudget, checklist: renderChecklist, settings: renderSettings };
+  const renderers = { dashboard: renderDashboard, today: renderToday, itinerary: renderItinerary, day: renderDay, places: renderPlaces, hotels: renderHotels, budget: renderBudget, checklist: renderChecklist, settings: renderSettings };
   (renderers[route.name] || renderNotFound)(main, route.id);
   main.focus({ preventScroll: true });
 }
