@@ -3,7 +3,7 @@
   "name": "UK Road Trip 2027",
   "short_name": "UK Road Trip",
   "description": "Your complete offline companion for a 15-day UK self-drive holiday.",
-  "start_url": "./#/today",
+  "start_url": "./#/dashboard",
   "scope": "./",
   "display": "standalone",
   "background_color": "#f4f5f2",

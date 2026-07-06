@@ -26,7 +26,7 @@ function metric(label, value, iconName, tone) {
   return `<article class="metric"><div class="metric-top"><span>${e(label)}</span><span class="metric-icon tone-${tone}">${icon(iconName, 'icon-sm')}</span></div><strong>${e(value)}</strong></article>`;
 }
 
-function renderToday(main) {
+function renderDashboard(main) {
   const data = store.data;
   const trip = data.trip;
   const day = activeDay(data);
@@ -41,7 +41,7 @@ function renderToday(main) {
     <section class="hero">
       <img class="hero-image" src="${e(trip.heroImage)}" alt="A winding road through the Scottish Highlands">
       <div class="hero-content">
-        <div><p class="hero-kicker">${e(formatDateRange(trip.startDate, trip.endDate))}</p><h1>${e(trip.name)}</h1><p class="hero-meta">${e(trip.subtitle)} · ${data.days.length} days</p></div>
+        <div><p class="hero-kicker">Planning dashboard · ${e(formatDateRange(trip.startDate, trip.endDate))}</p><h1>${e(trip.name)}</h1><p class="hero-meta">${e(trip.subtitle)} · ${data.days.length} days</p></div>
         <div class="countdown"><strong>${e(countdownCopy)}</strong><span>${countdown > 0 ? 'days to go' : countdown === 0 ? 'trip starts today' : 'trip complete'}</span></div>
       </div>
     </section>
@@ -357,7 +357,7 @@ function renderNotFound(main) {
 }
 
 export function renderView(main, route) {
-  const renderers = { today: renderToday, itinerary: renderItinerary, day: renderDay, places: renderPlaces, budget: renderBudget, checklist: renderChecklist, settings: renderSettings };
+  const renderers = { dashboard: renderDashboard, today: renderDashboard, itinerary: renderItinerary, day: renderDay, places: renderPlaces, budget: renderBudget, checklist: renderChecklist, settings: renderSettings };
   (renderers[route.name] || renderNotFound)(main, route.id);
   main.focus({ preventScroll: true });
 }

@@ -6,13 +6,13 @@ class Router extends EventTarget {
   }
 
   start() {
-    if (!location.hash) location.replace('#/today');
+    if (!location.hash) location.replace('#/dashboard');
     else this.#emit();
   }
 
   current() {
     const parts = location.hash.replace(/^#\/?/, '').split('/').filter(Boolean);
-    return { name: parts[0] || 'today', id: parts[1] || null };
+    return { name: parts[0] || 'dashboard', id: parts[1] || null };
   }
 
   #emit() {
