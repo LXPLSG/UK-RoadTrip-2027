@@ -1,18 +1,10 @@
 /** Reusable presentation components shared by all application views. */
 import { icon } from './icons.js';
 import { escapeHtml } from './utils.js';
-
-export const navItems = [
-  { route: 'today', label: 'Today', icon: 'home', mobile: true },
-  { route: 'itinerary', label: 'Itinerary', icon: 'calendar', mobile: true },
-  { route: 'places', label: 'Places', icon: 'pin', mobile: true },
-  { route: 'budget', label: 'Budget', icon: 'wallet', mobile: true },
-  { route: 'checklist', label: 'Checklist', icon: 'check', mobile: false },
-  { route: 'settings', label: 'Settings', icon: 'settings', mobile: true }
-];
+import { navigationItems } from './navigation.js';
 
 export function renderNav(active, mobile = false) {
-  return navItems.filter(item => !mobile || item.mobile).map(item => `
+  return navigationItems({ mobile }).map(item => `
     <a class="nav-link ${active === item.route ? 'active' : ''}" href="#/${item.route}" ${active === item.route ? 'aria-current="page"' : ''}>
       ${icon(item.icon)}<span>${item.label}</span>
     </a>`).join('');

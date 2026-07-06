@@ -6,13 +6,14 @@ import { renderView } from './views.js';
 import { validateTripData } from './validator.js';
 import { formatDateRange } from './utils.js';
 import { themeManager } from './theme.js';
+import { navigationRoute } from './navigation.js';
 
 const main = document.querySelector('#main');
 const app = document.querySelector('#app');
 let deferredInstall = null;
 
 function render(route = router.current()) {
-  const active = route.name === 'day' ? 'itinerary' : route.name;
+  const active = navigationRoute(route.name);
   document.querySelector('#desktop-nav').innerHTML = renderNav(active);
   document.querySelector('#mobile-nav').innerHTML = renderNav(active, true);
   document.querySelector('#brand-name').textContent = store.data.trip.name;
@@ -21,6 +22,14 @@ function render(route = router.current()) {
   renderView(main, route);
   app.setAttribute('aria-busy', 'false');
   window.scrollTo({ top: 0, behavior: 'instant' });
+}
+
+function updateConnectivity() {
+  const status = document.querySelector('#sync-status');
+  if (!status) return;
+  const offline = !navigator.onLine;
+  status.classList.toggle('is-offline', offline);
+  status.innerHTML = `<span class="status-dot"></span>${offline ? 'Offline · trip available' : 'Online · trip cached'}`;
 }
 
 async function registerServiceWorker() {
@@ -88,6 +97,9 @@ async function start() {
     router.addEventListener('route', event => render(event.detail));
     bindImport();
     installHandling();
+    window.addEventListener('online', updateConnectivity);
+    window.addEventListener('offline', updateConnectivity);
+    updateConnectivity();
     router.start();
     registerServiceWorker();
   } catch (error) {

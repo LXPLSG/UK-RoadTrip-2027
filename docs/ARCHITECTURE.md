@@ -8,6 +8,7 @@ UK Road Trip 2027 is a dependency-free, offline-first Progressive Web App. It us
 - `js/repository.js` is the only module that reads or writes persisted trip data.
 - `js/store.js` owns in-memory state and publishes state changes.
 - `js/router.js` maps hash routes to views without server rewrites.
+- `js/navigation.js` defines the shared desktop and mobile navigation registry.
 - `js/views.js` renders domain views and dispatches user intent through the store.
 - `js/components.js` contains reusable, domain-neutral UI building blocks.
 - `service-worker.js` owns application asset caching and offline navigation.
