@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#f4f5f2">
+  <meta name="description" content="A complete offline companion for UK Road Trip 2027.">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="UK Road Trip">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="apple-touch-icon" href="assets/icons/icon-192.png">
+  <link rel="icon" href="assets/icons/icon-192.png">
+  <link rel="stylesheet" href="css/tokens.css">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/app.css">
+  <title>UK Road Trip 2027</title>
+</head>
+<body>
+  <div id="app" class="app-shell" aria-busy="true">
+    <aside class="sidebar" aria-label="Primary navigation">
+      <a class="brand" href="#/today" aria-label="UK Road Trip home">
+        <span class="brand-mark" aria-hidden="true">UK</span>
+        <span><strong id="brand-name">UK Road Trip</strong><small id="brand-dates">Loading trip...</small></span>
+      </a>
+      <nav id="desktop-nav" class="desktop-nav"></nav>
+      <div class="sidebar-footer">
+        <span id="sync-status" class="sync-status"><span class="status-dot"></span> Available offline</span>
+      </div>
+    </aside>
+
+    <main id="main" class="main-content" tabindex="-1">
+      <div class="loading-screen">
+        <span class="loader" aria-hidden="true"></span>
+        <p>Preparing your trip</p>
+      </div>
+    </main>
+
+    <nav id="mobile-nav" class="mobile-nav" aria-label="Primary navigation"></nav>
+  </div>
+
+  <div id="toast-region" class="toast-region" aria-live="polite" aria-atomic="true"></div>
+  <div id="modal-root"></div>
+  <input id="file-import" type="file" accept="application/json,.json" hidden>
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>

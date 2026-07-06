@@ -1,0 +1,57 @@
+/* Shared design tokens for light and dark application themes. */
+:root {
+  color-scheme: light;
+  --font: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", sans-serif;
+  --font-display: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", sans-serif;
+  --bg: #f4f5f2;
+  --surface: #ffffff;
+  --surface-raised: #ffffff;
+  --surface-muted: #e9ece8;
+  --text: #17201d;
+  --text-soft: #66706c;
+  --text-faint: #8b9490;
+  --line: #dfe3df;
+  --line-strong: #cdd3ce;
+  --green: #176b52;
+  --green-soft: #dceee6;
+  --amber: #a96513;
+  --amber-soft: #f7ead5;
+  --coral: #b8493d;
+  --coral-soft: #f7dfdc;
+  --sky: #276d89;
+  --sky-soft: #dbeaf0;
+  --purple: #68558e;
+  --purple-soft: #e7e0f0;
+  --shadow-sm: 0 1px 2px rgba(24, 34, 30, .06), 0 4px 12px rgba(24, 34, 30, .04);
+  --shadow-md: 0 12px 35px rgba(24, 34, 30, .12);
+  --radius-sm: 5px;
+  --radius: 8px;
+  --sidebar: 248px;
+  --content: 1180px;
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #141817;
+  --surface: #1c211f;
+  --surface-raised: #242a27;
+  --surface-muted: #292f2c;
+  --text: #f0f3f1;
+  --text-soft: #adb7b2;
+  --text-faint: #808984;
+  --line: #323936;
+  --line-strong: #444d48;
+  --green: #6bc5a2;
+  --green-soft: #1f3d33;
+  --amber: #e2ad64;
+  --amber-soft: #44351f;
+  --coral: #e58b82;
+  --coral-soft: #482c29;
+  --sky: #79bdd7;
+  --sky-soft: #203944;
+  --purple: #b6a4d5;
+  --purple-soft: #362e44;
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, .2);
+  --shadow-md: 0 18px 45px rgba(0, 0, 0, .38);
+}

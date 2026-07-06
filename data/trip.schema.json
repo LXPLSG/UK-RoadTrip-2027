@@ -1,0 +1,93 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://uk-road-trip.local/schemas/trip.schema.json",
+  "title": "UK Road Trip document",
+  "type": "object",
+  "required": ["schemaVersion", "dataRevision", "lastUpdated", "trip", "days", "places", "bookings", "expenses", "checklists", "contacts"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "dataRevision": { "type": "integer", "minimum": 1 },
+    "lastUpdated": { "type": "string", "format": "date-time" },
+    "trip": { "$ref": "#/$defs/trip" },
+    "days": { "type": "array", "items": { "$ref": "#/$defs/day" }, "minItems": 1 },
+    "places": { "type": "array", "items": { "$ref": "#/$defs/place" } },
+    "bookings": { "type": "array", "items": { "$ref": "#/$defs/booking" } },
+    "expenses": { "type": "array", "items": { "$ref": "#/$defs/expense" } },
+    "checklists": { "type": "array", "items": { "$ref": "#/$defs/checklist" } },
+    "contacts": { "type": "array", "items": { "$ref": "#/$defs/contact" } }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$" },
+    "status": { "type": "string", "enum": ["idea", "researching", "planned", "confirmed", "paid", "cancelled"] },
+    "trip": {
+      "type": "object",
+      "required": ["id", "name", "startDate", "endDate", "homeCurrency", "budget"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" }, "name": { "type": "string", "minLength": 1 }, "subtitle": { "type": "string" },
+        "startDate": { "type": "string", "format": "date" }, "endDate": { "type": "string", "format": "date" },
+        "homeCurrency": { "type": "string", "pattern": "^[A-Z]{3}$" }, "budget": { "type": "number", "minimum": 0 },
+        "heroImage": { "type": "string" }, "travelers": { "type": "array", "items": { "type": "string" } },
+        "vehicle": { "type": "object" }, "notes": { "type": "string" }
+      },
+      "additionalProperties": true
+    },
+    "day": {
+      "type": "object", "required": ["id", "date", "title", "region", "activities"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" }, "date": { "type": "string", "format": "date" }, "title": { "type": "string", "minLength": 1 },
+        "region": { "type": "string" }, "summary": { "type": "string" }, "distanceMiles": { "type": "number", "minimum": 0 },
+        "driveMinutes": { "type": "integer", "minimum": 0 }, "overnightPlaceId": { "type": ["string", "null"] },
+        "activities": { "type": "array", "items": { "$ref": "#/$defs/activity" } }
+      }, "additionalProperties": false
+    },
+    "activity": {
+      "type": "object", "required": ["id", "type", "title", "status"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" }, "time": { "type": "string", "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$" },
+        "type": { "type": "string", "enum": ["attraction", "drive", "hotel", "restaurant", "transport", "walk", "note"] },
+        "title": { "type": "string", "minLength": 1 }, "placeId": { "type": "string" }, "status": { "$ref": "#/$defs/status" }, "notes": { "type": "string" }
+      }, "additionalProperties": false
+    },
+    "place": {
+      "type": "object", "required": ["id", "type", "name", "city", "status"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" }, "type": { "type": "string", "enum": ["hotel", "restaurant", "attraction", "transport"] },
+        "name": { "type": "string", "minLength": 1 }, "city": { "type": "string" }, "address": { "type": "string" },
+        "lat": { "type": ["number", "null"], "minimum": -90, "maximum": 90 }, "lng": { "type": ["number", "null"], "minimum": -180, "maximum": 180 },
+        "phone": { "type": "string" }, "website": { "type": "string" }, "status": { "$ref": "#/$defs/status" },
+        "price": { "type": "number", "minimum": 0 }, "notes": { "type": "string" }
+      }, "additionalProperties": false
+    },
+    "booking": {
+      "type": "object", "required": ["id", "type", "title", "date", "status", "cost"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" }, "type": { "type": "string" }, "title": { "type": "string" }, "placeId": { "type": "string" },
+        "date": { "type": "string", "format": "date" }, "reference": { "type": "string" }, "status": { "$ref": "#/$defs/status" },
+        "cost": { "type": "number", "minimum": 0 }, "notes": { "type": "string" }
+      }, "additionalProperties": false
+    },
+    "expense": {
+      "type": "object", "required": ["id", "date", "category", "description", "amount", "status"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" }, "date": { "type": "string", "format": "date" }, "category": { "type": "string" },
+        "description": { "type": "string", "minLength": 1 }, "amount": { "type": "number", "minimum": 0 }, "status": { "$ref": "#/$defs/status" }
+      }, "additionalProperties": false
+    },
+    "checklist": {
+      "type": "object", "required": ["id", "title", "items"],
+      "properties": { "id": { "$ref": "#/$defs/id" }, "title": { "type": "string" }, "items": { "type": "array", "items": { "$ref": "#/$defs/checklistItem" } } },
+      "additionalProperties": false
+    },
+    "checklistItem": {
+      "type": "object", "required": ["id", "label", "done"],
+      "properties": { "id": { "$ref": "#/$defs/id" }, "label": { "type": "string", "minLength": 1 }, "done": { "type": "boolean" } },
+      "additionalProperties": false
+    },
+    "contact": {
+      "type": "object", "required": ["id", "label", "value", "type"],
+      "properties": { "id": { "$ref": "#/$defs/id" }, "label": { "type": "string" }, "value": { "type": "string" }, "type": { "type": "string", "enum": ["phone", "email", "text"] } },
+      "additionalProperties": false
+    }
+  }
+}

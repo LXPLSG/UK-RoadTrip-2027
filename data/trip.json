@@ -1,0 +1,149 @@
+{
+  "schemaVersion": 1,
+  "dataRevision": 1,
+  "lastUpdated": "2026-07-06T00:00:00.000Z",
+  "trip": {
+    "id": "uk-road-trip-2027",
+    "name": "UK Road Trip 2027",
+    "subtitle": "England, Wales and Scotland",
+    "startDate": "2027-06-05",
+    "endDate": "2027-06-19",
+    "homeCurrency": "GBP",
+    "budget": 6500,
+    "heroImage": "assets/images/highlands-road.jpg",
+    "travelers": ["Alex", "Sam"],
+    "vehicle": { "label": "Rental car", "registration": "TBC", "provider": "TBC", "pickup": "London Heathrow", "dropoff": "London Heathrow" },
+    "notes": "A relaxed loop through England, Wales and Scotland. All bookings marked TBC should be reviewed before departure."
+  },
+  "days": [
+    { "id": "day-01", "date": "2027-06-05", "title": "Arrival in London", "region": "London", "summary": "Land, collect the car and settle in near Windsor.", "distanceMiles": 18, "driveMinutes": 45, "overnightPlaceId": "stay-windsor", "activities": [
+      { "id": "a-001", "time": "10:30", "type": "transport", "title": "Arrive at Heathrow", "placeId": "heathrow", "status": "planned", "notes": "Allow time for immigration and baggage." },
+      { "id": "a-002", "time": "13:00", "type": "drive", "title": "Collect rental car", "status": "planned", "notes": "Photograph the vehicle before leaving." },
+      { "id": "a-003", "time": "16:00", "type": "hotel", "title": "Check in and rest", "placeId": "stay-windsor", "status": "planned", "notes": "Easy first evening after the flight." }
+    ]},
+    { "id": "day-02", "date": "2027-06-06", "title": "Windsor to the Cotswolds", "region": "Cotswolds", "summary": "Castle morning followed by honey-stone villages.", "distanceMiles": 92, "driveMinutes": 135, "overnightPlaceId": "stay-bourton", "activities": [
+      { "id": "a-004", "time": "09:30", "type": "attraction", "title": "Windsor Castle", "placeId": "windsor-castle", "status": "planned", "notes": "Book the first timed entry." },
+      { "id": "a-005", "time": "13:30", "type": "drive", "title": "Drive to Bourton-on-the-Water", "status": "planned", "notes": "Lunch stop around Oxford if needed." },
+      { "id": "a-006", "time": "17:00", "type": "walk", "title": "Village riverside walk", "placeId": "bourton", "status": "planned", "notes": "Keep the evening flexible." }
+    ]},
+    { "id": "day-03", "date": "2027-06-07", "title": "Cotswolds Villages", "region": "Cotswolds", "summary": "A slow circuit through classic villages and country lanes.", "distanceMiles": 48, "driveMinutes": 100, "overnightPlaceId": "stay-bourton", "activities": [
+      { "id": "a-007", "time": "09:00", "type": "drive", "title": "Lower Slaughter and Stow-on-the-Wold", "status": "planned", "notes": "Use village car parks and explore on foot." },
+      { "id": "a-008", "time": "13:00", "type": "restaurant", "title": "Country pub lunch", "placeId": "wild-rabbit", "status": "idea", "notes": "Reservation recommended." },
+      { "id": "a-009", "time": "15:30", "type": "attraction", "title": "Broadway Tower", "placeId": "broadway-tower", "status": "planned", "notes": "Weather-dependent views." }
+    ]},
+    { "id": "day-04", "date": "2027-06-08", "title": "Bath and Roman Britain", "region": "Bath", "summary": "Georgian streets, Roman history and an evening in Bath.", "distanceMiles": 55, "driveMinutes": 90, "overnightPlaceId": "stay-bath", "activities": [
+      { "id": "a-010", "time": "09:00", "type": "drive", "title": "Drive to Bath", "status": "planned", "notes": "Use hotel parking or a park-and-ride." },
+      { "id": "a-011", "time": "12:00", "type": "attraction", "title": "Roman Baths", "placeId": "roman-baths", "status": "planned", "notes": "Timed ticket required." },
+      { "id": "a-012", "time": "16:00", "type": "walk", "title": "Royal Crescent and city walk", "status": "planned", "notes": "Finish around Pulteney Bridge." }
+    ]},
+    { "id": "day-05", "date": "2027-06-09", "title": "Into South Wales", "region": "Bannau Brycheiniog", "summary": "Cross the Severn and enter the Welsh mountains.", "distanceMiles": 96, "driveMinutes": 140, "overnightPlaceId": "stay-brecon", "activities": [
+      { "id": "a-013", "time": "09:30", "type": "drive", "title": "Drive to Brecon", "status": "planned", "notes": "Scenic approach via Abergavenny." },
+      { "id": "a-014", "time": "14:00", "type": "walk", "title": "Waterfall country walk", "placeId": "four-falls", "status": "idea", "notes": "Choose route based on weather and energy." }
+    ]},
+    { "id": "day-06", "date": "2027-06-10", "title": "Wales to Liverpool", "region": "Liverpool", "summary": "A northbound drive ending on the Mersey waterfront.", "distanceMiles": 150, "driveMinutes": 210, "overnightPlaceId": "stay-liverpool", "activities": [
+      { "id": "a-015", "time": "09:00", "type": "drive", "title": "Drive north to Liverpool", "status": "planned", "notes": "Plan one rest stop near Shrewsbury." },
+      { "id": "a-016", "time": "15:30", "type": "walk", "title": "Royal Albert Dock", "placeId": "albert-dock", "status": "planned", "notes": "Waterfront evening and dinner nearby." }
+    ]},
+    { "id": "day-07", "date": "2027-06-11", "title": "Liverpool to the Lakes", "region": "Lake District", "summary": "Music history in the morning, mountain scenery by evening.", "distanceMiles": 92, "driveMinutes": 125, "overnightPlaceId": "stay-keswick", "activities": [
+      { "id": "a-017", "time": "09:30", "type": "attraction", "title": "The Beatles Story", "placeId": "beatles-story", "status": "idea", "notes": "Optional if an early start is preferred." },
+      { "id": "a-018", "time": "13:00", "type": "drive", "title": "Drive to Keswick", "status": "planned", "notes": "Motorway section followed by lake roads." },
+      { "id": "a-019", "time": "17:00", "type": "walk", "title": "Derwentwater shoreline", "placeId": "derwentwater", "status": "planned", "notes": "Short walk from Keswick." }
+    ]},
+    { "id": "day-08", "date": "2027-06-12", "title": "Lake District Day", "region": "Lake District", "summary": "A full day for lakes, viewpoints and village stops.", "distanceMiles": 42, "driveMinutes": 95, "overnightPlaceId": "stay-keswick", "activities": [
+      { "id": "a-020", "time": "09:00", "type": "attraction", "title": "Derwentwater cruise", "placeId": "derwentwater", "status": "idea", "notes": "Check seasonal timetable." },
+      { "id": "a-021", "time": "13:30", "type": "drive", "title": "Borrowdale scenic loop", "status": "planned", "notes": "Narrow roads; allow extra time." },
+      { "id": "a-022", "time": "16:00", "type": "walk", "title": "Castlerigg Stone Circle", "placeId": "castlerigg", "status": "planned", "notes": "Open landscape with little shelter." }
+    ]},
+    { "id": "day-09", "date": "2027-06-13", "title": "Crossing into Scotland", "region": "Glasgow", "summary": "Leave the lakes for Scotland and an urban evening.", "distanceMiles": 132, "driveMinutes": 180, "overnightPlaceId": "stay-glasgow", "activities": [
+      { "id": "a-023", "time": "09:30", "type": "drive", "title": "Drive to Glasgow", "status": "planned", "notes": "Stop near Gretna Green if useful." },
+      { "id": "a-024", "time": "15:30", "type": "attraction", "title": "Kelvingrove Art Gallery", "placeId": "kelvingrove", "status": "idea", "notes": "Free entry; check closing time." }
+    ]},
+    { "id": "day-10", "date": "2027-06-14", "title": "Glencoe and Fort William", "region": "Scottish Highlands", "summary": "The road turns spectacular through lochs and Glencoe.", "distanceMiles": 112, "driveMinutes": 175, "overnightPlaceId": "stay-fort-william", "activities": [
+      { "id": "a-025", "time": "09:00", "type": "drive", "title": "Loch Lomond scenic drive", "status": "planned", "notes": "Allow frequent photo stops." },
+      { "id": "a-026", "time": "13:30", "type": "walk", "title": "Glencoe visitor centre and walk", "placeId": "glencoe", "status": "planned", "notes": "Choose a short trail based on weather." },
+      { "id": "a-027", "time": "17:00", "type": "hotel", "title": "Check in at Fort William", "placeId": "stay-fort-william", "status": "planned", "notes": "Refuel before the next day." }
+    ]},
+    { "id": "day-11", "date": "2027-06-15", "title": "Highlands to Inverness", "region": "Inverness", "summary": "Loch views and historic sites along the Great Glen.", "distanceMiles": 67, "driveMinutes": 110, "overnightPlaceId": "stay-inverness", "activities": [
+      { "id": "a-028", "time": "09:30", "type": "drive", "title": "Great Glen drive", "status": "planned", "notes": "Follow the A82 north." },
+      { "id": "a-029", "time": "12:30", "type": "attraction", "title": "Urquhart Castle", "placeId": "urquhart", "status": "planned", "notes": "Reserve parking and entry." },
+      { "id": "a-030", "time": "17:00", "type": "walk", "title": "Inverness riverside", "status": "planned", "notes": "Easy evening loop." }
+    ]},
+    { "id": "day-12", "date": "2027-06-16", "title": "Inverness to Edinburgh", "region": "Edinburgh", "summary": "South through the Cairngorms to Scotland's capital.", "distanceMiles": 158, "driveMinutes": 210, "overnightPlaceId": "stay-edinburgh", "activities": [
+      { "id": "a-031", "time": "09:00", "type": "drive", "title": "Drive through the Cairngorms", "status": "planned", "notes": "Rest stop around Pitlochry." },
+      { "id": "a-032", "time": "15:30", "type": "hotel", "title": "Park and check in", "placeId": "stay-edinburgh", "status": "planned", "notes": "Do not drive in the centre after arrival." },
+      { "id": "a-033", "time": "17:00", "type": "walk", "title": "Old Town orientation walk", "status": "planned", "notes": "Royal Mile and closes." }
+    ]},
+    { "id": "day-13", "date": "2027-06-17", "title": "Edinburgh", "region": "Edinburgh", "summary": "Castle, Old Town and a flexible city afternoon.", "distanceMiles": 0, "driveMinutes": 0, "overnightPlaceId": "stay-edinburgh", "activities": [
+      { "id": "a-034", "time": "09:30", "type": "attraction", "title": "Edinburgh Castle", "placeId": "edinburgh-castle", "status": "planned", "notes": "Book the earliest practical entry." },
+      { "id": "a-035", "time": "14:00", "type": "walk", "title": "Calton Hill and New Town", "status": "idea", "notes": "Swap for a museum in poor weather." }
+    ]},
+    { "id": "day-14", "date": "2027-06-18", "title": "Edinburgh to York", "region": "York", "summary": "A long final road day to medieval York.", "distanceMiles": 205, "driveMinutes": 275, "overnightPlaceId": "stay-york", "activities": [
+      { "id": "a-036", "time": "08:30", "type": "drive", "title": "Drive to York", "status": "planned", "notes": "Two rest stops; avoid city-centre driving." },
+      { "id": "a-037", "time": "16:00", "type": "walk", "title": "The Shambles and city walls", "placeId": "york-centre", "status": "planned", "notes": "Gentle final afternoon." }
+    ]},
+    { "id": "day-15", "date": "2027-06-19", "title": "York to London", "region": "London", "summary": "York Minster, the drive south and journey home.", "distanceMiles": 214, "driveMinutes": 255, "overnightPlaceId": null, "activities": [
+      { "id": "a-038", "time": "09:00", "type": "attraction", "title": "York Minster", "placeId": "york-minster", "status": "idea", "notes": "Skip if flight timing is tight." },
+      { "id": "a-039", "time": "11:30", "type": "drive", "title": "Drive to Heathrow", "status": "planned", "notes": "Build in motorway and rental return buffer." },
+      { "id": "a-040", "time": "17:00", "type": "transport", "title": "Return rental car", "placeId": "heathrow", "status": "planned", "notes": "Refuel near the airport." }
+    ]}
+  ],
+  "places": [
+    { "id": "heathrow", "type": "transport", "name": "London Heathrow Airport", "city": "London", "address": "Hounslow, United Kingdom", "lat": 51.4700, "lng": -0.4543, "phone": "", "website": "https://www.heathrow.com", "status": "confirmed", "notes": "Arrival and rental-car collection point." },
+    { "id": "stay-windsor", "type": "hotel", "name": "Windsor hotel", "city": "Windsor", "address": "TBC", "lat": 51.4817, "lng": -0.6136, "phone": "", "website": "", "status": "researching", "price": 180, "notes": "Choose somewhere with parking and easy Heathrow access." },
+    { "id": "windsor-castle", "type": "attraction", "name": "Windsor Castle", "city": "Windsor", "address": "Windsor SL4 1NJ", "lat": 51.4839, "lng": -0.6044, "phone": "", "website": "https://www.rct.uk/visit/windsor-castle", "status": "planned", "price": 64, "notes": "Check opening arrangements before booking." },
+    { "id": "stay-bourton", "type": "hotel", "name": "Cotswolds inn", "city": "Bourton-on-the-Water", "address": "TBC", "lat": 51.8857, "lng": -1.7581, "phone": "", "website": "", "status": "researching", "price": 360, "notes": "Two-night stay; parking essential." },
+    { "id": "bourton", "type": "attraction", "name": "Bourton-on-the-Water", "city": "Cotswolds", "address": "Bourton-on-the-Water GL54", "lat": 51.8857, "lng": -1.7581, "phone": "", "website": "", "status": "planned", "price": 0, "notes": "Village base for the Cotswolds." },
+    { "id": "wild-rabbit", "type": "restaurant", "name": "The Wild Rabbit", "city": "Kingham", "address": "Church Street, Kingham OX7 6YA", "lat": 51.9145, "lng": -1.6257, "phone": "", "website": "https://thewildrabbit.co.uk", "status": "idea", "price": 90, "notes": "Potential special lunch; verify menu and reserve." },
+    { "id": "broadway-tower", "type": "attraction", "name": "Broadway Tower", "city": "Broadway", "address": "Middle Hill, Broadway WR12 7LB", "lat": 52.0244, "lng": -1.8368, "phone": "", "website": "https://broadwaytower.co.uk", "status": "planned", "price": 28, "notes": "Panoramic viewpoint." },
+    { "id": "stay-bath", "type": "hotel", "name": "Bath hotel", "city": "Bath", "address": "TBC", "lat": 51.3811, "lng": -2.3590, "phone": "", "website": "", "status": "researching", "price": 210, "notes": "Look for parking or park-and-ride access." },
+    { "id": "roman-baths", "type": "attraction", "name": "The Roman Baths", "city": "Bath", "address": "Abbey Churchyard, Bath BA1 1LZ", "lat": 51.3809, "lng": -2.3595, "phone": "", "website": "https://www.romanbaths.co.uk", "status": "planned", "price": 58, "notes": "Timed entry." },
+    { "id": "stay-brecon", "type": "hotel", "name": "Brecon guesthouse", "city": "Brecon", "address": "TBC", "lat": 51.9468, "lng": -3.3909, "phone": "", "website": "", "status": "researching", "price": 150, "notes": "One night with breakfast and parking." },
+    { "id": "four-falls", "type": "attraction", "name": "Four Falls Trail", "city": "Ystradfellte", "address": "Bannau Brycheiniog National Park", "lat": 51.7771, "lng": -3.5596, "phone": "", "website": "", "status": "idea", "price": 8, "notes": "Weather-dependent hike; parking fee estimate." },
+    { "id": "stay-liverpool", "type": "hotel", "name": "Liverpool waterfront hotel", "city": "Liverpool", "address": "TBC", "lat": 53.4000, "lng": -2.9916, "phone": "", "website": "", "status": "researching", "price": 175, "notes": "Secure parking preferred." },
+    { "id": "albert-dock", "type": "attraction", "name": "Royal Albert Dock", "city": "Liverpool", "address": "Liverpool L3 4AD", "lat": 53.4006, "lng": -2.9927, "phone": "", "website": "https://albertdock.com", "status": "planned", "price": 0, "notes": "Waterfront walk." },
+    { "id": "beatles-story", "type": "attraction", "name": "The Beatles Story", "city": "Liverpool", "address": "Britannia Vaults, Liverpool L3 4AD", "lat": 53.3993, "lng": -2.9928, "phone": "", "website": "https://www.beatlesstory.com", "status": "idea", "price": 40, "notes": "Optional morning visit." },
+    { "id": "stay-keswick", "type": "hotel", "name": "Keswick guesthouse", "city": "Keswick", "address": "TBC", "lat": 54.6013, "lng": -3.1347, "phone": "", "website": "", "status": "researching", "price": 380, "notes": "Two nights; walkable to town." },
+    { "id": "derwentwater", "type": "attraction", "name": "Derwentwater", "city": "Keswick", "address": "Keswick CA12", "lat": 54.5760, "lng": -3.1467, "phone": "", "website": "", "status": "planned", "price": 36, "notes": "Cruise cost estimate for two." },
+    { "id": "castlerigg", "type": "attraction", "name": "Castlerigg Stone Circle", "city": "Keswick", "address": "Castle Lane, Keswick CA12 4RN", "lat": 54.6027, "lng": -3.0985, "phone": "", "website": "", "status": "planned", "price": 0, "notes": "Outdoor site." },
+    { "id": "stay-glasgow", "type": "hotel", "name": "Glasgow West End hotel", "city": "Glasgow", "address": "TBC", "lat": 55.8642, "lng": -4.2518, "phone": "", "website": "", "status": "researching", "price": 170, "notes": "Parking and transit access." },
+    { "id": "kelvingrove", "type": "attraction", "name": "Kelvingrove Art Gallery", "city": "Glasgow", "address": "Argyle Street, Glasgow G3 8AG", "lat": 55.8686, "lng": -4.2906, "phone": "", "website": "https://www.glasgowlife.org.uk/museums/venues/kelvingrove-art-gallery-and-museum", "status": "idea", "price": 0, "notes": "Free museum." },
+    { "id": "stay-fort-william", "type": "hotel", "name": "Fort William hotel", "city": "Fort William", "address": "TBC", "lat": 56.8198, "lng": -5.1052, "phone": "", "website": "", "status": "researching", "price": 190, "notes": "Book early; limited summer availability." },
+    { "id": "glencoe", "type": "attraction", "name": "Glencoe", "city": "Ballachulish", "address": "Glencoe PH49", "lat": 56.6826, "lng": -5.1023, "phone": "", "website": "https://www.nts.org.uk/visit/places/glencoe", "status": "planned", "price": 8, "notes": "Visitor centre and short walks." },
+    { "id": "stay-inverness", "type": "hotel", "name": "Inverness hotel", "city": "Inverness", "address": "TBC", "lat": 57.4778, "lng": -4.2247, "phone": "", "website": "", "status": "researching", "price": 185, "notes": "Central with parking." },
+    { "id": "urquhart", "type": "attraction", "name": "Urquhart Castle", "city": "Drumnadrochit", "address": "Inverness IV63 6XJ", "lat": 57.3240, "lng": -4.4423, "phone": "", "website": "https://www.historicenvironment.scot/visit-a-place/places/urquhart-castle", "status": "planned", "price": 40, "notes": "Loch Ness ruins and visitor centre." },
+    { "id": "stay-edinburgh", "type": "hotel", "name": "Edinburgh hotel", "city": "Edinburgh", "address": "TBC", "lat": 55.9533, "lng": -3.1883, "phone": "", "website": "", "status": "researching", "price": 440, "notes": "Two nights; parking outside restricted centre." },
+    { "id": "edinburgh-castle", "type": "attraction", "name": "Edinburgh Castle", "city": "Edinburgh", "address": "Castlehill, Edinburgh EH1 2NG", "lat": 55.9486, "lng": -3.1999, "phone": "", "website": "https://www.edinburghcastle.scot", "status": "planned", "price": 44, "notes": "Timed ticket essential." },
+    { "id": "stay-york", "type": "hotel", "name": "York hotel", "city": "York", "address": "TBC", "lat": 53.9599, "lng": -1.0873, "phone": "", "website": "", "status": "researching", "price": 175, "notes": "Parking outside city walls." },
+    { "id": "york-centre", "type": "attraction", "name": "York historic centre", "city": "York", "address": "The Shambles, York YO1", "lat": 53.9590, "lng": -1.0800, "phone": "", "website": "", "status": "planned", "price": 0, "notes": "Walk the walls and Shambles." },
+    { "id": "york-minster", "type": "attraction", "name": "York Minster", "city": "York", "address": "Deangate, York YO1 7HH", "lat": 53.9623, "lng": -1.0821, "phone": "", "website": "https://yorkminster.org", "status": "idea", "price": 40, "notes": "Visit only if departure timing permits." }
+  ],
+  "bookings": [
+    { "id": "booking-car", "type": "transport", "title": "Rental car", "placeId": "heathrow", "date": "2027-06-05", "reference": "TBC", "status": "researching", "cost": 950, "notes": "Automatic transmission, full insurance and second driver." }
+  ],
+  "expenses": [
+    { "id": "expense-car", "date": "2027-06-05", "category": "Transport", "description": "Rental car estimate", "amount": 950, "status": "planned" },
+    { "id": "expense-fuel", "date": "2027-06-05", "category": "Fuel", "description": "Fuel estimate", "amount": 420, "status": "planned" },
+    { "id": "expense-food", "date": "2027-06-05", "category": "Food", "description": "Meals estimate", "amount": 1200, "status": "planned" },
+    { "id": "expense-parking", "date": "2027-06-05", "category": "Parking", "description": "Parking and tolls estimate", "amount": 260, "status": "planned" }
+  ],
+  "checklists": [
+    { "id": "planning", "title": "Before booking", "items": [
+      { "id": "check-passports", "label": "Check passport validity", "done": true },
+      { "id": "check-flights", "label": "Confirm flight times", "done": false },
+      { "id": "check-car", "label": "Book automatic rental car", "done": false },
+      { "id": "check-hotels", "label": "Book all accommodation", "done": false },
+      { "id": "check-attractions", "label": "Reserve timed attractions", "done": false }
+    ]},
+    { "id": "packing", "title": "Packing", "items": [
+      { "id": "pack-licence", "label": "Driving licence and rental documents", "done": false },
+      { "id": "pack-rain", "label": "Waterproof jackets", "done": false },
+      { "id": "pack-adapter", "label": "UK power adapters", "done": false },
+      { "id": "pack-shoes", "label": "Comfortable walking shoes", "done": false }
+    ]}
+  ],
+  "contacts": [
+    { "id": "emergency", "label": "UK emergency services", "value": "999", "type": "phone" },
+    { "id": "non-emergency", "label": "Police non-emergency", "value": "101", "type": "phone" },
+    { "id": "medical", "label": "NHS non-emergency", "value": "111", "type": "phone" }
+  ]
+}
