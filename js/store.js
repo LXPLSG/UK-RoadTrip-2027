@@ -12,7 +12,6 @@ class Store extends EventTarget {
   async initialise() {
     this.#data = await repository.initialise();
     this.#preferences = repository.getPreferences();
-    this.#applyTheme();
   }
 
   update(mutator, message = 'Changes saved') {
@@ -45,15 +44,7 @@ class Store extends EventTarget {
   setPreference(key, value) {
     this.#preferences[key] = value;
     repository.savePreferences(this.#preferences);
-    if (key === 'theme') this.#applyTheme();
     this.dispatchEvent(new CustomEvent('preference', { detail: { key, value } }));
-  }
-
-  #applyTheme() {
-    const theme = this.#preferences.theme || 'system';
-    const dark = theme === 'dark' || (theme === 'system' && matchMedia('(prefers-color-scheme: dark)').matches);
-    document.documentElement.dataset.theme = dark ? 'dark' : 'light';
-    document.querySelector('meta[name="theme-color"]')?.setAttribute('content', dark ? '#141817' : '#f4f5f2');
   }
 }
 

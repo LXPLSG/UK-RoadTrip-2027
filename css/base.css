@@ -1,7 +1,7 @@
 /* Element defaults, typography, controls and accessibility foundations. */
 * { box-sizing: border-box; }
 html { min-height: 100%; background: var(--bg); }
-body { min-height: 100vh; margin: 0; background: var(--bg); color: var(--text); font-family: var(--font); font-size: 15px; line-height: 1.5; letter-spacing: 0; -webkit-font-smoothing: antialiased; }
+body { min-height: 100vh; margin: 0; background: var(--bg); color: var(--text); font-family: var(--font); font-size: 15px; line-height: 1.5; letter-spacing: 0; transition: var(--theme-transition); -webkit-font-smoothing: antialiased; }
 button, input, select, textarea { font: inherit; letter-spacing: 0; }
 button, a { -webkit-tap-highlight-color: transparent; }
 button { color: inherit; }

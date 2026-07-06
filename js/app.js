@@ -5,6 +5,7 @@ import { renderNav, toast } from './components.js';
 import { renderView } from './views.js';
 import { validateTripData } from './validator.js';
 import { formatDateRange } from './utils.js';
+import { themeManager } from './theme.js';
 
 const main = document.querySelector('#main');
 const app = document.querySelector('#app');
@@ -78,8 +79,12 @@ function bindImport() {
 async function start() {
   try {
     await store.initialise();
+    themeManager.initialise(store.preferences.theme || 'system');
     store.addEventListener('change', event => { render(); toast(event.detail.message); });
-    store.addEventListener('preference', () => render());
+    store.addEventListener('preference', event => {
+      if (event.detail.key === 'theme') themeManager.set(event.detail.value);
+      render();
+    });
     router.addEventListener('route', event => render(event.detail));
     bindImport();
     installHandling();

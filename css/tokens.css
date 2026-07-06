@@ -29,6 +29,7 @@
   --sidebar: 248px;
   --content: 1180px;
   --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --theme-transition: background-color .18s ease, color .18s ease, border-color .18s ease;
 }
 
 [data-theme="dark"] {
