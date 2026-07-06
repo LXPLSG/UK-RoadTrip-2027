@@ -1,6 +1,6 @@
 {
-  "schemaVersion": 3,
-  "dataRevision": 5,
+  "schemaVersion": 4,
+  "dataRevision": 6,
   "lastUpdated": "2026-07-06T00:00:00.000Z",
   "trip": {
     "id": "uk-road-trip-2027",
@@ -38,6 +38,7 @@
       { "id": "tube-westminster-tower", "date": "2027-06-05", "time": "15:00", "from": "Westminster", "to": "Tower Hill", "route": "District line eastbound", "durationMinutes": 12, "status": "idea", "accessibility": "Check current step-free status with TfL.", "notes": "Sample central London journey; replace if it is not needed." }
     ]
   },
+  "budgetCategories": ["Accommodation", "Activities", "Food", "Fuel", "Parking", "Transport", "Other"],
   "days": [
     { "id": "day-01", "date": "2027-06-05", "title": "Arrival in London", "region": "London", "country": "England", "summary": "Land, collect the car and settle in near Windsor.", "distanceMiles": 18, "driveMinutes": 45, "overnightPlaceId": "stay-windsor", "activities": [
       { "id": "a-001", "time": "10:30", "type": "transport", "title": "Arrive at Heathrow", "placeId": "heathrow", "status": "planned", "notes": "Allow time for immigration and baggage." },

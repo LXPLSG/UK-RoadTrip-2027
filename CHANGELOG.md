@@ -19,6 +19,7 @@ All notable changes to UK Road Trip 2027 are documented here. The project follow
 - Attraction and ticket workspace with itinerary linkage, booking requirements and search.
 - Offline driving guide with route legs, vehicle details, emergency information and versioned UK road guidance.
 - Offline London Tube journey planner with editable routes, accessibility notes and TfL handoff.
+- JSON-defined budget categories, editable expenses and linked-place de-duplication.
 
 ## [0.1.0] - 2026-07-06
 

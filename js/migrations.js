@@ -1,7 +1,7 @@
 /** Sequential trip-document migrations that preserve existing local working copies. */
 import { clone } from './utils.js';
 
-export const CURRENT_SCHEMA_VERSION = 3;
+export const CURRENT_SCHEMA_VERSION = 4;
 
 export function migrateTripData(input, defaults) {
   const data = clone(input);
@@ -14,6 +14,10 @@ export function migrateTripData(input, defaults) {
   if (data.schemaVersion === 2) {
     data.tubePlan = clone(defaults.tubePlan);
     data.schemaVersion = 3;
+  }
+  if (data.schemaVersion === 3) {
+    data.budgetCategories = clone(defaults.budgetCategories);
+    data.schemaVersion = 4;
   }
   return data;
 }

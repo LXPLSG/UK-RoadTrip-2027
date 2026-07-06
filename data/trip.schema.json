@@ -3,14 +3,15 @@
   "$id": "https://uk-road-trip.local/schemas/trip.schema.json",
   "title": "UK Road Trip document",
   "type": "object",
-  "required": ["schemaVersion", "dataRevision", "lastUpdated", "trip", "drivingGuide", "tubePlan", "days", "places", "bookings", "expenses", "checklists", "contacts"],
+  "required": ["schemaVersion", "dataRevision", "lastUpdated", "trip", "drivingGuide", "tubePlan", "budgetCategories", "days", "places", "bookings", "expenses", "checklists", "contacts"],
   "properties": {
-    "schemaVersion": { "const": 3 },
+    "schemaVersion": { "const": 4 },
     "dataRevision": { "type": "integer", "minimum": 1 },
     "lastUpdated": { "type": "string", "format": "date-time" },
     "trip": { "$ref": "#/$defs/trip" },
     "drivingGuide": { "$ref": "#/$defs/drivingGuide" },
     "tubePlan": { "$ref": "#/$defs/tubePlan" },
+    "budgetCategories": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "type": "string", "minLength": 1 } },
     "days": { "type": "array", "items": { "$ref": "#/$defs/day" }, "minItems": 1 },
     "places": { "type": "array", "items": { "$ref": "#/$defs/place" } },
     "bookings": { "type": "array", "items": { "$ref": "#/$defs/booking" } },
@@ -101,7 +102,7 @@
       "type": "object", "required": ["id", "date", "category", "description", "amount", "status"],
       "properties": {
         "id": { "$ref": "#/$defs/id" }, "date": { "type": "string", "format": "date" }, "category": { "type": "string" },
-        "description": { "type": "string", "minLength": 1 }, "amount": { "type": "number", "minimum": 0 }, "status": { "$ref": "#/$defs/status" }
+        "description": { "type": "string", "minLength": 1 }, "amount": { "type": "number", "minimum": 0 }, "status": { "$ref": "#/$defs/status" }, "placeId": { "type": "string" }
       }, "additionalProperties": false
     },
     "checklist": {

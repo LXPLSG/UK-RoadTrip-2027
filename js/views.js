@@ -425,13 +425,14 @@ function renderPlaces(main) {
   draw();
 }
 
-function expenseForm() {
+function expenseForm(expense = {}) {
   return `<div class="form-grid">
-    <label>Description<input name="description" required></label>
-    <label>Category<select name="category">${['Accommodation', 'Activities', 'Food', 'Fuel', 'Parking', 'Transport', 'Other'].map(category => `<option>${category}</option>`).join('')}</select></label>
-    <label>Date<input type="date" name="date" required value="${e(store.data.trip.startDate)}"></label>
-    <label>Amount<input type="number" min="0" step="0.01" name="amount" required></label>
-    <label>Status<select name="status"><option value="planned">Planned</option><option value="paid">Paid</option></select></label>
+    <label>Description<input name="description" required value="${e(expense.description || '')}"></label>
+    <label>Category<select name="category">${store.data.budgetCategories.map(category => `<option ${expense.category === category ? 'selected' : ''}>${e(category)}</option>`).join('')}</select></label>
+    <label>Date<input type="date" name="date" required value="${e(expense.date || store.data.trip.startDate)}"></label>
+    <label>Amount<input type="number" min="0" step="0.01" name="amount" required value="${Number(expense.amount || 0)}"></label>
+    <label>Status<select name="status"><option value="planned" ${expense.status === 'planned' ? 'selected' : ''}>Planned</option><option value="paid" ${expense.status === 'paid' ? 'selected' : ''}>Paid</option></select></label>
+    <label>Linked place<select name="placeId"><option value="">None</option>${store.data.places.map(place => `<option value="${e(place.id)}" ${expense.placeId === place.id ? 'selected' : ''}>${e(place.name)}</option>`).join('')}</select></label>
   </div>`;
 }
 
@@ -439,7 +440,7 @@ function budgetEntries(data) {
   const placeCategory = { hotel: 'Accommodation', attraction: 'Activities', restaurant: 'Food', transport: 'Transport' };
   return [
     ...data.expenses.map(expense => ({ ...expense, source: 'ledger' })),
-    ...data.places.filter(place => Number(place.price) > 0).map(place => ({ id: `place-${place.id}`, category: placeCategory[place.type] || 'Other', description: place.name, amount: Number(place.price), status: place.status, source: 'place' }))
+    ...data.places.filter(place => Number(place.price) > 0 && !data.expenses.some(expense => expense.placeId === place.id)).map(place => ({ id: `place-${place.id}`, category: placeCategory[place.type] || 'Other', description: place.name, amount: Number(place.price), status: place.status, source: 'place' }))
   ];
 }
 
@@ -460,7 +461,7 @@ function renderBudget(main) {
     </section>
     <div class="dashboard-grid">
       <section><div class="section-header"><h2>Expense ledger</h2></div><div class="panel"><table class="expense-table"><thead><tr><th>Description</th><th>Category</th><th>Status</th><th>Amount</th><th><span class="sr-only">Actions</span></th></tr></thead><tbody>
-        ${data.expenses.map(expense => `<tr><td><strong>${e(expense.description)}</strong><br><span class="subtle">${e(formatDate(expense.date))}</span></td><td>${e(expense.category)}</td><td>${statusTag(expense.status)}</td><td>${formatMoney(expense.amount, data.trip.homeCurrency)}</td><td><button class="icon-btn delete-expense" data-id="${e(expense.id)}" aria-label="Delete ${e(expense.description)}">${icon('trash', 'icon-sm')}</button></td></tr>`).join('') || '<tr><td colspan="5" class="muted">No ledger entries yet.</td></tr>'}
+        ${data.expenses.map(expense => `<tr><td><strong>${e(expense.description)}</strong><br><span class="subtle">${e(formatDate(expense.date))}</span></td><td>${e(expense.category)}</td><td>${statusTag(expense.status)}</td><td>${formatMoney(expense.amount, data.trip.homeCurrency)}</td><td><div class="card-actions"><button class="icon-btn edit-expense" data-id="${e(expense.id)}" aria-label="Edit ${e(expense.description)}">${icon('edit', 'icon-sm')}</button><button class="icon-btn delete-expense" data-id="${e(expense.id)}" aria-label="Delete ${e(expense.description)}">${icon('trash', 'icon-sm')}</button></div></td></tr>`).join('') || '<tr><td colspan="5" class="muted">No ledger entries yet.</td></tr>'}
       </tbody></table></div></section>
       <section><div class="section-header"><h2>By category</h2></div><div class="panel panel-body stack">${categories.map(([category, amount]) => `<div class="category-bar"><strong>${e(category)}</strong><div class="progress-track"><div class="progress-fill" style="width:${planned ? Math.round(amount / planned * 100) : 0}%;background:var(--sky)"></div></div><span>${formatMoney(amount, data.trip.homeCurrency)}</span></div>`).join('')}</div></section>
     </div>
@@ -469,6 +470,10 @@ function renderBudget(main) {
     const values = formObject(form);
     store.update(next => next.expenses.push({ id: uid('expense'), ...values, amount: Number(values.amount) }));
   }}));
+  main.querySelectorAll('.edit-expense').forEach(button => button.addEventListener('click', () => {
+    const expense = data.expenses.find(item => item.id === button.dataset.id);
+    openModal({ title: 'Edit expense', body: expenseForm(expense), onSubmit: form => { const values = formObject(form); store.update(next => Object.assign(next.expenses.find(item => item.id === expense.id), values, { amount: Number(values.amount) })); } });
+  }));
   main.querySelectorAll('.delete-expense').forEach(button => button.addEventListener('click', () => {
     const expense = data.expenses.find(item => item.id === button.dataset.id);
     confirmAction({ title: 'Delete expense?', message: `${expense.description} will be removed from the budget.`, onConfirm: () => store.update(next => { next.expenses = next.expenses.filter(item => item.id !== expense.id); }, 'Expense deleted') });
