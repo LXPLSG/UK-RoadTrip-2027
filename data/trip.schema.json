@@ -58,7 +58,8 @@
         "phone": { "type": "string" }, "website": { "type": "string" }, "status": { "$ref": "#/$defs/status" },
         "price": { "type": "number", "minimum": 0 }, "bookingReference": { "type": "string" },
         "checkIn": { "type": "string" }, "checkOut": { "type": "string" }, "parking": { "type": "string" }, "notes": { "type": "string" }
-        ,"cuisine": { "type": "string" }, "reservationDate": { "type": "string" }, "reservationTime": { "type": "string" }, "reservationReference": { "type": "string" }
+        ,"cuisine": { "type": "string" }, "reservationDate": { "type": "string" }, "reservationTime": { "type": "string" }, "reservationReference": { "type": "string" },
+        "openingHours": { "type": "string" }, "bookingRequired": { "type": "boolean" }, "ticketReference": { "type": "string" }, "durationMinutes": { "type": "integer", "minimum": 0 }
       }, "additionalProperties": false
     },
     "booking": {

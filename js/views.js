@@ -240,6 +240,11 @@ function placeForm(place = {}) {
     <label>Reservation reference<input name="reservationReference" value="${e(place.reservationReference || '')}"></label>
     <label>Reservation date<input type="date" name="reservationDate" value="${e(place.reservationDate || '')}"></label>
     <label>Reservation time<input type="time" name="reservationTime" value="${e(place.reservationTime || '')}"></label>` : '';
+  const attractionFields = place.type === 'attraction' ? `
+    <label>Opening hours<input name="openingHours" placeholder="Check before visiting" value="${e(place.openingHours || '')}"></label>
+    <label>Ticket reference<input name="ticketReference" value="${e(place.ticketReference || '')}"></label>
+    <label>Visit duration (minutes)<input type="number" min="0" name="durationMinutes" value="${Number(place.durationMinutes || 0)}"></label>
+    <label>Advance booking<select name="bookingRequired"><option value="false" ${!place.bookingRequired ? 'selected' : ''}>Optional</option><option value="true" ${place.bookingRequired ? 'selected' : ''}>Required</option></select></label>` : '';
   return `<div class="form-grid">
     <label>Name<input name="name" required value="${e(place.name || '')}"></label>
     <label>Type<select name="type">${['hotel', 'attraction', 'restaurant', 'transport'].map(type => `<option value="${type}" ${place.type === type ? 'selected' : ''}>${titleCase(type)}</option>`).join('')}</select></label>
@@ -251,8 +256,35 @@ function placeForm(place = {}) {
     <label class="full">Website<input type="url" name="website" placeholder="https://" value="${e(place.website || '')}"></label>
     ${hotelFields}
     ${restaurantFields}
+    ${attractionFields}
     <label class="full">Notes<textarea name="notes">${e(place.notes || '')}</textarea></label>
   </div>`;
+}
+
+function renderAttractions(main) {
+  const data = store.data;
+  const attractions = data.places.filter(place => place.type === 'attraction');
+  const linked = new Set(data.days.flatMap(day => day.activities.map(activity => activity.placeId).filter(Boolean)));
+  main.innerHTML = `<div class="page">
+    ${pageHeader('Things to do', 'Attractions and tickets', 'Track ideas, timed entry, ticket references and itinerary links.', `<button class="btn btn-primary" id="add-attraction">${icon('plus', 'icon-sm')}<span>Add attraction</span></button>`)}
+    <section class="route-overview">${metric('Saved', `${attractions.length}`, 'attraction', 'sky')}${metric('In itinerary', `${attractions.filter(item => linked.has(item.id)).length}`, 'calendar', 'green')}${metric('Need decision', `${attractions.filter(item => ['idea', 'researching'].includes(item.status)).length}`, 'alert', 'amber')}</section>
+    <div class="filter-bar"><div class="search-wrap">${icon('search')}<input id="attraction-search" type="search" placeholder="Search attraction or city" aria-label="Search attractions"></div><div class="segmented" id="attraction-filters">${['all', 'planned', 'idea'].map((status, index) => `<button class="segment ${index === 0 ? 'active' : ''}" data-status="${status}">${titleCase(status)}</button>`).join('')}</div></div>
+    <div class="place-grid" id="attraction-list"></div>
+  </div>`;
+  let statusFilter = 'all';
+  const search = main.querySelector('#attraction-search');
+  const list = main.querySelector('#attraction-list');
+  const draw = () => {
+    const term = search.value.trim().toLowerCase();
+    const visible = attractions.filter(attraction => (statusFilter === 'all' || attraction.status === statusFilter) && `${attraction.name} ${attraction.city}`.toLowerCase().includes(term));
+    list.innerHTML = visible.map(attraction => `<article class="place-card"><div class="place-card-head"><span class="place-type-icon tone-sky">${icon('attraction')}</span>${statusTag(attraction.status)}</div><div class="place-card-body"><h3>${e(attraction.name)}</h3><p>${e(attraction.city)} · ${linked.has(attraction.id) ? 'In itinerary' : 'Not scheduled'}</p><div class="hotel-details"><span><small>Opening</small>${e(attraction.openingHours || 'Check before visiting')}</span><span><small>Booking</small>${attraction.bookingRequired ? 'Advance booking required' : 'No requirement recorded'}</span><span><small>Ticket</small>${e(attraction.ticketReference || 'TBC')}</span></div>${Number(attraction.price) ? `<strong>${formatMoney(attraction.price, data.trip.homeCurrency)}</strong>` : ''}</div><div class="place-card-foot"><a class="btn btn-ghost" href="${e(mapUrl(attraction))}" target="_blank" rel="noopener">${icon('pin', 'icon-sm')} Map</a><div class="card-actions"><button class="icon-btn edit-attraction" data-id="${e(attraction.id)}" aria-label="Edit ${e(attraction.name)}">${icon('edit', 'icon-sm')}</button><button class="icon-btn delete-attraction" data-id="${e(attraction.id)}" aria-label="Delete ${e(attraction.name)}">${icon('trash', 'icon-sm')}</button></div></div></article>`).join('') || emptyState('search', 'No matching attractions', 'Adjust the search or add another attraction.');
+    list.querySelectorAll('.edit-attraction').forEach(button => button.addEventListener('click', () => { const attraction = attractions.find(item => item.id === button.dataset.id); openModal({ title: 'Edit attraction', body: placeForm(attraction), onSubmit: form => { const values = formObject(form); store.update(next => Object.assign(next.places.find(item => item.id === attraction.id), values, { type: 'attraction', price: Number(values.price || 0), durationMinutes: Number(values.durationMinutes || 0), bookingRequired: values.bookingRequired === 'true' })); } }); }));
+    list.querySelectorAll('.delete-attraction').forEach(button => button.addEventListener('click', () => { const attraction = attractions.find(item => item.id === button.dataset.id); confirmAction({ title: 'Delete attraction?', message: `${attraction.name} and its itinerary links will be removed.`, onConfirm: () => removePlace(attraction) }); }));
+  };
+  main.querySelector('#add-attraction').addEventListener('click', () => openModal({ title: 'Add attraction', body: placeForm({ type: 'attraction', status: 'researching' }), onSubmit: form => { const values = formObject(form); store.update(next => next.places.push({ id: uid('attraction'), lat: null, lng: null, ...values, type: 'attraction', price: Number(values.price || 0), durationMinutes: Number(values.durationMinutes || 0), bookingRequired: values.bookingRequired === 'true' })); } }));
+  search.addEventListener('input', draw);
+  main.querySelectorAll('#attraction-filters .segment').forEach(button => button.addEventListener('click', () => { statusFilter = button.dataset.status; main.querySelectorAll('#attraction-filters .segment').forEach(item => item.classList.toggle('active', item === button)); draw(); }));
+  draw();
 }
 
 function renderRestaurants(main) {
@@ -479,7 +511,7 @@ function renderNotFound(main) {
 }
 
 export function renderView(main, route) {
-  const renderers = { dashboard: renderDashboard, today: renderToday, itinerary: renderItinerary, day: renderDay, places: renderPlaces, hotels: renderHotels, restaurants: renderRestaurants, budget: renderBudget, checklist: renderChecklist, settings: renderSettings };
+  const renderers = { dashboard: renderDashboard, today: renderToday, itinerary: renderItinerary, day: renderDay, places: renderPlaces, hotels: renderHotels, restaurants: renderRestaurants, attractions: renderAttractions, budget: renderBudget, checklist: renderChecklist, settings: renderSettings };
   (renderers[route.name] || renderNotFound)(main, route.id);
   main.focus({ preventScroll: true });
 }
