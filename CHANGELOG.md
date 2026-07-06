@@ -13,6 +13,7 @@ All notable changes to UK Road Trip 2027 are documented here. The project follow
 - Responsive desktop and mobile navigation with route matching and connectivity status.
 - Data-derived planning dashboard with trip metrics, readiness and upcoming-day summaries.
 - Focused Today view with travel-phase context, schedule, overnight details and emergency contacts.
+- Country-filtered full itinerary with route metrics and adjacent-day navigation.
 
 ## [0.1.0] - 2026-07-06
 

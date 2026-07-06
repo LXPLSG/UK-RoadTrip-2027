@@ -122,23 +122,39 @@ function renderToday(main) {
 function renderItinerary(main) {
   const data = store.data;
   const stats = totals(data);
+  const countries = [...new Set(data.days.map(day => day.country))];
   main.innerHTML = `<div class="page">
     ${pageHeader('Your route', '15 days, one clear plan', `${formatDateRange(data.trip.startDate, data.trip.endDate)} · ${stats.miles.toLocaleString()} miles`)}
-    <section class="panel timeline">
+    <section class="route-overview">${metric('Countries', `${countries.length}`, 'pin', 'green')}${metric('Road days', `${data.days.filter(day => day.distanceMiles > 0).length}`, 'car', 'amber')}${metric('Activities', `${data.days.flatMap(day => day.activities).length}`, 'list', 'sky')}</section>
+    <div class="itinerary-toolbar"><div class="segmented" id="country-filters"><button class="segment active" data-country="all">All</button>${countries.map(country => `<button class="segment" data-country="${e(country)}">${e(country)}</button>`).join('')}</div><span id="itinerary-count" class="muted"></span></div>
+    <section class="panel timeline" id="itinerary-days">
       ${data.days.map((day, index) => `<a class="day-row" href="#/day/${e(day.id)}">
         <div class="day-date"><strong>${e(formatDate(day.date, { day: 'numeric' }))}</strong><span>${e(formatDate(day.date, { month: 'short' }))}</span></div>
         <span class="timeline-marker" aria-hidden="true"></span>
-        <div class="day-copy"><h3>Day ${index + 1} · ${e(day.title)}</h3><p>${e(day.region)} · ${e(day.summary)}</p></div>
+        <div class="day-copy"><h3>Day ${index + 1} · ${e(day.title)}</h3><p>${e(day.country)} · ${e(day.region)} · ${e(day.summary)}</p></div>
         <div class="day-stats"><span>${icon('road', 'icon-sm')} ${Number(day.distanceMiles || 0)} mi</span><span>${icon('clock', 'icon-sm')} ${e(formatDuration(day.driveMinutes))}</span>${icon('chevronRight')}</div>
       </a>`).join('')}
     </section>
   </div>`;
+  const rows = [...main.querySelectorAll('.day-row')];
+  const count = main.querySelector('#itinerary-count');
+  const applyCountry = country => {
+    let visible = 0;
+    rows.forEach((row, index) => { const show = country === 'all' || data.days[index].country === country; row.hidden = !show; if (show) visible += 1; });
+    count.textContent = `${visible} ${visible === 1 ? 'day' : 'days'}`;
+  };
+  main.querySelectorAll('#country-filters .segment').forEach(button => button.addEventListener('click', () => {
+    main.querySelectorAll('#country-filters .segment').forEach(item => item.classList.toggle('active', item === button));
+    applyCountry(button.dataset.country);
+  }));
+  applyCountry('all');
 }
 
 function dayForm(day) {
   return `<div class="form-grid">
     <label>Title<input name="title" required value="${e(day.title)}"></label>
     <label>Region<input name="region" required value="${e(day.region)}"></label>
+    <label>Country<input name="country" required value="${e(day.country)}"></label>
     <label>Date<input type="date" name="date" required value="${e(day.date)}"></label>
     <label>Overnight place<select name="overnightPlaceId"><option value="">None</option>${store.data.places.filter(place => place.type === 'hotel').map(place => `<option value="${e(place.id)}" ${place.id === day.overnightPlaceId ? 'selected' : ''}>${e(place.name)}</option>`).join('')}</select></label>
     <label>Distance (miles)<input type="number" min="0" name="distanceMiles" value="${Number(day.distanceMiles || 0)}"></label>
@@ -164,10 +180,13 @@ function renderDay(main, id) {
   const day = data.days.find(item => item.id === id);
   if (!day) { renderNotFound(main); return; }
   const index = data.days.indexOf(day);
+  const previous = data.days[index - 1];
+  const next = data.days[index + 1];
   const overnight = data.places.find(place => place.id === day.overnightPlaceId);
   main.innerHTML = `<div class="page">
+    <nav class="day-pagination" aria-label="Adjacent itinerary days">${previous ? `<a href="#/day/${e(previous.id)}">${icon('arrowLeft', 'icon-sm')} Day ${index}</a>` : '<span></span>'}${next ? `<a href="#/day/${e(next.id)}">Day ${index + 2} ${icon('arrowRight', 'icon-sm')}</a>` : '<span></span>'}</nav>
     <div class="day-hero">
-      <div><a class="page-eyebrow" href="#/itinerary">${icon('arrowLeft', 'icon-sm')} Itinerary</a><h1>Day ${index + 1} · ${e(day.title)}</h1><p class="page-subtitle">${e(formatDate(day.date, { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }))} · ${e(day.region)}</p></div>
+      <div><a class="page-eyebrow" href="#/itinerary">${icon('calendar', 'icon-sm')} Itinerary</a><h1>Day ${index + 1} · ${e(day.title)}</h1><p class="page-subtitle">${e(formatDate(day.date, { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }))} · ${e(day.country)} · ${e(day.region)}</p></div>
       <div class="button-row"><button class="btn" id="edit-day">${icon('edit', 'icon-sm')}<span>Edit day</span></button><button class="btn btn-primary" id="add-activity">${icon('plus', 'icon-sm')}<span>Add activity</span></button></div>
     </div>
     <section class="metric-grid">

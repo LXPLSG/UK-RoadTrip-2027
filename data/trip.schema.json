@@ -33,10 +33,10 @@
       "additionalProperties": true
     },
     "day": {
-      "type": "object", "required": ["id", "date", "title", "region", "activities"],
+      "type": "object", "required": ["id", "date", "title", "region", "country", "activities"],
       "properties": {
         "id": { "$ref": "#/$defs/id" }, "date": { "type": "string", "format": "date" }, "title": { "type": "string", "minLength": 1 },
-        "region": { "type": "string" }, "summary": { "type": "string" }, "distanceMiles": { "type": "number", "minimum": 0 },
+        "region": { "type": "string" }, "country": { "type": "string" }, "summary": { "type": "string" }, "distanceMiles": { "type": "number", "minimum": 0 },
         "driveMinutes": { "type": "integer", "minimum": 0 }, "overnightPlaceId": { "type": ["string", "null"] },
         "activities": { "type": "array", "items": { "$ref": "#/$defs/activity" } }
       }, "additionalProperties": false

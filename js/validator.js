@@ -15,7 +15,7 @@ export function validateTripData(data) {
   if (Array.isArray(data.days)) {
     const ids = new Set();
     data.days.forEach((day, index) => {
-      if (!day.id || !day.date || !day.title) errors.push(`days[${index}] requires id, date and title.`);
+      if (!day.id || !day.date || !day.title || !day.region || !day.country) errors.push(`days[${index}] requires id, date, title, region and country.`);
       if (ids.has(day.id)) errors.push(`Duplicate day id: ${day.id}.`);
       ids.add(day.id);
       if (!Array.isArray(day.activities)) errors.push(`days[${index}].activities must be an array.`);
