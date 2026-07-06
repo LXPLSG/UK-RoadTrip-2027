@@ -1,19 +1,25 @@
 {
   "schemaVersion": 6,
-  "dataRevision": 8,
+  "dataRevision": 9,
   "lastUpdated": "2026-07-06T00:00:00.000Z",
   "trip": {
     "id": "uk-road-trip-2027",
     "name": "UK Road Trip 2027",
-    "subtitle": "England, Wales and Scotland",
+    "subtitle": "Singapore to Britain and back",
     "startDate": "2027-06-05",
     "endDate": "2027-06-19",
     "homeCurrency": "GBP",
     "budget": 6500,
     "heroImage": "assets/images/highlands-road.jpg",
-    "travelers": ["Alex", "Sam"],
-    "vehicle": { "label": "Rental car", "registration": "TBC", "provider": "TBC", "pickup": "London Heathrow", "dropoff": "London Heathrow" },
-    "notes": "A relaxed loop through England, Wales and Scotland. All bookings marked TBC should be reviewed before departure."
+    "travelers": [],
+    "vehicle": {
+      "label": "UK rental car",
+      "registration": "TBC",
+      "provider": "TBC",
+      "pickup": "London Heathrow",
+      "dropoff": "London"
+    },
+    "notes": "The travel dates and route are fixed. Hotels, attractions, restaurants, flight details and reservation references remain provisional until confirmed."
   },
   "drivingGuide": {
     "units": "Miles and miles per hour",
@@ -22,160 +28,1409 @@
     "lastReviewed": "2026-07-06",
     "sourceUrl": "https://www.gov.uk/guidance/the-highway-code",
     "rules": [
-      { "id": "drive-left", "title": "Keep left", "detail": "Drive on the left and keep to the left-hand lane on multi-lane roads unless overtaking or signs direct otherwise." },
-      { "id": "speed-limits", "title": "Read every speed sign", "detail": "For cars, national limits are generally 60 mph on single carriageways and 70 mph on dual carriageways and motorways. Built-up defaults differ: generally 30 mph in England and Scotland and 20 mph in Wales, unless signs show another limit." },
-      { "id": "seat-belts", "title": "Seat belts for every occupant", "detail": "Use a seat belt whenever one is fitted and ensure each passenger has their own belted seat." },
-      { "id": "phones", "title": "No hand-held phone use", "detail": "Do not hold and use a phone or similar interactive device while driving. Set navigation before moving and stop safely if changes are needed." },
-      { "id": "breakdown", "title": "Move to relative safety", "detail": "For a breakdown, leave the live carriageway when possible, use hazard lights and follow motorway emergency guidance. Never place a warning triangle on a motorway." }
+      {
+        "id": "drive-left",
+        "title": "Keep left",
+        "detail": "Drive on the left and keep to the left-hand lane on multi-lane roads unless overtaking or signs direct otherwise."
+      },
+      {
+        "id": "speed-limits",
+        "title": "Read every speed sign",
+        "detail": "For cars, national limits are generally 60 mph on single carriageways and 70 mph on dual carriageways and motorways. Always follow posted limits."
+      },
+      {
+        "id": "seat-belts",
+        "title": "Seat belts for every occupant",
+        "detail": "Use a seat belt whenever one is fitted and ensure each passenger has their own belted seat."
+      },
+      {
+        "id": "phones",
+        "title": "No hand-held phone use",
+        "detail": "Set navigation before moving and stop safely before making changes."
+      },
+      {
+        "id": "breakdown",
+        "title": "Move to relative safety",
+        "detail": "For a breakdown, leave the live carriageway when possible, use hazard lights and follow motorway emergency guidance."
+      }
     ]
   },
   "tubePlan": {
     "lastReviewed": "2026-07-06",
     "sourceUrl": "https://tfl.gov.uk/plan-a-journey/",
-    "paymentNote": "Use the same contactless card or device to touch in and out. Recheck fares, disruptions and step-free availability with TfL before travel.",
+    "paymentNote": "Tube routes are provisional. Recheck fares, closures, disruptions and step-free availability with TfL before each journey.",
     "journeys": [
-      { "id": "tube-heathrow-paddington", "date": "2027-06-05", "time": "12:00", "from": "Heathrow Terminals 2 & 3", "to": "Paddington", "route": "Elizabeth line direct", "durationMinutes": 35, "status": "idea", "accessibility": "Step-free route; verify lift status on the day.", "notes": "Alternative airport transfer if the rental-car plan changes." },
-      { "id": "tube-westminster-tower", "date": "2027-06-05", "time": "15:00", "from": "Westminster", "to": "Tower Hill", "route": "District line eastbound", "durationMinutes": 12, "status": "idea", "accessibility": "Check current step-free status with TfL.", "notes": "Sample central London journey; replace if it is not needed." }
+      {
+        "id": "tube-westminster-tower",
+        "date": "2027-06-18",
+        "time": "10:00",
+        "from": "Westminster",
+        "to": "Tower Hill",
+        "route": "District line eastbound",
+        "durationMinutes": 12,
+        "status": "idea",
+        "accessibility": "Check current step-free status with TfL.",
+        "notes": "Provisional sightseeing transfer."
+      },
+      {
+        "id": "tube-paddington-heathrow",
+        "date": "2027-06-19",
+        "time": "10:00",
+        "from": "Paddington",
+        "to": "Heathrow Terminals 2 and 3",
+        "route": "Elizabeth line direct",
+        "durationMinutes": 35,
+        "status": "idea",
+        "accessibility": "Verify lift availability and airline terminal before departure.",
+        "notes": "Provisional airport route if the final London hotel is near Paddington."
+      }
     ]
   },
-  "budgetCategories": ["Accommodation", "Activities", "Food", "Fuel", "Parking", "Transport", "Other"],
-  "noteCategories": ["General", "Booking", "Driving", "Food"],
+  "budgetCategories": [
+    "Accommodation",
+    "Activities",
+    "Food",
+    "Fuel",
+    "Parking",
+    "Transport",
+    "Other"
+  ],
+  "noteCategories": [
+    "General",
+    "Booking",
+    "Driving",
+    "Food"
+  ],
   "notes": [
-    { "id": "note-arrival", "title": "Arrival priorities", "body": "Collect the rental car only after everyone has eaten and rested. Photograph all sides of the vehicle before departure.", "category": "Driving", "dayId": "day-01", "pinned": true, "updatedAt": "2026-07-06T00:00:00.000Z" },
-    { "id": "note-bookings", "title": "Booking sequence", "body": "Confirm summer Highlands accommodation before making flexible restaurant reservations.", "category": "Booking", "dayId": "", "pinned": true, "updatedAt": "2026-07-06T00:00:00.000Z" },
-    { "id": "note-weather", "title": "Wet-weather alternatives", "body": "Keep one indoor museum option for each major city and avoid committing every afternoon to outdoor walks.", "category": "General", "dayId": "", "pinned": false, "updatedAt": "2026-07-06T00:00:00.000Z" }
+    {
+      "id": "note-fixed-route",
+      "title": "Fixed route",
+      "body": "Singapore, London Heathrow, Stonehenge, Bristol, Cotswolds, Windermere, Edinburgh, St Andrews, York, Bicester Village, London, Singapore.",
+      "category": "General",
+      "dayId": "",
+      "pinned": true,
+      "updatedAt": "2026-07-06T00:00:00.000Z"
+    },
+    {
+      "id": "note-booking-status",
+      "title": "Provisional bookings",
+      "body": "Do not treat any hotel, attraction or restaurant in this database as confirmed until its status and reference are updated.",
+      "category": "Booking",
+      "dayId": "",
+      "pinned": true,
+      "updatedAt": "2026-07-06T00:00:00.000Z"
+    },
+    {
+      "id": "note-long-drives",
+      "title": "Long driving days",
+      "body": "Protect extra time for the Cotswolds to Windermere, St Andrews to York, and York to London driving days.",
+      "category": "Driving",
+      "dayId": "",
+      "pinned": false,
+      "updatedAt": "2026-07-06T00:00:00.000Z"
+    }
   ],
   "days": [
-    { "id": "day-01", "date": "2027-06-05", "title": "Arrival in London", "region": "London", "country": "England", "summary": "Land, collect the car and settle in near Windsor.", "distanceMiles": 18, "driveMinutes": 45, "overnightPlaceId": "stay-windsor", "activities": [
-      { "id": "a-001", "time": "10:30", "type": "transport", "title": "Arrive at Heathrow", "placeId": "heathrow", "status": "planned", "notes": "Allow time for immigration and baggage." },
-      { "id": "a-002", "time": "13:00", "type": "drive", "title": "Collect rental car", "status": "planned", "notes": "Photograph the vehicle before leaving." },
-      { "id": "a-003", "time": "16:00", "type": "hotel", "title": "Check in and rest", "placeId": "stay-windsor", "status": "planned", "notes": "Easy first evening after the flight." }
-    ]},
-    { "id": "day-02", "date": "2027-06-06", "title": "Windsor to the Cotswolds", "region": "Cotswolds", "country": "England", "summary": "Castle morning followed by honey-stone villages.", "distanceMiles": 92, "driveMinutes": 135, "overnightPlaceId": "stay-bourton", "activities": [
-      { "id": "a-004", "time": "09:30", "type": "attraction", "title": "Windsor Castle", "placeId": "windsor-castle", "status": "planned", "notes": "Book the first timed entry." },
-      { "id": "a-005", "time": "13:30", "type": "drive", "title": "Drive to Bourton-on-the-Water", "status": "planned", "notes": "Lunch stop around Oxford if needed." },
-      { "id": "a-006", "time": "17:00", "type": "walk", "title": "Village riverside walk", "placeId": "bourton", "status": "planned", "notes": "Keep the evening flexible." }
-    ]},
-    { "id": "day-03", "date": "2027-06-07", "title": "Cotswolds Villages", "region": "Cotswolds", "country": "England", "summary": "A slow circuit through classic villages and country lanes.", "distanceMiles": 48, "driveMinutes": 100, "overnightPlaceId": "stay-bourton", "activities": [
-      { "id": "a-007", "time": "09:00", "type": "drive", "title": "Lower Slaughter and Stow-on-the-Wold", "status": "planned", "notes": "Use village car parks and explore on foot." },
-      { "id": "a-008", "time": "13:00", "type": "restaurant", "title": "Country pub lunch", "placeId": "wild-rabbit", "status": "idea", "notes": "Reservation recommended." },
-      { "id": "a-009", "time": "15:30", "type": "attraction", "title": "Broadway Tower", "placeId": "broadway-tower", "status": "planned", "notes": "Weather-dependent views." }
-    ]},
-    { "id": "day-04", "date": "2027-06-08", "title": "Bath and Roman Britain", "region": "Bath", "country": "England", "summary": "Georgian streets, Roman history and an evening in Bath.", "distanceMiles": 55, "driveMinutes": 90, "overnightPlaceId": "stay-bath", "activities": [
-      { "id": "a-010", "time": "09:00", "type": "drive", "title": "Drive to Bath", "status": "planned", "notes": "Use hotel parking or a park-and-ride." },
-      { "id": "a-011", "time": "12:00", "type": "attraction", "title": "Roman Baths", "placeId": "roman-baths", "status": "planned", "notes": "Timed ticket required." },
-      { "id": "a-012", "time": "16:00", "type": "walk", "title": "Royal Crescent and city walk", "status": "planned", "notes": "Finish around Pulteney Bridge." }
-    ]},
-    { "id": "day-05", "date": "2027-06-09", "title": "Into South Wales", "region": "Bannau Brycheiniog", "country": "Wales", "summary": "Cross the Severn and enter the Welsh mountains.", "distanceMiles": 96, "driveMinutes": 140, "overnightPlaceId": "stay-brecon", "activities": [
-      { "id": "a-013", "time": "09:30", "type": "drive", "title": "Drive to Brecon", "status": "planned", "notes": "Scenic approach via Abergavenny." },
-      { "id": "a-014", "time": "14:00", "type": "walk", "title": "Waterfall country walk", "placeId": "four-falls", "status": "idea", "notes": "Choose route based on weather and energy." }
-    ]},
-    { "id": "day-06", "date": "2027-06-10", "title": "Wales to Liverpool", "region": "Liverpool", "country": "England", "summary": "A northbound drive ending on the Mersey waterfront.", "distanceMiles": 150, "driveMinutes": 210, "overnightPlaceId": "stay-liverpool", "activities": [
-      { "id": "a-015", "time": "09:00", "type": "drive", "title": "Drive north to Liverpool", "status": "planned", "notes": "Plan one rest stop near Shrewsbury." },
-      { "id": "a-016", "time": "15:30", "type": "walk", "title": "Royal Albert Dock", "placeId": "albert-dock", "status": "planned", "notes": "Waterfront evening and dinner nearby." }
-    ]},
-    { "id": "day-07", "date": "2027-06-11", "title": "Liverpool to the Lakes", "region": "Lake District", "country": "England", "summary": "Music history in the morning, mountain scenery by evening.", "distanceMiles": 92, "driveMinutes": 125, "overnightPlaceId": "stay-keswick", "activities": [
-      { "id": "a-017", "time": "09:30", "type": "attraction", "title": "The Beatles Story", "placeId": "beatles-story", "status": "idea", "notes": "Optional if an early start is preferred." },
-      { "id": "a-018", "time": "13:00", "type": "drive", "title": "Drive to Keswick", "status": "planned", "notes": "Motorway section followed by lake roads." },
-      { "id": "a-019", "time": "17:00", "type": "walk", "title": "Derwentwater shoreline", "placeId": "derwentwater", "status": "planned", "notes": "Short walk from Keswick." }
-    ]},
-    { "id": "day-08", "date": "2027-06-12", "title": "Lake District Day", "region": "Lake District", "country": "England", "summary": "A full day for lakes, viewpoints and village stops.", "distanceMiles": 42, "driveMinutes": 95, "overnightPlaceId": "stay-keswick", "activities": [
-      { "id": "a-020", "time": "09:00", "type": "attraction", "title": "Derwentwater cruise", "placeId": "derwentwater", "status": "idea", "notes": "Check seasonal timetable." },
-      { "id": "a-021", "time": "13:30", "type": "drive", "title": "Borrowdale scenic loop", "status": "planned", "notes": "Narrow roads; allow extra time." },
-      { "id": "a-022", "time": "16:00", "type": "walk", "title": "Castlerigg Stone Circle", "placeId": "castlerigg", "status": "planned", "notes": "Open landscape with little shelter." }
-    ]},
-    { "id": "day-09", "date": "2027-06-13", "title": "Crossing into Scotland", "region": "Glasgow", "country": "Scotland", "summary": "Leave the lakes for Scotland and an urban evening.", "distanceMiles": 132, "driveMinutes": 180, "overnightPlaceId": "stay-glasgow", "activities": [
-      { "id": "a-023", "time": "09:30", "type": "drive", "title": "Drive to Glasgow", "status": "planned", "notes": "Stop near Gretna Green if useful." },
-      { "id": "a-024", "time": "15:30", "type": "attraction", "title": "Kelvingrove Art Gallery", "placeId": "kelvingrove", "status": "idea", "notes": "Free entry; check closing time." }
-    ]},
-    { "id": "day-10", "date": "2027-06-14", "title": "Glencoe and Fort William", "region": "Scottish Highlands", "country": "Scotland", "summary": "The road turns spectacular through lochs and Glencoe.", "distanceMiles": 112, "driveMinutes": 175, "overnightPlaceId": "stay-fort-william", "activities": [
-      { "id": "a-025", "time": "09:00", "type": "drive", "title": "Loch Lomond scenic drive", "status": "planned", "notes": "Allow frequent photo stops." },
-      { "id": "a-026", "time": "13:30", "type": "walk", "title": "Glencoe visitor centre and walk", "placeId": "glencoe", "status": "planned", "notes": "Choose a short trail based on weather." },
-      { "id": "a-027", "time": "17:00", "type": "hotel", "title": "Check in at Fort William", "placeId": "stay-fort-william", "status": "planned", "notes": "Refuel before the next day." }
-    ]},
-    { "id": "day-11", "date": "2027-06-15", "title": "Highlands to Inverness", "region": "Inverness", "country": "Scotland", "summary": "Loch views and historic sites along the Great Glen.", "distanceMiles": 67, "driveMinutes": 110, "overnightPlaceId": "stay-inverness", "activities": [
-      { "id": "a-028", "time": "09:30", "type": "drive", "title": "Great Glen drive", "status": "planned", "notes": "Follow the A82 north." },
-      { "id": "a-029", "time": "12:30", "type": "attraction", "title": "Urquhart Castle", "placeId": "urquhart", "status": "planned", "notes": "Reserve parking and entry." },
-      { "id": "a-030", "time": "17:00", "type": "walk", "title": "Inverness riverside", "status": "planned", "notes": "Easy evening loop." }
-    ]},
-    { "id": "day-12", "date": "2027-06-16", "title": "Inverness to Edinburgh", "region": "Edinburgh", "country": "Scotland", "summary": "South through the Cairngorms to Scotland's capital.", "distanceMiles": 158, "driveMinutes": 210, "overnightPlaceId": "stay-edinburgh", "activities": [
-      { "id": "a-031", "time": "09:00", "type": "drive", "title": "Drive through the Cairngorms", "status": "planned", "notes": "Rest stop around Pitlochry." },
-      { "id": "a-032", "time": "15:30", "type": "hotel", "title": "Park and check in", "placeId": "stay-edinburgh", "status": "planned", "notes": "Do not drive in the centre after arrival." },
-      { "id": "a-033", "time": "17:00", "type": "walk", "title": "Old Town orientation walk", "status": "planned", "notes": "Royal Mile and closes." }
-    ]},
-    { "id": "day-13", "date": "2027-06-17", "title": "Edinburgh", "region": "Edinburgh", "country": "Scotland", "summary": "Castle, Old Town and a flexible city afternoon.", "distanceMiles": 0, "driveMinutes": 0, "overnightPlaceId": "stay-edinburgh", "activities": [
-      { "id": "a-034", "time": "09:30", "type": "attraction", "title": "Edinburgh Castle", "placeId": "edinburgh-castle", "status": "planned", "notes": "Book the earliest practical entry." },
-      { "id": "a-035", "time": "14:00", "type": "walk", "title": "Calton Hill and New Town", "status": "idea", "notes": "Swap for a museum in poor weather." }
-    ]},
-    { "id": "day-14", "date": "2027-06-18", "title": "Edinburgh to York", "region": "York", "country": "England", "summary": "A long final road day to medieval York.", "distanceMiles": 205, "driveMinutes": 275, "overnightPlaceId": "stay-york", "activities": [
-      { "id": "a-036", "time": "08:30", "type": "drive", "title": "Drive to York", "status": "planned", "notes": "Two rest stops; avoid city-centre driving." },
-      { "id": "a-037", "time": "16:00", "type": "walk", "title": "The Shambles and city walls", "placeId": "york-centre", "status": "planned", "notes": "Gentle final afternoon." }
-    ]},
-    { "id": "day-15", "date": "2027-06-19", "title": "York to London", "region": "London", "country": "England", "summary": "York Minster, the drive south and journey home.", "distanceMiles": 214, "driveMinutes": 255, "overnightPlaceId": null, "activities": [
-      { "id": "a-038", "time": "09:00", "type": "attraction", "title": "York Minster", "placeId": "york-minster", "status": "idea", "notes": "Skip if flight timing is tight." },
-      { "id": "a-039", "time": "11:30", "type": "drive", "title": "Drive to Heathrow", "status": "planned", "notes": "Build in motorway and rental return buffer." },
-      { "id": "a-040", "time": "17:00", "type": "transport", "title": "Return rental car", "placeId": "heathrow", "status": "planned", "notes": "Refuel near the airport." }
-    ]}
+    {
+      "id": "day-01",
+      "date": "2027-06-05",
+      "title": "Singapore to London Heathrow",
+      "region": "London Heathrow",
+      "country": "England",
+      "summary": "Travel from Singapore to London Heathrow and settle in before beginning the road trip.",
+      "distanceMiles": 5,
+      "driveMinutes": 20,
+      "overnightPlaceId": "hotel-heathrow",
+      "activities": [
+        {
+          "id": "activity-001",
+          "time": "08:00",
+          "type": "transport",
+          "title": "Travel from Singapore",
+          "placeId": "singapore-changi",
+          "status": "planned",
+          "notes": "Flight number and departure time TBC."
+        },
+        {
+          "id": "activity-002",
+          "time": "18:00",
+          "type": "transport",
+          "title": "Arrive at London Heathrow",
+          "placeId": "london-heathrow",
+          "status": "planned",
+          "notes": "Arrival time and terminal TBC."
+        },
+        {
+          "id": "activity-003",
+          "time": "20:00",
+          "type": "hotel",
+          "title": "Check in near Heathrow",
+          "placeId": "hotel-heathrow",
+          "status": "idea",
+          "notes": "Hotel is provisional."
+        }
+      ]
+    },
+    {
+      "id": "day-02",
+      "date": "2027-06-06",
+      "title": "Heathrow to Stonehenge and Bristol",
+      "region": "Wiltshire and Bristol",
+      "country": "England",
+      "summary": "Collect the rental car, visit Stonehenge and continue to Bristol.",
+      "distanceMiles": 125,
+      "driveMinutes": 200,
+      "overnightPlaceId": "hotel-bristol",
+      "activities": [
+        {
+          "id": "activity-004",
+          "time": "08:30",
+          "type": "drive",
+          "title": "Collect rental car at Heathrow",
+          "placeId": "london-heathrow",
+          "status": "planned",
+          "notes": "Rental company and collection details TBC."
+        },
+        {
+          "id": "activity-005",
+          "time": "11:30",
+          "type": "attraction",
+          "title": "Visit Stonehenge",
+          "placeId": "stonehenge",
+          "status": "idea",
+          "notes": "Timed admission is provisional."
+        },
+        {
+          "id": "activity-006",
+          "time": "15:30",
+          "type": "drive",
+          "title": "Drive to Bristol",
+          "status": "planned",
+          "notes": "Allow time for traffic and a rest stop."
+        },
+        {
+          "id": "activity-007",
+          "time": "18:00",
+          "type": "hotel",
+          "title": "Check in at Bristol",
+          "placeId": "hotel-bristol",
+          "status": "idea",
+          "notes": "Hotel is provisional."
+        }
+      ]
+    },
+    {
+      "id": "day-03",
+      "date": "2027-06-07",
+      "title": "Bristol",
+      "region": "Bristol",
+      "country": "England",
+      "summary": "A full day to explore Bristol before continuing north.",
+      "distanceMiles": 15,
+      "driveMinutes": 45,
+      "overnightPlaceId": "hotel-bristol",
+      "activities": [
+        {
+          "id": "activity-008",
+          "time": "09:30",
+          "type": "attraction",
+          "title": "Explore Bristol Harbour",
+          "placeId": "bristol-harbour",
+          "status": "idea",
+          "notes": "Walking route and museum stops are provisional."
+        },
+        {
+          "id": "activity-009",
+          "time": "14:30",
+          "type": "attraction",
+          "title": "Visit Clifton Suspension Bridge",
+          "placeId": "clifton-bridge",
+          "status": "idea",
+          "notes": "Visit depends on weather and parking."
+        },
+        {
+          "id": "activity-010",
+          "time": "19:00",
+          "type": "restaurant",
+          "title": "Dinner in Bristol",
+          "placeId": "restaurant-bristol",
+          "status": "idea",
+          "notes": "Restaurant is provisional."
+        }
+      ]
+    },
+    {
+      "id": "day-04",
+      "date": "2027-06-08",
+      "title": "Bristol to the Cotswolds",
+      "region": "Cotswolds",
+      "country": "England",
+      "summary": "Leave Bristol and begin the Cotswolds section of the trip.",
+      "distanceMiles": 60,
+      "driveMinutes": 105,
+      "overnightPlaceId": "hotel-cotswolds",
+      "activities": [
+        {
+          "id": "activity-011",
+          "time": "09:30",
+          "type": "drive",
+          "title": "Drive from Bristol to the Cotswolds",
+          "status": "planned",
+          "notes": "Final village base and route TBC."
+        },
+        {
+          "id": "activity-012",
+          "time": "12:30",
+          "type": "restaurant",
+          "title": "Lunch in the Cotswolds",
+          "placeId": "restaurant-cotswolds",
+          "status": "idea",
+          "notes": "Restaurant is provisional."
+        },
+        {
+          "id": "activity-013",
+          "time": "15:00",
+          "type": "walk",
+          "title": "First Cotswolds village walk",
+          "placeId": "cotswolds-villages",
+          "status": "idea",
+          "notes": "Village selection is provisional."
+        },
+        {
+          "id": "activity-014",
+          "time": "18:00",
+          "type": "hotel",
+          "title": "Check in at the Cotswolds",
+          "placeId": "hotel-cotswolds",
+          "status": "idea",
+          "notes": "Hotel is provisional."
+        }
+      ]
+    },
+    {
+      "id": "day-05",
+      "date": "2027-06-09",
+      "title": "Cotswolds Villages",
+      "region": "Cotswolds",
+      "country": "England",
+      "summary": "A flexible day for villages, countryside and local food.",
+      "distanceMiles": 45,
+      "driveMinutes": 100,
+      "overnightPlaceId": "hotel-cotswolds",
+      "activities": [
+        {
+          "id": "activity-015",
+          "time": "09:00",
+          "type": "drive",
+          "title": "Cotswolds village circuit",
+          "placeId": "cotswolds-villages",
+          "status": "planned",
+          "notes": "Exact villages and parking stops TBC."
+        },
+        {
+          "id": "activity-016",
+          "time": "13:00",
+          "type": "restaurant",
+          "title": "Country pub lunch",
+          "placeId": "restaurant-cotswolds",
+          "status": "idea",
+          "notes": "Restaurant is provisional."
+        },
+        {
+          "id": "activity-017",
+          "time": "15:30",
+          "type": "walk",
+          "title": "Countryside walk",
+          "status": "idea",
+          "notes": "Choose a route based on weather and parking."
+        }
+      ]
+    },
+    {
+      "id": "day-06",
+      "date": "2027-06-10",
+      "title": "Cotswolds to Windermere",
+      "region": "Lake District",
+      "country": "England",
+      "summary": "A long northbound drive from the Cotswolds to Windermere.",
+      "distanceMiles": 230,
+      "driveMinutes": 270,
+      "overnightPlaceId": "hotel-windermere",
+      "activities": [
+        {
+          "id": "activity-018",
+          "time": "08:30",
+          "type": "drive",
+          "title": "Drive to Windermere",
+          "status": "planned",
+          "notes": "Schedule at least two rest stops."
+        },
+        {
+          "id": "activity-019",
+          "time": "15:30",
+          "type": "hotel",
+          "title": "Check in at Windermere",
+          "placeId": "hotel-windermere",
+          "status": "idea",
+          "notes": "Hotel is provisional."
+        },
+        {
+          "id": "activity-020",
+          "time": "17:30",
+          "type": "walk",
+          "title": "Windermere lakeside walk",
+          "placeId": "lake-windermere",
+          "status": "idea",
+          "notes": "Keep the evening light after the long drive."
+        }
+      ]
+    },
+    {
+      "id": "day-07",
+      "date": "2027-06-11",
+      "title": "Windermere and the Lake District",
+      "region": "Windermere",
+      "country": "England",
+      "summary": "A full day around Windermere with flexible lake and village activities.",
+      "distanceMiles": 35,
+      "driveMinutes": 80,
+      "overnightPlaceId": "hotel-windermere",
+      "activities": [
+        {
+          "id": "activity-021",
+          "time": "09:30",
+          "type": "attraction",
+          "title": "Lake Windermere cruise",
+          "placeId": "lake-windermere",
+          "status": "idea",
+          "notes": "Cruise route and tickets are provisional."
+        },
+        {
+          "id": "activity-022",
+          "time": "13:30",
+          "type": "drive",
+          "title": "Lake District scenic drive",
+          "status": "idea",
+          "notes": "Exact route depends on weather and road conditions."
+        },
+        {
+          "id": "activity-023",
+          "time": "19:00",
+          "type": "restaurant",
+          "title": "Dinner in Windermere",
+          "placeId": "restaurant-windermere",
+          "status": "idea",
+          "notes": "Restaurant is provisional."
+        }
+      ]
+    },
+    {
+      "id": "day-08",
+      "date": "2027-06-12",
+      "title": "Windermere to Edinburgh",
+      "region": "Edinburgh",
+      "country": "Scotland",
+      "summary": "Cross into Scotland and arrive in Edinburgh.",
+      "distanceMiles": 135,
+      "driveMinutes": 190,
+      "overnightPlaceId": "hotel-edinburgh",
+      "activities": [
+        {
+          "id": "activity-024",
+          "time": "09:00",
+          "type": "drive",
+          "title": "Drive from Windermere to Edinburgh",
+          "status": "planned",
+          "notes": "Allow one substantial rest stop."
+        },
+        {
+          "id": "activity-025",
+          "time": "14:30",
+          "type": "hotel",
+          "title": "Check in at Edinburgh",
+          "placeId": "hotel-edinburgh",
+          "status": "idea",
+          "notes": "Hotel and parking are provisional."
+        },
+        {
+          "id": "activity-026",
+          "time": "17:00",
+          "type": "walk",
+          "title": "Royal Mile orientation walk",
+          "placeId": "royal-mile",
+          "status": "idea",
+          "notes": "Keep the route flexible after the drive."
+        }
+      ]
+    },
+    {
+      "id": "day-09",
+      "date": "2027-06-13",
+      "title": "Edinburgh",
+      "region": "Edinburgh",
+      "country": "Scotland",
+      "summary": "A full day for Edinburgh Old Town and provisional attractions.",
+      "distanceMiles": 10,
+      "driveMinutes": 30,
+      "overnightPlaceId": "hotel-edinburgh",
+      "activities": [
+        {
+          "id": "activity-027",
+          "time": "09:30",
+          "type": "attraction",
+          "title": "Edinburgh Castle",
+          "placeId": "edinburgh-castle",
+          "status": "idea",
+          "notes": "Timed ticket is provisional."
+        },
+        {
+          "id": "activity-028",
+          "time": "14:00",
+          "type": "walk",
+          "title": "Explore Edinburgh Old Town",
+          "placeId": "royal-mile",
+          "status": "idea",
+          "notes": "Exact stops are provisional."
+        },
+        {
+          "id": "activity-029",
+          "time": "19:00",
+          "type": "restaurant",
+          "title": "Dinner in Edinburgh",
+          "placeId": "restaurant-edinburgh",
+          "status": "idea",
+          "notes": "Restaurant is provisional."
+        }
+      ]
+    },
+    {
+      "id": "day-10",
+      "date": "2027-06-14",
+      "title": "Edinburgh to St Andrews",
+      "region": "St Andrews",
+      "country": "Scotland",
+      "summary": "Drive from Edinburgh to St Andrews and explore the historic town.",
+      "distanceMiles": 52,
+      "driveMinutes": 90,
+      "overnightPlaceId": "hotel-st-andrews",
+      "activities": [
+        {
+          "id": "activity-030",
+          "time": "09:30",
+          "type": "drive",
+          "title": "Drive to St Andrews",
+          "status": "planned",
+          "notes": "Parking arrangements TBC."
+        },
+        {
+          "id": "activity-031",
+          "time": "12:00",
+          "type": "attraction",
+          "title": "St Andrews Old Course area",
+          "placeId": "st-andrews-old-course",
+          "status": "idea",
+          "notes": "Visit details are provisional."
+        },
+        {
+          "id": "activity-032",
+          "time": "15:00",
+          "type": "attraction",
+          "title": "St Andrews Cathedral and town",
+          "placeId": "st-andrews-cathedral",
+          "status": "idea",
+          "notes": "Attraction plan is provisional."
+        },
+        {
+          "id": "activity-033",
+          "time": "18:00",
+          "type": "hotel",
+          "title": "Check in at St Andrews",
+          "placeId": "hotel-st-andrews",
+          "status": "idea",
+          "notes": "Hotel is provisional."
+        }
+      ]
+    },
+    {
+      "id": "day-11",
+      "date": "2027-06-15",
+      "title": "St Andrews to York",
+      "region": "York",
+      "country": "England",
+      "summary": "A long drive south from St Andrews to York.",
+      "distanceMiles": 210,
+      "driveMinutes": 270,
+      "overnightPlaceId": "hotel-york",
+      "activities": [
+        {
+          "id": "activity-034",
+          "time": "08:30",
+          "type": "drive",
+          "title": "Drive from St Andrews to York",
+          "status": "planned",
+          "notes": "Schedule at least two rest stops."
+        },
+        {
+          "id": "activity-035",
+          "time": "16:00",
+          "type": "hotel",
+          "title": "Check in at York",
+          "placeId": "hotel-york",
+          "status": "idea",
+          "notes": "Hotel and parking are provisional."
+        },
+        {
+          "id": "activity-036",
+          "time": "17:30",
+          "type": "walk",
+          "title": "Evening walk in central York",
+          "placeId": "york-shambles",
+          "status": "idea",
+          "notes": "Keep the evening flexible after the drive."
+        }
+      ]
+    },
+    {
+      "id": "day-12",
+      "date": "2027-06-16",
+      "title": "York",
+      "region": "York",
+      "country": "England",
+      "summary": "A full day for York attractions and the historic centre.",
+      "distanceMiles": 10,
+      "driveMinutes": 30,
+      "overnightPlaceId": "hotel-york",
+      "activities": [
+        {
+          "id": "activity-037",
+          "time": "09:30",
+          "type": "attraction",
+          "title": "York Minster",
+          "placeId": "york-minster",
+          "status": "idea",
+          "notes": "Admission is provisional."
+        },
+        {
+          "id": "activity-038",
+          "time": "13:30",
+          "type": "walk",
+          "title": "The Shambles and city walls",
+          "placeId": "york-shambles",
+          "status": "idea",
+          "notes": "Walking route is provisional."
+        },
+        {
+          "id": "activity-039",
+          "time": "19:00",
+          "type": "restaurant",
+          "title": "Dinner in York",
+          "placeId": "restaurant-york",
+          "status": "idea",
+          "notes": "Restaurant is provisional."
+        }
+      ]
+    },
+    {
+      "id": "day-13",
+      "date": "2027-06-17",
+      "title": "York to Bicester Village and London",
+      "region": "Bicester and London",
+      "country": "England",
+      "summary": "Drive south, stop at Bicester Village and continue to London.",
+      "distanceMiles": 220,
+      "driveMinutes": 285,
+      "overnightPlaceId": "hotel-london",
+      "activities": [
+        {
+          "id": "activity-040",
+          "time": "08:30",
+          "type": "drive",
+          "title": "Drive from York to Bicester Village",
+          "status": "planned",
+          "notes": "Allow a motorway rest stop."
+        },
+        {
+          "id": "activity-041",
+          "time": "12:30",
+          "type": "attraction",
+          "title": "Bicester Village",
+          "placeId": "bicester-village",
+          "status": "idea",
+          "notes": "Shopping time and parking plan are provisional."
+        },
+        {
+          "id": "activity-042",
+          "time": "16:30",
+          "type": "drive",
+          "title": "Continue to London",
+          "status": "planned",
+          "notes": "Rental-car return timing and location TBC."
+        },
+        {
+          "id": "activity-043",
+          "time": "19:00",
+          "type": "hotel",
+          "title": "Check in at London",
+          "placeId": "hotel-london",
+          "status": "idea",
+          "notes": "Hotel is provisional."
+        }
+      ]
+    },
+    {
+      "id": "day-14",
+      "date": "2027-06-18",
+      "title": "London",
+      "region": "London",
+      "country": "England",
+      "summary": "A full London day with provisional sightseeing and dining plans.",
+      "distanceMiles": 0,
+      "driveMinutes": 0,
+      "overnightPlaceId": "hotel-london",
+      "activities": [
+        {
+          "id": "activity-044",
+          "time": "09:30",
+          "type": "walk",
+          "title": "Westminster sightseeing",
+          "placeId": "westminster",
+          "status": "idea",
+          "notes": "Exact sights and tickets are provisional."
+        },
+        {
+          "id": "activity-045",
+          "time": "14:00",
+          "type": "attraction",
+          "title": "Tower of London area",
+          "placeId": "tower-of-london",
+          "status": "idea",
+          "notes": "Admission is provisional."
+        },
+        {
+          "id": "activity-046",
+          "time": "19:00",
+          "type": "restaurant",
+          "title": "Final dinner in London",
+          "placeId": "restaurant-london",
+          "status": "idea",
+          "notes": "Restaurant is provisional."
+        }
+      ]
+    },
+    {
+      "id": "day-15",
+      "date": "2027-06-19",
+      "title": "London to Singapore",
+      "region": "London Heathrow",
+      "country": "England",
+      "summary": "Travel from London to Heathrow and return to Singapore.",
+      "distanceMiles": 20,
+      "driveMinutes": 60,
+      "overnightPlaceId": null,
+      "activities": [
+        {
+          "id": "activity-047",
+          "time": "09:00",
+          "type": "transport",
+          "title": "Travel to London Heathrow",
+          "placeId": "london-heathrow",
+          "status": "planned",
+          "notes": "Transfer method and departure time TBC."
+        },
+        {
+          "id": "activity-048",
+          "time": "13:00",
+          "type": "transport",
+          "title": "Fly from London to Singapore",
+          "placeId": "london-heathrow",
+          "status": "planned",
+          "notes": "Flight number, terminal and departure time TBC."
+        }
+      ]
+    }
   ],
   "places": [
-    { "id": "heathrow", "type": "transport", "name": "London Heathrow Airport", "city": "London", "address": "Hounslow, United Kingdom", "lat": 51.4700, "lng": -0.4543, "phone": "", "website": "https://www.heathrow.com", "status": "confirmed", "notes": "Arrival and rental-car collection point." },
-    { "id": "stay-windsor", "type": "hotel", "name": "Windsor hotel", "city": "Windsor", "address": "TBC", "lat": 51.4817, "lng": -0.6136, "phone": "", "website": "", "status": "researching", "price": 180, "notes": "Choose somewhere with parking and easy Heathrow access." },
-    { "id": "windsor-castle", "type": "attraction", "name": "Windsor Castle", "city": "Windsor", "address": "Windsor SL4 1NJ", "lat": 51.4839, "lng": -0.6044, "phone": "", "website": "https://www.rct.uk/visit/windsor-castle", "status": "planned", "price": 64, "notes": "Check opening arrangements before booking." },
-    { "id": "stay-bourton", "type": "hotel", "name": "Cotswolds inn", "city": "Bourton-on-the-Water", "address": "TBC", "lat": 51.8857, "lng": -1.7581, "phone": "", "website": "", "status": "researching", "price": 360, "notes": "Two-night stay; parking essential." },
-    { "id": "bourton", "type": "attraction", "name": "Bourton-on-the-Water", "city": "Cotswolds", "address": "Bourton-on-the-Water GL54", "lat": 51.8857, "lng": -1.7581, "phone": "", "website": "", "status": "planned", "price": 0, "notes": "Village base for the Cotswolds." },
-    { "id": "wild-rabbit", "type": "restaurant", "name": "The Wild Rabbit", "city": "Kingham", "address": "Church Street, Kingham OX7 6YA", "lat": 51.9145, "lng": -1.6257, "phone": "", "website": "https://thewildrabbit.co.uk", "status": "idea", "price": 90, "cuisine": "Modern British", "reservationDate": "2027-06-07", "reservationTime": "13:00", "reservationReference": "TBC", "notes": "Potential special lunch; verify menu and reserve." },
-    { "id": "dinner-edinburgh", "type": "restaurant", "name": "Edinburgh dinner candidate", "city": "Edinburgh", "address": "TBC", "lat": null, "lng": null, "phone": "", "website": "", "status": "researching", "price": 80, "cuisine": "Scottish", "reservationDate": "2027-06-17", "reservationTime": "19:30", "reservationReference": "TBC", "notes": "Choose a relaxed Old Town option after sightseeing." },
-    { "id": "dinner-york", "type": "restaurant", "name": "York dinner candidate", "city": "York", "address": "TBC", "lat": null, "lng": null, "phone": "", "website": "", "status": "researching", "price": 70, "cuisine": "Seasonal British", "reservationDate": "2027-06-18", "reservationTime": "19:00", "reservationReference": "TBC", "notes": "Keep within walking distance of the hotel." },
-    { "id": "broadway-tower", "type": "attraction", "name": "Broadway Tower", "city": "Broadway", "address": "Middle Hill, Broadway WR12 7LB", "lat": 52.0244, "lng": -1.8368, "phone": "", "website": "https://broadwaytower.co.uk", "status": "planned", "price": 28, "notes": "Panoramic viewpoint." },
-    { "id": "stay-bath", "type": "hotel", "name": "Bath hotel", "city": "Bath", "address": "TBC", "lat": 51.3811, "lng": -2.3590, "phone": "", "website": "", "status": "researching", "price": 210, "notes": "Look for parking or park-and-ride access." },
-    { "id": "roman-baths", "type": "attraction", "name": "The Roman Baths", "city": "Bath", "address": "Abbey Churchyard, Bath BA1 1LZ", "lat": 51.3809, "lng": -2.3595, "phone": "", "website": "https://www.romanbaths.co.uk", "status": "planned", "price": 58, "notes": "Timed entry." },
-    { "id": "stay-brecon", "type": "hotel", "name": "Brecon guesthouse", "city": "Brecon", "address": "TBC", "lat": 51.9468, "lng": -3.3909, "phone": "", "website": "", "status": "researching", "price": 150, "notes": "One night with breakfast and parking." },
-    { "id": "four-falls", "type": "attraction", "name": "Four Falls Trail", "city": "Ystradfellte", "address": "Bannau Brycheiniog National Park", "lat": 51.7771, "lng": -3.5596, "phone": "", "website": "", "status": "idea", "price": 8, "notes": "Weather-dependent hike; parking fee estimate." },
-    { "id": "stay-liverpool", "type": "hotel", "name": "Liverpool waterfront hotel", "city": "Liverpool", "address": "TBC", "lat": 53.4000, "lng": -2.9916, "phone": "", "website": "", "status": "researching", "price": 175, "notes": "Secure parking preferred." },
-    { "id": "albert-dock", "type": "attraction", "name": "Royal Albert Dock", "city": "Liverpool", "address": "Liverpool L3 4AD", "lat": 53.4006, "lng": -2.9927, "phone": "", "website": "https://albertdock.com", "status": "planned", "price": 0, "notes": "Waterfront walk." },
-    { "id": "beatles-story", "type": "attraction", "name": "The Beatles Story", "city": "Liverpool", "address": "Britannia Vaults, Liverpool L3 4AD", "lat": 53.3993, "lng": -2.9928, "phone": "", "website": "https://www.beatlesstory.com", "status": "idea", "price": 40, "notes": "Optional morning visit." },
-    { "id": "stay-keswick", "type": "hotel", "name": "Keswick guesthouse", "city": "Keswick", "address": "TBC", "lat": 54.6013, "lng": -3.1347, "phone": "", "website": "", "status": "researching", "price": 380, "notes": "Two nights; walkable to town." },
-    { "id": "derwentwater", "type": "attraction", "name": "Derwentwater", "city": "Keswick", "address": "Keswick CA12", "lat": 54.5760, "lng": -3.1467, "phone": "", "website": "", "status": "planned", "price": 36, "notes": "Cruise cost estimate for two." },
-    { "id": "castlerigg", "type": "attraction", "name": "Castlerigg Stone Circle", "city": "Keswick", "address": "Castle Lane, Keswick CA12 4RN", "lat": 54.6027, "lng": -3.0985, "phone": "", "website": "", "status": "planned", "price": 0, "notes": "Outdoor site." },
-    { "id": "stay-glasgow", "type": "hotel", "name": "Glasgow West End hotel", "city": "Glasgow", "address": "TBC", "lat": 55.8642, "lng": -4.2518, "phone": "", "website": "", "status": "researching", "price": 170, "notes": "Parking and transit access." },
-    { "id": "kelvingrove", "type": "attraction", "name": "Kelvingrove Art Gallery", "city": "Glasgow", "address": "Argyle Street, Glasgow G3 8AG", "lat": 55.8686, "lng": -4.2906, "phone": "", "website": "https://www.glasgowlife.org.uk/museums/venues/kelvingrove-art-gallery-and-museum", "status": "idea", "price": 0, "notes": "Free museum." },
-    { "id": "stay-fort-william", "type": "hotel", "name": "Fort William hotel", "city": "Fort William", "address": "TBC", "lat": 56.8198, "lng": -5.1052, "phone": "", "website": "", "status": "researching", "price": 190, "notes": "Book early; limited summer availability." },
-    { "id": "glencoe", "type": "attraction", "name": "Glencoe", "city": "Ballachulish", "address": "Glencoe PH49", "lat": 56.6826, "lng": -5.1023, "phone": "", "website": "https://www.nts.org.uk/visit/places/glencoe", "status": "planned", "price": 8, "notes": "Visitor centre and short walks." },
-    { "id": "stay-inverness", "type": "hotel", "name": "Inverness hotel", "city": "Inverness", "address": "TBC", "lat": 57.4778, "lng": -4.2247, "phone": "", "website": "", "status": "researching", "price": 185, "notes": "Central with parking." },
-    { "id": "urquhart", "type": "attraction", "name": "Urquhart Castle", "city": "Drumnadrochit", "address": "Inverness IV63 6XJ", "lat": 57.3240, "lng": -4.4423, "phone": "", "website": "https://www.historicenvironment.scot/visit-a-place/places/urquhart-castle", "status": "planned", "price": 40, "notes": "Loch Ness ruins and visitor centre." },
-    { "id": "stay-edinburgh", "type": "hotel", "name": "Edinburgh hotel", "city": "Edinburgh", "address": "TBC", "lat": 55.9533, "lng": -3.1883, "phone": "", "website": "", "status": "researching", "price": 440, "notes": "Two nights; parking outside restricted centre." },
-    { "id": "edinburgh-castle", "type": "attraction", "name": "Edinburgh Castle", "city": "Edinburgh", "address": "Castlehill, Edinburgh EH1 2NG", "lat": 55.9486, "lng": -3.1999, "phone": "", "website": "https://www.edinburghcastle.scot", "status": "planned", "price": 44, "notes": "Timed ticket essential." },
-    { "id": "stay-york", "type": "hotel", "name": "York hotel", "city": "York", "address": "TBC", "lat": 53.9599, "lng": -1.0873, "phone": "", "website": "", "status": "researching", "price": 175, "notes": "Parking outside city walls." },
-    { "id": "york-centre", "type": "attraction", "name": "York historic centre", "city": "York", "address": "The Shambles, York YO1", "lat": 53.9590, "lng": -1.0800, "phone": "", "website": "", "status": "planned", "price": 0, "notes": "Walk the walls and Shambles." },
-    { "id": "york-minster", "type": "attraction", "name": "York Minster", "city": "York", "address": "Deangate, York YO1 7HH", "lat": 53.9623, "lng": -1.0821, "phone": "", "website": "https://yorkminster.org", "status": "idea", "price": 40, "notes": "Visit only if departure timing permits." }
+    {
+      "id": "singapore-changi",
+      "type": "transport",
+      "name": "Singapore Changi Airport",
+      "city": "Singapore",
+      "address": "Airport Boulevard, Singapore",
+      "lat": 1.3644,
+      "lng": 103.9915,
+      "phone": "",
+      "website": "https://www.changiairport.com",
+      "status": "planned",
+      "price": 0,
+      "notes": "Departure and final arrival airport."
+    },
+    {
+      "id": "london-heathrow",
+      "type": "transport",
+      "name": "London Heathrow Airport",
+      "city": "London",
+      "address": "Hounslow, United Kingdom",
+      "lat": 51.47,
+      "lng": -0.4543,
+      "phone": "",
+      "website": "https://www.heathrow.com",
+      "status": "planned",
+      "price": 0,
+      "notes": "UK arrival and departure airport. Terminals TBC."
+    },
+    {
+      "id": "hotel-heathrow",
+      "type": "hotel",
+      "name": "Heathrow hotel TBC",
+      "city": "London Heathrow",
+      "address": "TBC",
+      "lat": null,
+      "lng": null,
+      "phone": "",
+      "website": "",
+      "status": "researching",
+      "price": 0,
+      "bookingReference": "TBC",
+      "checkIn": "TBC",
+      "checkOut": "TBC",
+      "parking": "TBC",
+      "notes": "Provisional one-night arrival hotel near Heathrow."
+    },
+    {
+      "id": "hotel-bristol",
+      "type": "hotel",
+      "name": "Bristol hotel TBC",
+      "city": "Bristol",
+      "address": "TBC",
+      "lat": null,
+      "lng": null,
+      "phone": "",
+      "website": "",
+      "status": "researching",
+      "price": 0,
+      "bookingReference": "TBC",
+      "checkIn": "TBC",
+      "checkOut": "TBC",
+      "parking": "Required",
+      "notes": "Provisional two-night Bristol hotel with parking."
+    },
+    {
+      "id": "hotel-cotswolds",
+      "type": "hotel",
+      "name": "Cotswolds hotel TBC",
+      "city": "Cotswolds",
+      "address": "TBC",
+      "lat": null,
+      "lng": null,
+      "phone": "",
+      "website": "",
+      "status": "researching",
+      "price": 0,
+      "bookingReference": "TBC",
+      "checkIn": "TBC",
+      "checkOut": "TBC",
+      "parking": "Required",
+      "notes": "Provisional two-night base. Final village TBC."
+    },
+    {
+      "id": "hotel-windermere",
+      "type": "hotel",
+      "name": "Windermere hotel TBC",
+      "city": "Windermere",
+      "address": "TBC",
+      "lat": null,
+      "lng": null,
+      "phone": "",
+      "website": "",
+      "status": "researching",
+      "price": 0,
+      "bookingReference": "TBC",
+      "checkIn": "TBC",
+      "checkOut": "TBC",
+      "parking": "Required",
+      "notes": "Provisional two-night Windermere hotel."
+    },
+    {
+      "id": "hotel-edinburgh",
+      "type": "hotel",
+      "name": "Edinburgh hotel TBC",
+      "city": "Edinburgh",
+      "address": "TBC",
+      "lat": null,
+      "lng": null,
+      "phone": "",
+      "website": "",
+      "status": "researching",
+      "price": 0,
+      "bookingReference": "TBC",
+      "checkIn": "TBC",
+      "checkOut": "TBC",
+      "parking": "Required or park-and-ride",
+      "notes": "Provisional two-night Edinburgh hotel."
+    },
+    {
+      "id": "hotel-st-andrews",
+      "type": "hotel",
+      "name": "St Andrews hotel TBC",
+      "city": "St Andrews",
+      "address": "TBC",
+      "lat": null,
+      "lng": null,
+      "phone": "",
+      "website": "",
+      "status": "researching",
+      "price": 0,
+      "bookingReference": "TBC",
+      "checkIn": "TBC",
+      "checkOut": "TBC",
+      "parking": "Required",
+      "notes": "Provisional one-night St Andrews hotel."
+    },
+    {
+      "id": "hotel-york",
+      "type": "hotel",
+      "name": "York hotel TBC",
+      "city": "York",
+      "address": "TBC",
+      "lat": null,
+      "lng": null,
+      "phone": "",
+      "website": "",
+      "status": "researching",
+      "price": 0,
+      "bookingReference": "TBC",
+      "checkIn": "TBC",
+      "checkOut": "TBC",
+      "parking": "Required",
+      "notes": "Provisional two-night York hotel outside the restricted centre."
+    },
+    {
+      "id": "hotel-london",
+      "type": "hotel",
+      "name": "London hotel TBC",
+      "city": "London",
+      "address": "TBC",
+      "lat": null,
+      "lng": null,
+      "phone": "",
+      "website": "",
+      "status": "researching",
+      "price": 0,
+      "bookingReference": "TBC",
+      "checkIn": "TBC",
+      "checkOut": "TBC",
+      "parking": "Not required after car return",
+      "notes": "Provisional two-night London hotel with convenient Heathrow access."
+    },
+    {
+      "id": "stonehenge",
+      "type": "attraction",
+      "name": "Stonehenge",
+      "city": "Amesbury",
+      "address": "Amesbury, Salisbury SP4 7DE",
+      "lat": 51.1789,
+      "lng": -1.8262,
+      "phone": "",
+      "website": "https://www.english-heritage.org.uk/visit/places/stonehenge/",
+      "status": "idea",
+      "price": 0,
+      "openingHours": "TBC for June 2027",
+      "bookingRequired": true,
+      "ticketReference": "TBC",
+      "durationMinutes": 150,
+      "notes": "Provisional timed visit between Heathrow and Bristol."
+    },
+    {
+      "id": "bristol-harbour",
+      "type": "attraction",
+      "name": "Bristol Harbour",
+      "city": "Bristol",
+      "address": "Bristol Harbourside",
+      "lat": 51.4496,
+      "lng": -2.5989,
+      "phone": "",
+      "website": "",
+      "status": "idea",
+      "price": 0,
+      "openingHours": "Open public area; individual venues TBC",
+      "bookingRequired": false,
+      "ticketReference": "",
+      "durationMinutes": 180,
+      "notes": "Provisional harbour walk and museum area."
+    },
+    {
+      "id": "clifton-bridge",
+      "type": "attraction",
+      "name": "Clifton Suspension Bridge",
+      "city": "Bristol",
+      "address": "Bridge Road, Leigh Woods, Bristol BS8",
+      "lat": 51.4545,
+      "lng": -2.6278,
+      "phone": "",
+      "website": "https://cliftonbridge.org.uk",
+      "status": "idea",
+      "price": 0,
+      "openingHours": "TBC",
+      "bookingRequired": false,
+      "ticketReference": "",
+      "durationMinutes": 90,
+      "notes": "Provisional viewpoint visit."
+    },
+    {
+      "id": "cotswolds-villages",
+      "type": "attraction",
+      "name": "Cotswolds villages",
+      "city": "Cotswolds",
+      "address": "Exact villages TBC",
+      "lat": null,
+      "lng": null,
+      "phone": "",
+      "website": "",
+      "status": "researching",
+      "price": 0,
+      "openingHours": "Not applicable",
+      "bookingRequired": false,
+      "ticketReference": "",
+      "durationMinutes": 360,
+      "notes": "Provisional village circuit. Final stops and parking TBC."
+    },
+    {
+      "id": "lake-windermere",
+      "type": "attraction",
+      "name": "Lake Windermere",
+      "city": "Windermere",
+      "address": "Windermere, Cumbria",
+      "lat": 54.36,
+      "lng": -2.94,
+      "phone": "",
+      "website": "",
+      "status": "idea",
+      "price": 0,
+      "openingHours": "Cruise timetable TBC",
+      "bookingRequired": false,
+      "ticketReference": "TBC",
+      "durationMinutes": 180,
+      "notes": "Provisional cruise and lakeside plan."
+    },
+    {
+      "id": "edinburgh-castle",
+      "type": "attraction",
+      "name": "Edinburgh Castle",
+      "city": "Edinburgh",
+      "address": "Castlehill, Edinburgh EH1 2NG",
+      "lat": 55.9486,
+      "lng": -3.1999,
+      "phone": "",
+      "website": "https://www.edinburghcastle.scot",
+      "status": "idea",
+      "price": 0,
+      "openingHours": "TBC for June 2027",
+      "bookingRequired": true,
+      "ticketReference": "TBC",
+      "durationMinutes": 180,
+      "notes": "Provisional timed attraction."
+    },
+    {
+      "id": "royal-mile",
+      "type": "attraction",
+      "name": "Royal Mile and Edinburgh Old Town",
+      "city": "Edinburgh",
+      "address": "Royal Mile, Edinburgh",
+      "lat": 55.9495,
+      "lng": -3.1906,
+      "phone": "",
+      "website": "",
+      "status": "idea",
+      "price": 0,
+      "openingHours": "Public area",
+      "bookingRequired": false,
+      "ticketReference": "",
+      "durationMinutes": 180,
+      "notes": "Provisional walking route."
+    },
+    {
+      "id": "st-andrews-old-course",
+      "type": "attraction",
+      "name": "Old Course area",
+      "city": "St Andrews",
+      "address": "West Sands Road, St Andrews KY16",
+      "lat": 56.3433,
+      "lng": -2.8028,
+      "phone": "",
+      "website": "",
+      "status": "idea",
+      "price": 0,
+      "openingHours": "Access conditions TBC",
+      "bookingRequired": false,
+      "ticketReference": "",
+      "durationMinutes": 90,
+      "notes": "Provisional sightseeing stop, not a confirmed golf booking."
+    },
+    {
+      "id": "st-andrews-cathedral",
+      "type": "attraction",
+      "name": "St Andrews Cathedral",
+      "city": "St Andrews",
+      "address": "The Pends, St Andrews KY16 9QL",
+      "lat": 56.3397,
+      "lng": -2.7872,
+      "phone": "",
+      "website": "",
+      "status": "idea",
+      "price": 0,
+      "openingHours": "TBC for June 2027",
+      "bookingRequired": false,
+      "ticketReference": "",
+      "durationMinutes": 90,
+      "notes": "Provisional historic-site visit."
+    },
+    {
+      "id": "york-minster",
+      "type": "attraction",
+      "name": "York Minster",
+      "city": "York",
+      "address": "Deangate, York YO1 7HH",
+      "lat": 53.9623,
+      "lng": -1.0821,
+      "phone": "",
+      "website": "https://yorkminster.org",
+      "status": "idea",
+      "price": 0,
+      "openingHours": "TBC for June 2027",
+      "bookingRequired": false,
+      "ticketReference": "TBC",
+      "durationMinutes": 120,
+      "notes": "Provisional visit."
+    },
+    {
+      "id": "york-shambles",
+      "type": "attraction",
+      "name": "The Shambles and York city walls",
+      "city": "York",
+      "address": "The Shambles, York YO1",
+      "lat": 53.959,
+      "lng": -1.08,
+      "phone": "",
+      "website": "",
+      "status": "idea",
+      "price": 0,
+      "openingHours": "Public area",
+      "bookingRequired": false,
+      "ticketReference": "",
+      "durationMinutes": 180,
+      "notes": "Provisional walking route."
+    },
+    {
+      "id": "bicester-village",
+      "type": "attraction",
+      "name": "Bicester Village",
+      "city": "Bicester",
+      "address": "50 Pingle Drive, Bicester OX26 6WD",
+      "lat": 51.8919,
+      "lng": -1.1537,
+      "phone": "",
+      "website": "https://www.thebicestercollection.com/bicester-village/en",
+      "status": "idea",
+      "price": 0,
+      "openingHours": "TBC for June 2027",
+      "bookingRequired": false,
+      "ticketReference": "",
+      "durationMinutes": 210,
+      "notes": "Fixed route stop; shopping duration and parking plan remain provisional."
+    },
+    {
+      "id": "westminster",
+      "type": "attraction",
+      "name": "Westminster area",
+      "city": "London",
+      "address": "Westminster, London",
+      "lat": 51.5007,
+      "lng": -0.1246,
+      "phone": "",
+      "website": "",
+      "status": "idea",
+      "price": 0,
+      "openingHours": "Individual attractions TBC",
+      "bookingRequired": false,
+      "ticketReference": "",
+      "durationMinutes": 180,
+      "notes": "Provisional London sightseeing area."
+    },
+    {
+      "id": "tower-of-london",
+      "type": "attraction",
+      "name": "Tower of London",
+      "city": "London",
+      "address": "London EC3N 4AB",
+      "lat": 51.5081,
+      "lng": -0.0759,
+      "phone": "",
+      "website": "https://www.hrp.org.uk/tower-of-london/",
+      "status": "idea",
+      "price": 0,
+      "openingHours": "TBC for June 2027",
+      "bookingRequired": true,
+      "ticketReference": "TBC",
+      "durationMinutes": 180,
+      "notes": "Provisional London attraction."
+    },
+    {
+      "id": "restaurant-bristol",
+      "type": "restaurant",
+      "name": "Bristol restaurant TBC",
+      "city": "Bristol",
+      "address": "TBC",
+      "lat": null,
+      "lng": null,
+      "phone": "",
+      "website": "",
+      "status": "researching",
+      "price": 0,
+      "cuisine": "TBC",
+      "reservationDate": "2027-06-07",
+      "reservationTime": "19:00",
+      "reservationReference": "TBC",
+      "notes": "Provisional dinner option."
+    },
+    {
+      "id": "restaurant-cotswolds",
+      "type": "restaurant",
+      "name": "Cotswolds restaurant TBC",
+      "city": "Cotswolds",
+      "address": "TBC",
+      "lat": null,
+      "lng": null,
+      "phone": "",
+      "website": "",
+      "status": "researching",
+      "price": 0,
+      "cuisine": "British pub",
+      "reservationDate": "2027-06-09",
+      "reservationTime": "13:00",
+      "reservationReference": "TBC",
+      "notes": "Provisional lunch or dinner option."
+    },
+    {
+      "id": "restaurant-windermere",
+      "type": "restaurant",
+      "name": "Windermere restaurant TBC",
+      "city": "Windermere",
+      "address": "TBC",
+      "lat": null,
+      "lng": null,
+      "phone": "",
+      "website": "",
+      "status": "researching",
+      "price": 0,
+      "cuisine": "TBC",
+      "reservationDate": "2027-06-11",
+      "reservationTime": "19:00",
+      "reservationReference": "TBC",
+      "notes": "Provisional dinner option."
+    },
+    {
+      "id": "restaurant-edinburgh",
+      "type": "restaurant",
+      "name": "Edinburgh restaurant TBC",
+      "city": "Edinburgh",
+      "address": "TBC",
+      "lat": null,
+      "lng": null,
+      "phone": "",
+      "website": "",
+      "status": "researching",
+      "price": 0,
+      "cuisine": "Scottish",
+      "reservationDate": "2027-06-13",
+      "reservationTime": "19:00",
+      "reservationReference": "TBC",
+      "notes": "Provisional dinner option."
+    },
+    {
+      "id": "restaurant-st-andrews",
+      "type": "restaurant",
+      "name": "St Andrews restaurant TBC",
+      "city": "St Andrews",
+      "address": "TBC",
+      "lat": null,
+      "lng": null,
+      "phone": "",
+      "website": "",
+      "status": "researching",
+      "price": 0,
+      "cuisine": "TBC",
+      "reservationDate": "2027-06-14",
+      "reservationTime": "19:00",
+      "reservationReference": "TBC",
+      "notes": "Provisional dinner option."
+    },
+    {
+      "id": "restaurant-york",
+      "type": "restaurant",
+      "name": "York restaurant TBC",
+      "city": "York",
+      "address": "TBC",
+      "lat": null,
+      "lng": null,
+      "phone": "",
+      "website": "",
+      "status": "researching",
+      "price": 0,
+      "cuisine": "TBC",
+      "reservationDate": "2027-06-16",
+      "reservationTime": "19:00",
+      "reservationReference": "TBC",
+      "notes": "Provisional dinner option."
+    },
+    {
+      "id": "restaurant-london",
+      "type": "restaurant",
+      "name": "London restaurant TBC",
+      "city": "London",
+      "address": "TBC",
+      "lat": null,
+      "lng": null,
+      "phone": "",
+      "website": "",
+      "status": "researching",
+      "price": 0,
+      "cuisine": "TBC",
+      "reservationDate": "2027-06-18",
+      "reservationTime": "19:00",
+      "reservationReference": "TBC",
+      "notes": "Provisional final dinner option."
+    }
   ],
   "bookings": [
-    { "id": "booking-car", "type": "transport", "title": "Rental car", "placeId": "heathrow", "date": "2027-06-05", "reference": "TBC", "status": "researching", "cost": 950, "notes": "Automatic transmission, full insurance and second driver." }
+    {
+      "id": "booking-outbound-flight",
+      "type": "transport",
+      "title": "Singapore to London flight",
+      "placeId": "singapore-changi",
+      "date": "2027-06-05",
+      "reference": "TBC",
+      "status": "researching",
+      "cost": 0,
+      "notes": "Airline, flight number and timing TBC."
+    },
+    {
+      "id": "booking-rental-car",
+      "type": "transport",
+      "title": "UK rental car",
+      "placeId": "london-heathrow",
+      "date": "2027-06-06",
+      "reference": "TBC",
+      "status": "researching",
+      "cost": 0,
+      "notes": "Pickup at Heathrow and return in London. Provider, transmission, insurance and return location TBC."
+    },
+    {
+      "id": "booking-return-flight",
+      "type": "transport",
+      "title": "London to Singapore flight",
+      "placeId": "london-heathrow",
+      "date": "2027-06-19",
+      "reference": "TBC",
+      "status": "researching",
+      "cost": 0,
+      "notes": "Airline, flight number, terminal and timing TBC."
+    }
   ],
-  "expenses": [
-    { "id": "expense-car", "date": "2027-06-05", "category": "Transport", "description": "Rental car estimate", "amount": 950, "status": "planned" },
-    { "id": "expense-fuel", "date": "2027-06-05", "category": "Fuel", "description": "Fuel estimate", "amount": 420, "status": "planned" },
-    { "id": "expense-food", "date": "2027-06-05", "category": "Food", "description": "Meals estimate", "amount": 1200, "status": "planned" },
-    { "id": "expense-parking", "date": "2027-06-05", "category": "Parking", "description": "Parking and tolls estimate", "amount": 260, "status": "planned" }
-  ],
+  "expenses": [],
   "checklists": [
-    { "id": "planning", "type": "planning", "title": "Before booking", "items": [
-      { "id": "check-passports", "label": "Check passport validity", "done": true },
-      { "id": "check-flights", "label": "Confirm flight times", "done": false },
-      { "id": "check-car", "label": "Book automatic rental car", "done": false },
-      { "id": "check-hotels", "label": "Book all accommodation", "done": false },
-      { "id": "check-attractions", "label": "Reserve timed attractions", "done": false }
-    ]},
-    { "id": "packing", "type": "packing", "title": "Packing", "items": [
-      { "id": "pack-licence", "label": "Driving licence and rental documents", "done": false },
-      { "id": "pack-rain", "label": "Waterproof jackets", "done": false },
-      { "id": "pack-adapter", "label": "UK power adapters", "done": false },
-      { "id": "pack-shoes", "label": "Comfortable walking shoes", "done": false }
-    ]}
+    {
+      "id": "planning",
+      "type": "planning",
+      "title": "Trip planning",
+      "items": [
+        {
+          "id": "check-flights",
+          "label": "Confirm outbound and return flights",
+          "done": false
+        },
+        {
+          "id": "check-car",
+          "label": "Book Heathrow pickup and London return rental car",
+          "done": false
+        },
+        {
+          "id": "check-hotels",
+          "label": "Confirm all provisional hotels",
+          "done": false
+        },
+        {
+          "id": "check-attractions",
+          "label": "Reserve timed attractions",
+          "done": false
+        },
+        {
+          "id": "check-restaurants",
+          "label": "Choose and reserve priority restaurants",
+          "done": false
+        },
+        {
+          "id": "check-driving",
+          "label": "Review long driving days and rest stops",
+          "done": false
+        }
+      ]
+    },
+    {
+      "id": "packing",
+      "type": "packing",
+      "title": "Packing",
+      "items": [
+        {
+          "id": "pack-passport",
+          "label": "Passports and flight documents",
+          "done": false
+        },
+        {
+          "id": "pack-licence",
+          "label": "Driving licence and rental documents",
+          "done": false
+        },
+        {
+          "id": "pack-rain",
+          "label": "Waterproof jackets",
+          "done": false
+        },
+        {
+          "id": "pack-shoes",
+          "label": "Comfortable walking shoes",
+          "done": false
+        },
+        {
+          "id": "pack-adapter",
+          "label": "UK power adapters",
+          "done": false
+        },
+        {
+          "id": "pack-medication",
+          "label": "Medication and travel essentials",
+          "done": false
+        }
+      ]
+    }
   ],
   "contacts": [
-    { "id": "emergency", "label": "UK emergency services", "value": "999", "type": "phone" },
-    { "id": "non-emergency", "label": "Police non-emergency", "value": "101", "type": "phone" },
-    { "id": "medical", "label": "NHS non-emergency", "value": "111", "type": "phone" }
+    {
+      "id": "emergency",
+      "label": "UK emergency services",
+      "value": "999",
+      "type": "phone"
+    },
+    {
+      "id": "police-non-emergency",
+      "label": "Police non-emergency",
+      "value": "101",
+      "type": "phone"
+    },
+    {
+      "id": "nhs-non-emergency",
+      "label": "NHS non-emergency",
+      "value": "111",
+      "type": "phone"
+    }
   ]
 }
