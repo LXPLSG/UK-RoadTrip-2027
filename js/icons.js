@@ -26,6 +26,7 @@ const paths = {
   chevronRight: '<path d="m9 18 6-6-6-6"/>',
   close: '<path d="m6 6 12 12M18 6 6 18"/>',
   download: '<path d="M12 3v12M7 10l5 5 5-5M5 21h14"/>',
+  print: '<path d="M6 9V3h12v6M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2M6 14h12v7H6Z"/>',
   upload: '<path d="M12 16V4M7 9l5-5 5 5M5 20h14"/>',
   refresh: '<path d="M20 7h-6V1M20 7a9 9 0 1 0 1 7"/>',
   moon: '<path d="M20 15.5A9 9 0 0 1 8.5 4 9 9 0 1 0 20 15.5Z"/>',

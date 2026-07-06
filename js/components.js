@@ -25,6 +25,14 @@ export function emptyState(iconName, title, copy) {
   return `<div class="empty-state">${icon(iconName)}<strong>${escapeHtml(title)}</strong><span>${escapeHtml(copy)}</span></div>`;
 }
 
+export function printButton(label = 'Print') {
+  return `<button class="btn print-view" type="button">${icon('print', 'icon-sm')}<span>${escapeHtml(label)}</span></button>`;
+}
+
+export function bindPrint(container) {
+  container.querySelectorAll('.print-view').forEach(button => button.addEventListener('click', () => window.print()));
+}
+
 export function toast(message, duration = 2800) {
   const region = document.querySelector('#toast-region');
   if (!region) return;

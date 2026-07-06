@@ -21,3 +21,7 @@ Use **Settings → Trip JSON** for direct edits, or import/export a complete JSO
 ## Offline behavior
 
 The service worker precaches the complete app shell, trip JSON, icons and local hero image. External map and website links remain optional online actions; all core itinerary, place, budget and checklist information stays available offline.
+
+## Printing
+
+Use the print action on the itinerary, day, driving guide or budget. Application navigation and editing controls are automatically removed from paper and PDF output.

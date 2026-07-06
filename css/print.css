@@ -1,0 +1,26 @@
+/* Paper-first layouts for itinerary, day, budget and guide printing. */
+@media print {
+  @page { size: A4; margin: 14mm; }
+  :root { color-scheme: light; --bg: #fff; --surface: #fff; --text: #111; --text-soft: #444; --text-faint: #666; --line: #bbb; --green: #155c48; }
+  body { background: #fff; color: #111; font-size: 10pt; }
+  .sidebar, .mobile-nav, .toast-region, #modal-root, .skip-link, button, .btn, .filter-bar, .itinerary-toolbar, .day-pagination { display: none !important; }
+  .main-content { margin: 0; overflow: visible; padding: 0; }
+  .page { width: 100%; max-width: none; animation: none; }
+  .page-header, .day-hero, .travel-header { margin-bottom: 8mm; border-bottom: 1px solid #999; padding-bottom: 4mm; }
+  h1 { font-size: 23pt; }
+  h2 { font-size: 15pt; }
+  .hero { min-height: 0; display: block; background: none; color: #111; box-shadow: none; }
+  .hero-image, .hero::after, .countdown { display: none; }
+  .hero-content { display: block; padding: 0 0 5mm; color: #111; }
+  .hero h1, .hero-meta { color: #111; }
+  .panel, .metric, .place-card, .tube-notice, .packing-progress { box-shadow: none; }
+  .metric-grid, .route-overview { grid-template-columns: repeat(4, 1fr); }
+  .dashboard-grid, .today-grid, .driving-layout, .settings-layout { grid-template-columns: 1fr; }
+  .place-grid, .note-grid, .rule-grid, .checklist-layout { grid-template-columns: repeat(2, 1fr); }
+  .day-row, .activity, .place-card, .expense-table tr, .tube-journey, .rule-card, .note-card { break-inside: avoid; }
+  .day-row { min-height: 18mm; }
+  .activity-card { box-shadow: none; }
+  a { color: #111; text-decoration: none; }
+  a[href^="http"]::after { content: " (" attr(href) ")"; color: #555; font-size: 8pt; overflow-wrap: anywhere; }
+  .settings-layout, .json-editor { display: none; }
+}

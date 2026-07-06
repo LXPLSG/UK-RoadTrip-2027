@@ -2,7 +2,7 @@
 import { store } from './store.js';
 import { repository } from './repository.js';
 import { icon } from './icons.js';
-import { pageHeader, statusTag, emptyState, openModal, confirmAction, toast } from './components.js';
+import { pageHeader, statusTag, emptyState, openModal, confirmAction, toast, printButton, bindPrint } from './components.js';
 import { escapeHtml as e, formatDate, formatDateRange, formatMoney, formatDuration, daysUntil, titleCase, uid, formObject, mapUrl, downloadJson } from './utils.js';
 import { themeManager } from './theme.js';
 import { modeManager } from './mode.js';
@@ -128,7 +128,7 @@ function renderItinerary(main) {
   const stats = totals(data);
   const countries = [...new Set(data.days.map(day => day.country))];
   main.innerHTML = `<div class="page">
-    ${pageHeader('Your route', '15 days, one clear plan', `${formatDateRange(data.trip.startDate, data.trip.endDate)} · ${stats.miles.toLocaleString()} miles`)}
+    ${pageHeader('Your route', '15 days, one clear plan', `${formatDateRange(data.trip.startDate, data.trip.endDate)} · ${stats.miles.toLocaleString()} miles`, printButton('Print itinerary'))}
     <section class="route-overview">${metric('Countries', `${countries.length}`, 'pin', 'green')}${metric('Road days', `${data.days.filter(day => day.distanceMiles > 0).length}`, 'car', 'amber')}${metric('Activities', `${data.days.flatMap(day => day.activities).length}`, 'list', 'sky')}</section>
     <div class="itinerary-toolbar"><div class="segmented" id="country-filters"><button class="segment active" data-country="all">All</button>${countries.map(country => `<button class="segment" data-country="${e(country)}">${e(country)}</button>`).join('')}</div><span id="itinerary-count" class="muted"></span></div>
     <section class="panel timeline" id="itinerary-days">
@@ -152,6 +152,7 @@ function renderItinerary(main) {
     applyCountry(button.dataset.country);
   }));
   applyCountry('all');
+  bindPrint(main);
 }
 
 function dayForm(day) {
@@ -191,7 +192,7 @@ function renderDay(main, id) {
     <nav class="day-pagination" aria-label="Adjacent itinerary days">${previous ? `<a href="#/day/${e(previous.id)}">${icon('arrowLeft', 'icon-sm')} Day ${index}</a>` : '<span></span>'}${next ? `<a href="#/day/${e(next.id)}">Day ${index + 2} ${icon('arrowRight', 'icon-sm')}</a>` : '<span></span>'}</nav>
     <div class="day-hero">
       <div><a class="page-eyebrow" href="#/itinerary">${icon('calendar', 'icon-sm')} Itinerary</a><h1>Day ${index + 1} · ${e(day.title)}</h1><p class="page-subtitle">${e(formatDate(day.date, { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }))} · ${e(day.country)} · ${e(day.region)}</p></div>
-      <div class="button-row"><button class="btn" id="edit-day">${icon('edit', 'icon-sm')}<span>Edit day</span></button><button class="btn btn-primary" id="add-activity">${icon('plus', 'icon-sm')}<span>Add activity</span></button></div>
+      <div class="button-row">${printButton('Print day')}<button class="btn" id="edit-day">${icon('edit', 'icon-sm')}<span>Edit day</span></button><button class="btn btn-primary" id="add-activity">${icon('plus', 'icon-sm')}<span>Add activity</span></button></div>
     </div>
     <section class="metric-grid">
       ${metric('Distance', `${Number(day.distanceMiles || 0)} mi`, 'road', 'green')}
@@ -231,6 +232,7 @@ function renderDay(main, id) {
       target.activities = target.activities.filter(item => item.id !== activity.id);
     }, 'Activity deleted') });
   }));
+  bindPrint(main);
 }
 
 function placeForm(place = {}) {
@@ -297,7 +299,7 @@ function renderDriving(main) {
   const roadDays = data.days.filter(day => Number(day.distanceMiles) > 0);
   const stats = totals(data);
   main.innerHTML = `<div class="page">
-    ${pageHeader('On the road', 'Driving guide', `${guide.units} · Guidance reviewed ${formatDate(guide.lastReviewed)}`)}
+    ${pageHeader('On the road', 'Driving guide', `${guide.units} · Guidance reviewed ${formatDate(guide.lastReviewed)}`, printButton('Print guide'))}
     <section class="route-overview">${metric('Route distance', `${stats.miles.toLocaleString()} mi`, 'road', 'green')}${metric('Wheel time', formatDuration(stats.driveMinutes), 'clock', 'amber')}${metric('Road days', `${roadDays.length}`, 'car', 'sky')}</section>
     <div class="driving-layout">
       <section><div class="section-header"><h2>Daily drives</h2></div><div class="panel drive-list">${roadDays.map(day => `<a class="drive-row" href="#/day/${e(day.id)}"><span class="drive-day">${e(formatDate(day.date, { day: 'numeric', month: 'short' }))}</span><div><strong>${e(day.title)}</strong><span>${e(day.country)} · ${e(day.region)}</span></div><div class="drive-numbers"><strong>${Number(day.distanceMiles)} mi</strong><span>${e(formatDuration(day.driveMinutes))}</span></div>${icon('chevronRight')}</a>`).join('')}</div></section>
@@ -306,6 +308,7 @@ function renderDriving(main) {
     <div class="section-header"><h2>UK road essentials</h2><a class="btn btn-ghost" href="${e(guide.sourceUrl)}" target="_blank" rel="noopener">Official guidance ${icon('external', 'icon-sm')}</a></div>
     <section class="rule-grid">${guide.rules.map((rule, index) => `<article class="panel rule-card"><span>${String(index + 1).padStart(2, '0')}</span><div><h3>${e(rule.title)}</h3><p>${e(rule.detail)}</p></div></article>`).join('')}</section>
   </div>`;
+  bindPrint(main);
 }
 
 function tubeJourneyForm(journey = {}) {
@@ -457,7 +460,7 @@ function renderBudget(main) {
   const percent = Math.min(100, Math.round((planned / Number(data.trip.budget || 1)) * 100));
   const categories = Object.entries(entries.reduce((acc, item) => { acc[item.category] = (acc[item.category] || 0) + Number(item.amount || 0); return acc; }, {})).sort((a, b) => b[1] - a[1]);
   main.innerHTML = `<div class="page">
-    ${pageHeader('Money', 'Budget without surprises', `All figures in ${data.trip.homeCurrency}. Place estimates and ledger entries update this view automatically.`, `<button class="btn btn-primary" id="add-expense">${icon('plus', 'icon-sm')}<span>Add expense</span></button>`)}
+    ${pageHeader('Money', 'Budget without surprises', `All figures in ${data.trip.homeCurrency}. Place estimates and ledger entries update this view automatically.`, `${printButton('Print budget')}<button class="btn btn-primary" id="add-expense">${icon('plus', 'icon-sm')}<span>Add expense</span></button>`)}
     <section class="budget-summary">
       <article class="panel budget-card"><span>Total budget</span><strong>${formatMoney(data.trip.budget, data.trip.homeCurrency)}</strong><div class="progress-track"><div class="progress-fill" style="width:${percent}%"></div></div></article>
       <article class="panel budget-card"><span>Plan estimate</span><strong>${formatMoney(planned, data.trip.homeCurrency)}</strong><span>${percent}% of budget</span></article>
@@ -482,6 +485,7 @@ function renderBudget(main) {
     const expense = data.expenses.find(item => item.id === button.dataset.id);
     confirmAction({ title: 'Delete expense?', message: `${expense.description} will be removed from the budget.`, onConfirm: () => store.update(next => { next.expenses = next.expenses.filter(item => item.id !== expense.id); }, 'Expense deleted') });
   }));
+  bindPrint(main);
 }
 
 function renderChecklist(main) {
