@@ -54,6 +54,20 @@
 
 .dashboard-grid { min-width: 0; display: grid; grid-template-columns: minmax(0, 1.45fr) minmax(280px, .75fr); gap: 20px; }
 .dashboard-grid > *, .settings-layout > * { min-width: 0; }
+.travel-header { display: flex; align-items: flex-end; justify-content: space-between; gap: 20px; border-bottom: 1px solid var(--line); padding-bottom: 22px; }
+.travel-summary { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); margin: 18px 0 4px; overflow: hidden; border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); box-shadow: var(--shadow-sm); }
+.travel-summary > div { min-width: 0; border-right: 1px solid var(--line); padding: 17px 19px; }
+.travel-summary > div:last-child { border-right: 0; }
+.travel-summary span, .travel-summary strong { display: block; overflow-wrap: anywhere; }
+.travel-summary span { margin-bottom: 4px; color: var(--text-soft); font-size: 11px; }
+.travel-summary strong { font-size: 16px; }
+.today-grid { display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(270px, .65fr); gap: 20px; }
+.today-grid > * { min-width: 0; }
+.contact-strip { display: grid; }
+.contact-strip a { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 42px; border-bottom: 1px solid var(--line); }
+.contact-strip a:last-child { border-bottom: 0; }
+.contact-strip span { color: var(--text-soft); font-size: 12px; }
+.contact-strip strong { color: var(--green); }
 .panel { border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); box-shadow: var(--shadow-sm); }
 .panel-header { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 17px 18px; border-bottom: 1px solid var(--line); }
 .panel-header h2, .panel-header h3 { margin: 0; font-size: 15px; }
@@ -187,7 +201,7 @@
   :root { --sidebar: 208px; }
   .place-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .metric-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .dashboard-grid, .settings-layout { grid-template-columns: 1fr; }
+  .dashboard-grid, .settings-layout, .today-grid { grid-template-columns: 1fr; }
 }
 
 @media (max-width: 760px) {
@@ -233,4 +247,9 @@
   .activity-line::before { left: 9px; }
   .activity-line::after { left: 4px; }
   .category-bar { grid-template-columns: 82px minmax(60px, 1fr) 68px; gap: 8px; }
+  .travel-header { align-items: flex-start; }
+  .travel-header .btn span { display: none; }
+  .travel-summary { grid-template-columns: 1fr; }
+  .travel-summary > div { border-right: 0; border-bottom: 1px solid var(--line); }
+  .travel-summary > div:last-child { border-bottom: 0; }
 }

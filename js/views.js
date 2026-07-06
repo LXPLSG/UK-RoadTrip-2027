@@ -14,6 +14,13 @@ function activeDay(data) {
   return data.days.find(day => day.date === today) || (today < data.trip.startDate ? data.days[0] : data.days.at(-1));
 }
 
+function tripPhase(data) {
+  const today = new Date().toISOString().slice(0, 10);
+  if (today < data.trip.startDate) return 'preview';
+  if (today > data.trip.endDate) return 'complete';
+  return 'travel';
+}
+
 function totals(data) {
   const miles = data.days.reduce((sum, day) => sum + Number(day.distanceMiles || 0), 0);
   const driveMinutes = data.days.reduce((sum, day) => sum + Number(day.driveMinutes || 0), 0);
@@ -74,6 +81,40 @@ function renderDashboard(main) {
           ${openPlaces.length ? openPlaces.map(place => `<a class="mini-row" href="#/places?focus=${e(place.id)}"><span class="mini-row-icon tone-amber">${icon(typeIcon(place.type), 'icon-sm')}</span><div><strong>${e(place.name)}</strong><span>${e(place.city)} · ${e(titleCase(place.type))}</span></div>${statusTag(place.status)}</a>`).join('') : '<div class="panel-body muted">All place decisions are settled.</div>'}
         </div>
       </section>
+    </div>
+  </div>`;
+}
+
+function renderToday(main) {
+  const data = store.data;
+  const day = activeDay(data);
+  const phase = tripPhase(data);
+  if (!day) { main.innerHTML = `<div class="page">${emptyState('calendar', 'No travel day available', 'Add itinerary days to use Travel Mode.')}</div>`; return; }
+  const dayNumber = data.days.indexOf(day) + 1;
+  const overnight = data.places.find(place => place.id === day.overnightPlaceId);
+  const ordered = [...day.activities].sort((a, b) => (a.time || '').localeCompare(b.time || ''));
+  const phaseLabel = phase === 'travel' ? 'Travel mode' : phase === 'complete' ? 'Trip complete' : 'Planning preview';
+  main.innerHTML = `<div class="page">
+    <header class="travel-header">
+      <div><p class="page-eyebrow">${e(phaseLabel)} · Day ${dayNumber}</p><h1>${e(day.title)}</h1><p class="page-subtitle">${e(formatDate(day.date, { weekday: 'long', day: 'numeric', month: 'long' }))} · ${e(day.region)}</p></div>
+      <a class="btn" href="#/day/${e(day.id)}">${icon('edit', 'icon-sm')}<span>Manage day</span></a>
+    </header>
+    <section class="travel-summary">
+      <div><span>On the road</span><strong>${Number(day.distanceMiles || 0)} miles</strong></div>
+      <div><span>Driving</span><strong>${e(formatDuration(day.driveMinutes))}</strong></div>
+      <div><span>Overnight</span><strong>${e(overnight?.name || 'No stay planned')}</strong></div>
+    </section>
+    <div class="today-grid">
+      <section><div class="section-header"><h2>Today’s schedule</h2><span class="muted">${ordered.length} stops</span></div>
+        <div class="panel mini-list">${ordered.map(activity => {
+          const place = data.places.find(item => item.id === activity.placeId);
+          return `<div class="mini-row"><span class="mini-row-icon tone-${typeTone[activity.type] || 'sky'}">${icon(typeIcon(activity.type), 'icon-sm')}</span><div><strong>${e(activity.title)}</strong><span>${e(place?.name || activity.notes || titleCase(activity.type))}</span></div><strong class="nowrap">${e(activity.time || 'Anytime')}</strong></div>`;
+        }).join('') || '<div class="panel-body muted">No activities scheduled.</div>'}</div>
+      </section>
+      <aside><div class="section-header"><h2>Quick access</h2></div><div class="stack">
+        ${overnight ? `<article class="panel panel-body"><p class="page-eyebrow">Tonight</p><h3>${e(overnight.name)}</h3><p class="muted">${e(overnight.address || overnight.city)}</p><div class="button-row"><a class="btn" href="${e(mapUrl(overnight))}" target="_blank" rel="noopener">${icon('pin', 'icon-sm')} Directions</a>${overnight.phone ? `<a class="icon-btn" href="tel:${e(overnight.phone)}" aria-label="Call ${e(overnight.name)}">${icon('phone')}</a>` : ''}</div></article>` : ''}
+        <article class="panel panel-body"><p class="page-eyebrow">Important numbers</p><div class="contact-strip">${data.contacts.map(contact => `<a href="${contact.type === 'phone' ? `tel:${e(contact.value)}` : '#'}"><span>${e(contact.label)}</span><strong>${e(contact.value)}</strong></a>`).join('')}</div></article>
+      </div></aside>
     </div>
   </div>`;
 }
@@ -357,7 +398,7 @@ function renderNotFound(main) {
 }
 
 export function renderView(main, route) {
-  const renderers = { dashboard: renderDashboard, today: renderDashboard, itinerary: renderItinerary, day: renderDay, places: renderPlaces, budget: renderBudget, checklist: renderChecklist, settings: renderSettings };
+  const renderers = { dashboard: renderDashboard, today: renderToday, itinerary: renderItinerary, day: renderDay, places: renderPlaces, budget: renderBudget, checklist: renderChecklist, settings: renderSettings };
   (renderers[route.name] || renderNotFound)(main, route.id);
   main.focus({ preventScroll: true });
 }
