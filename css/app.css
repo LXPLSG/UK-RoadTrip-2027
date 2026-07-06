@@ -212,7 +212,8 @@
 .check-row { display: grid; grid-template-columns: 24px 1fr 34px; align-items: center; gap: 10px; min-height: 52px; border-bottom: 1px solid var(--line); padding: 8px 12px 8px 18px; }
 .check-row:last-child { border-bottom: 0; }
 .check-row input { width: 19px; min-height: 19px; accent-color: var(--green); }
-.check-row.done span { color: var(--text-faint); text-decoration: line-through; }
+.check-row label { color: var(--text); font-size: 13px; font-weight: 500; cursor: pointer; }
+.check-row.done label { color: var(--text-faint); text-decoration: line-through; }
 .check-row .icon-btn { width: 32px; height: 32px; border: 0; background: transparent; color: var(--text-faint); }
 
 .settings-layout { display: grid; grid-template-columns: minmax(0, 1fr) 320px; gap: 20px; }

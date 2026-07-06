@@ -38,6 +38,7 @@ export function toast(message, duration = 2800) {
   if (!region) return;
   const node = document.createElement('div');
   node.className = 'toast';
+  node.setAttribute('role', 'status');
   node.innerHTML = `${icon('check', 'icon-sm')}<span>${escapeHtml(message)}</span>`;
   region.append(node);
   setTimeout(() => node.remove(), duration);
@@ -45,6 +46,7 @@ export function toast(message, duration = 2800) {
 
 export function openModal({ title, body, submitLabel = 'Save', onSubmit, destructive = false }) {
   const root = document.querySelector('#modal-root');
+  const previousFocus = document.activeElement;
   root.innerHTML = `<div class="modal-backdrop" role="presentation">
     <section class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
       <header class="modal-header"><h2 id="modal-title">${escapeHtml(title)}</h2><button class="icon-btn" type="button" data-close aria-label="Close">${icon('close')}</button></header>
@@ -54,17 +56,30 @@ export function openModal({ title, body, submitLabel = 'Save', onSubmit, destruc
       </form>
     </section>
   </div>`;
-  const close = () => { root.innerHTML = ''; };
+  const close = () => {
+    document.removeEventListener('keydown', handleKeys);
+    root.innerHTML = '';
+    previousFocus?.focus?.();
+  };
   root.querySelectorAll('[data-close]').forEach(button => button.addEventListener('click', close));
   root.querySelector('.modal-backdrop').addEventListener('click', event => { if (event.target.classList.contains('modal-backdrop')) close(); });
-  const escapeClose = event => { if (event.key === 'Escape') { close(); document.removeEventListener('keydown', escapeClose); } };
-  document.addEventListener('keydown', escapeClose);
+  const handleKeys = event => {
+    if (event.key === 'Escape') { close(); return; }
+    if (event.key !== 'Tab') return;
+    const controls = [...root.querySelectorAll('button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), a[href]')];
+    if (!controls.length) return;
+    const first = controls[0];
+    const last = controls.at(-1);
+    if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last.focus(); }
+    else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
+  };
+  document.addEventListener('keydown', handleKeys);
   root.querySelector('#modal-form').addEventListener('submit', async event => {
     event.preventDefault();
     const success = await onSubmit(event.currentTarget);
     if (success !== false) close();
   });
-  setTimeout(() => root.querySelector('input, select, textarea, button')?.focus(), 0);
+  setTimeout(() => root.querySelector('#modal-form input, #modal-form select, #modal-form textarea, #modal-form button')?.focus(), 0);
 }
 
 export function confirmAction({ title, message, confirmLabel = 'Delete', onConfirm }) {

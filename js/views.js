@@ -11,6 +11,14 @@ import { APP_VERSION } from './config.js';
 const typeTone = { hotel: 'green', attraction: 'sky', restaurant: 'coral', transport: 'purple', drive: 'amber', walk: 'green' };
 const typeIcon = type => ({ hotel: 'hotel', attraction: 'attraction', restaurant: 'restaurant', transport: 'transport', drive: 'car', walk: 'walk' })[type] || 'pin';
 
+function activateSegment(elements, active) {
+  elements.forEach(item => {
+    const selected = item === active;
+    item.classList.toggle('active', selected);
+    item.setAttribute('aria-pressed', String(selected));
+  });
+}
+
 function activeDay(data) {
   const today = new Date().toISOString().slice(0, 10);
   return data.days.find(day => day.date === today) || (today < data.trip.startDate ? data.days[0] : data.days.at(-1));
@@ -148,7 +156,7 @@ function renderItinerary(main) {
     count.textContent = `${visible} ${visible === 1 ? 'day' : 'days'}`;
   };
   main.querySelectorAll('#country-filters .segment').forEach(button => button.addEventListener('click', () => {
-    main.querySelectorAll('#country-filters .segment').forEach(item => item.classList.toggle('active', item === button));
+    activateSegment(main.querySelectorAll('#country-filters .segment'), button);
     applyCountry(button.dataset.country);
   }));
   applyCountry('all');
@@ -289,7 +297,7 @@ function renderAttractions(main) {
   };
   main.querySelector('#add-attraction').addEventListener('click', () => openModal({ title: 'Add attraction', body: placeForm({ type: 'attraction', status: 'researching' }), onSubmit: form => { const values = formObject(form); store.update(next => next.places.push({ id: uid('attraction'), lat: null, lng: null, ...values, type: 'attraction', price: Number(values.price || 0), durationMinutes: Number(values.durationMinutes || 0), bookingRequired: values.bookingRequired === 'true' })); } }));
   search.addEventListener('input', draw);
-  main.querySelectorAll('#attraction-filters .segment').forEach(button => button.addEventListener('click', () => { statusFilter = button.dataset.status; main.querySelectorAll('#attraction-filters .segment').forEach(item => item.classList.toggle('active', item === button)); draw(); }));
+  main.querySelectorAll('#attraction-filters .segment').forEach(button => button.addEventListener('click', () => { statusFilter = button.dataset.status; activateSegment(main.querySelectorAll('#attraction-filters .segment'), button); draw(); }));
   draw();
 }
 
@@ -346,7 +354,7 @@ function renderRestaurants(main) {
     <div class="place-grid" id="restaurant-list">${restaurants.map(restaurant => `<article class="place-card restaurant-card" data-city="${e(restaurant.city)}"><div class="place-card-head"><span class="place-type-icon tone-coral">${icon('restaurant')}</span>${statusTag(restaurant.status)}</div><div class="place-card-body"><h3>${e(restaurant.name)}</h3><p>${e(restaurant.city)} · ${e(restaurant.cuisine || 'Cuisine TBC')}</p><div class="hotel-details"><span><small>Reservation</small>${e(restaurant.reservationDate ? formatDate(restaurant.reservationDate) : 'Date TBC')} ${e(restaurant.reservationTime || '')}</span><span><small>Reference</small>${e(restaurant.reservationReference || 'TBC')}</span><span><small>Notes</small>${e(restaurant.notes || 'No notes yet.')}</span></div>${Number(restaurant.price) ? `<strong>${formatMoney(restaurant.price, data.trip.homeCurrency)}</strong>` : ''}</div><div class="place-card-foot"><a class="btn btn-ghost" href="${e(mapUrl(restaurant))}" target="_blank" rel="noopener">${icon('pin', 'icon-sm')} Map</a><div class="card-actions"><button class="icon-btn edit-restaurant" data-id="${e(restaurant.id)}" aria-label="Edit ${e(restaurant.name)}">${icon('edit', 'icon-sm')}</button><button class="icon-btn delete-restaurant" data-id="${e(restaurant.id)}" aria-label="Delete ${e(restaurant.name)}">${icon('trash', 'icon-sm')}</button></div></div></article>`).join('') || emptyState('restaurant', 'No restaurants yet', 'Add dining ideas or confirmed reservations.')}</div>
   </div>`;
   const cards = [...main.querySelectorAll('.restaurant-card')];
-  main.querySelectorAll('#restaurant-filters .segment').forEach(button => button.addEventListener('click', () => { main.querySelectorAll('#restaurant-filters .segment').forEach(item => item.classList.toggle('active', item === button)); cards.forEach(card => { card.hidden = button.dataset.city !== 'all' && card.dataset.city !== button.dataset.city; }); }));
+  main.querySelectorAll('#restaurant-filters .segment').forEach(button => button.addEventListener('click', () => { activateSegment(main.querySelectorAll('#restaurant-filters .segment'), button); cards.forEach(card => { card.hidden = button.dataset.city !== 'all' && card.dataset.city !== button.dataset.city; }); }));
   main.querySelector('#add-restaurant').addEventListener('click', () => openModal({ title: 'Add restaurant', body: placeForm({ type: 'restaurant', status: 'researching' }), onSubmit: form => { const values = formObject(form); store.update(next => next.places.push({ id: uid('restaurant'), lat: null, lng: null, ...values, type: 'restaurant', price: Number(values.price || 0) })); } }));
   main.querySelectorAll('.edit-restaurant').forEach(button => button.addEventListener('click', () => { const restaurant = restaurants.find(item => item.id === button.dataset.id); openModal({ title: 'Edit restaurant', body: placeForm(restaurant), onSubmit: form => { const values = formObject(form); store.update(next => Object.assign(next.places.find(item => item.id === restaurant.id), values, { type: 'restaurant', price: Number(values.price || 0) })); } }); }));
   main.querySelectorAll('.delete-restaurant').forEach(button => button.addEventListener('click', () => { const restaurant = restaurants.find(item => item.id === button.dataset.id); confirmAction({ title: 'Delete restaurant?', message: `${restaurant.name} will be removed from places and linked activities.`, onConfirm: () => removePlace(restaurant) }); }));
@@ -428,7 +436,7 @@ function renderPlaces(main) {
     store.update(next => next.places.push({ id: uid('place'), lat: null, lng: null, ...values, price: Number(values.price || 0) }));
   }}));
   search.addEventListener('input', draw);
-  main.querySelectorAll('.segment').forEach(button => button.addEventListener('click', () => { filter = button.dataset.type; main.querySelectorAll('.segment').forEach(item => item.classList.toggle('active', item === button)); draw(); }));
+  main.querySelectorAll('.segment').forEach(button => button.addEventListener('click', () => { filter = button.dataset.type; activateSegment(main.querySelectorAll('.segment'), button); draw(); }));
   draw();
 }
 
@@ -496,7 +504,7 @@ function renderChecklist(main) {
   main.innerHTML = `<div class="page">
     ${pageHeader('Ready to go', 'Planning checklist', `${done} of ${all.length} complete · ${percent}% ready`, `<button class="btn btn-primary" id="add-task">${icon('plus', 'icon-sm')}<span>Add task</span></button>`)}
     <div class="progress-track" style="margin-bottom:24px"><div class="progress-fill" style="width:${percent}%"></div></div>
-    <div class="checklist-layout">${data.checklists.map(group => `<section class="panel checklist"><div class="panel-header"><h2>${e(group.title)}</h2><span class="tag">${group.items.filter(item => item.done).length}/${group.items.length}</span></div>${group.items.map(item => `<label class="check-row ${item.done ? 'done' : ''}"><input class="task-toggle" type="checkbox" data-group="${e(group.id)}" data-id="${e(item.id)}" ${item.done ? 'checked' : ''}><span>${e(item.label)}</span><button type="button" class="icon-btn delete-task" data-group="${e(group.id)}" data-id="${e(item.id)}" aria-label="Delete ${e(item.label)}">${icon('trash', 'icon-sm')}</button></label>`).join('') || '<div class="panel-body muted">No tasks in this list.</div>'}</section>`).join('')}</div>
+    <div class="checklist-layout">${data.checklists.map(group => `<section class="panel checklist"><div class="panel-header"><h2>${e(group.title)}</h2><span class="tag">${group.items.filter(item => item.done).length}/${group.items.length}</span></div>${group.items.map(item => `<div class="check-row ${item.done ? 'done' : ''}"><input id="${e(item.id)}" class="task-toggle" type="checkbox" data-group="${e(group.id)}" data-id="${e(item.id)}" ${item.done ? 'checked' : ''}><label for="${e(item.id)}">${e(item.label)}</label><button type="button" class="icon-btn delete-task" data-group="${e(group.id)}" data-id="${e(item.id)}" aria-label="Delete ${e(item.label)}">${icon('trash', 'icon-sm')}</button></div>`).join('') || '<div class="panel-body muted">No tasks in this list.</div>'}</section>`).join('')}</div>
   </div>`;
   main.querySelectorAll('.task-toggle').forEach(input => input.addEventListener('change', () => store.update(next => { next.checklists.find(group => group.id === input.dataset.group).items.find(item => item.id === input.dataset.id).done = input.checked; }, input.checked ? 'Task complete' : 'Task reopened')));
   main.querySelectorAll('.delete-task').forEach(button => button.addEventListener('click', event => { event.preventDefault(); store.update(next => { const group = next.checklists.find(item => item.id === button.dataset.group); group.items = group.items.filter(item => item.id !== button.dataset.id); }, 'Task deleted'); }));
@@ -515,7 +523,7 @@ function renderPacking(main) {
   main.innerHTML = `<div class="page">
     ${pageHeader('Travel ready', 'Packing list', `${packed} of ${items.length} packed`, groups.length ? `<button class="btn btn-primary" id="add-packing-item">${icon('plus', 'icon-sm')}<span>Add item</span></button>` : '')}
     <section class="packing-progress"><div><span>Overall progress</span><strong>${percent}%</strong></div><div class="progress-track"><div class="progress-fill" style="width:${percent}%"></div></div></section>
-    <div class="checklist-layout">${groups.map(group => `<section class="panel checklist"><div class="panel-header"><h2>${e(group.title)}</h2><span class="tag">${group.items.filter(item => item.done).length}/${group.items.length}</span></div>${group.items.map(item => `<label class="check-row ${item.done ? 'done' : ''}"><input class="packing-toggle" type="checkbox" data-group="${e(group.id)}" data-id="${e(item.id)}" ${item.done ? 'checked' : ''}><span>${e(item.label)}</span><button type="button" class="icon-btn delete-packing" data-group="${e(group.id)}" data-id="${e(item.id)}" aria-label="Delete ${e(item.label)}">${icon('trash', 'icon-sm')}</button></label>`).join('') || '<div class="panel-body muted">This list is empty.</div>'}</section>`).join('') || emptyState('list', 'No packing lists', 'Add a packing checklist group in trip JSON.')}</div>
+    <div class="checklist-layout">${groups.map(group => `<section class="panel checklist"><div class="panel-header"><h2>${e(group.title)}</h2><span class="tag">${group.items.filter(item => item.done).length}/${group.items.length}</span></div>${group.items.map(item => `<div class="check-row ${item.done ? 'done' : ''}"><input id="${e(item.id)}" class="packing-toggle" type="checkbox" data-group="${e(group.id)}" data-id="${e(item.id)}" ${item.done ? 'checked' : ''}><label for="${e(item.id)}">${e(item.label)}</label><button type="button" class="icon-btn delete-packing" data-group="${e(group.id)}" data-id="${e(item.id)}" aria-label="Delete ${e(item.label)}">${icon('trash', 'icon-sm')}</button></div>`).join('') || '<div class="panel-body muted">This list is empty.</div>'}</section>`).join('') || emptyState('list', 'No packing lists', 'Add a packing checklist group in trip JSON.')}</div>
   </div>`;
   main.querySelectorAll('.packing-toggle').forEach(input => input.addEventListener('change', () => store.update(next => { next.checklists.find(group => group.id === input.dataset.group).items.find(item => item.id === input.dataset.id).done = input.checked; }, input.checked ? 'Packed' : 'Returned to packing list')));
   main.querySelectorAll('.delete-packing').forEach(button => button.addEventListener('click', event => { event.preventDefault(); store.update(next => { const group = next.checklists.find(item => item.id === button.dataset.group); group.items = group.items.filter(item => item.id !== button.dataset.id); }, 'Packing item deleted'); }));
@@ -545,7 +553,7 @@ function renderNotes(main) {
   };
   main.querySelector('#add-note').addEventListener('click', () => openModal({ title: 'Add note', body: noteForm(), onSubmit: form => { const values = formObject(form); store.update(next => next.notes.push({ id: uid('note'), ...values, pinned: values.pinned === 'true', updatedAt: new Date().toISOString() })); } }));
   search.addEventListener('input', draw);
-  main.querySelectorAll('#note-filters .segment').forEach(button => button.addEventListener('click', () => { category = button.dataset.category; main.querySelectorAll('#note-filters .segment').forEach(item => item.classList.toggle('active', item === button)); draw(); }));
+  main.querySelectorAll('#note-filters .segment').forEach(button => button.addEventListener('click', () => { category = button.dataset.category; activateSegment(main.querySelectorAll('#note-filters .segment'), button); draw(); }));
   draw();
 }
 
@@ -593,5 +601,6 @@ function renderNotFound(main) {
 export function renderView(main, route) {
   const renderers = { dashboard: renderDashboard, today: renderToday, itinerary: renderItinerary, day: renderDay, places: renderPlaces, hotels: renderHotels, restaurants: renderRestaurants, attractions: renderAttractions, driving: renderDriving, tube: renderTube, budget: renderBudget, checklist: renderChecklist, packing: renderPacking, notes: renderNotes, settings: renderSettings };
   (renderers[route.name] || renderNotFound)(main, route.id);
+  main.querySelectorAll('.segment').forEach(button => button.setAttribute('aria-pressed', String(button.classList.contains('active'))));
   main.focus({ preventScroll: true });
 }

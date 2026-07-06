@@ -52,3 +52,8 @@ input::placeholder, textarea::placeholder { color: var(--text-faint); }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; transition-duration: .01ms !important; }
 }
+
+@media (forced-colors: active) {
+  .status-dot, .progress-fill, .timeline-marker::after { forced-color-adjust: none; background: Highlight; }
+  .btn-primary { border: 2px solid ButtonText; }
+}
