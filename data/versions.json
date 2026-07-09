@@ -1,7 +1,8 @@
 {
   "$schema": "./versions.schema.json",
   "formatVersion": 1,
-  "activeVersion": "v0.3",
+  "activeVersion": "v0.1",
+  "currentVersion": "v0.3",
   "versions": [
     {
       "version": "v0.1",

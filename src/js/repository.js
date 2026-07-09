@@ -25,7 +25,9 @@ function getActiveVersion(registry) {
     }
     versions.add(entry.version);
   }
-  const active = registry.versions.find(entry => entry.version === registry.activeVersion);
+  const requestedVersion = registry.currentVersion || registry.activeVersion;
+  if (!versions.has(requestedVersion)) throw new Error('The current trip version does not exist.');
+  const active = registry.versions.find(entry => entry.version === requestedVersion);
   if (!active) throw new Error('The active trip version does not exist.');
   return active;
 }
@@ -36,10 +38,11 @@ async function loadBundled() {
   const active = getActiveVersion(await registryResponse.json());
   const dataResponse = await fetch(`../data/${active.file}`, { cache: 'no-store' });
   if (!dataResponse.ok) throw new Error(`Could not load bundled trip data ${active.version}.`);
-  const data = await dataResponse.json();
+  const rawData = await dataResponse.json();
+  if (rawData.dataRevision !== active.dataRevision) throw new Error(`Bundled data ${active.version} has a mismatched revision.`);
+  const data = migrateTripData(rawData, rawData);
   const result = validateTripData(data);
   if (!result.valid) throw new Error(`Bundled data is invalid: ${result.errors.join(' ')}`);
-  if (data.dataRevision !== active.dataRevision) throw new Error(`Bundled data ${active.version} has a mismatched revision.`);
   bundledData = data;
   return data;
 }

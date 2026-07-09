@@ -24,7 +24,9 @@ for (const entry of registry.versions) {
 
 const active = registry.versions.find(entry => entry.version === registry.activeVersion);
 if (!active) throw new Error(`Active trip version ${registry.activeVersion} is not registered.`);
-const data = JSON.parse(fs.readFileSync(`data/${active.file}`, 'utf8'));
+const currentEntry = registry.versions.find(entry => entry.version === (registry.currentVersion || registry.activeVersion));
+if (!currentEntry) throw new Error(`Current trip version ${registry.currentVersion || registry.activeVersion} is not registered.`);
+const data = JSON.parse(fs.readFileSync(`data/${currentEntry.file}`, 'utf8'));
 
 const current = validateTripData(data);
 if (!current.valid) throw new Error(current.errors.join('\n'));
@@ -72,4 +74,4 @@ for (const [, path] of worker.matchAll(/'((?:\.\.?\/)[^']+)'/g)) {
   if (path && !fs.existsSync(resolved)) throw new Error(`Cached asset is missing: ${path}`);
 }
 
-console.log(`Validated ${registry.versions.length} trip snapshot(s); active ${registry.activeVersion}, schema v${data.schemaVersion}, ${data.days.length} days and all migration paths.`);
+console.log(`Validated ${registry.versions.length} trip snapshot(s); active ${registry.activeVersion}, current ${currentEntry.version}, schema v${data.schemaVersion}, ${data.days.length} days and all migration paths.`);

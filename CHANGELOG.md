@@ -4,6 +4,13 @@ All notable changes to UK Road Trip 2027 are documented here. The project follow
 
 ## [Unreleased]
 
+## [1.2.1] - 2026-07-09
+
+### Fixed
+
+- Prevented stale cached app shells from failing when the public trip registry advances to a newer schema by splitting the legacy `activeVersion` pointer from the current app `currentVersion` pointer.
+- Migrated bundled snapshots before validation so future schema transitions are safer.
+
 ## [1.2.0] - 2026-07-09
 
 ### Added
