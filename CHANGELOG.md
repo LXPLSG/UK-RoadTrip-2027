@@ -4,6 +4,13 @@ All notable changes to UK Road Trip 2027 are documented here. The project follow
 
 ## [Unreleased]
 
+## [1.2.4] - 2026-07-09
+
+### Fixed
+
+- Added a browser recovery page for clearing stale service-worker caches when an old app shell hides newer Dashboard features.
+- Changed JavaScript and CSS runtime requests to network-first caching so future UI releases appear without manual browser-cache clearing.
+
 ## [1.2.3] - 2026-07-09
 
 ### Changed

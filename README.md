@@ -57,6 +57,8 @@ Use **Settings → Trip JSON** for direct edits, or import/export a complete JSO
 
 The service worker precaches the complete app shell, every registered trip snapshot, icons and local hero image. External map and website links remain optional online actions; all core itinerary, place, budget and checklist information stays available offline.
 
+If a browser ever shows an older interface after deployment, open `/src/recover.html` once to clear the old offline shell and reload the latest app.
+
 Install from the browser’s application menu on desktop. On iPhone or iPad, open the site in Safari and use **Share → Add to Home Screen**.
 
 ## Printing

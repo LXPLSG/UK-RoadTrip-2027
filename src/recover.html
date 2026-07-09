@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f4f5f2">
+  <title>Refresh UK Road Trip</title>
+  <style>
+    :root { color-scheme: light dark; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: #f4f5f2; color: #17201d; }
+    @media (prefers-color-scheme: dark) { :root { background: #141817; color: #f0f3f1; } .card { background: #1c211f; border-color: #323936; } }
+    body { min-height: 100vh; display: grid; place-items: center; margin: 0; padding: 24px; }
+    .card { width: min(100%, 520px); border: 1px solid #dfe3df; border-radius: 8px; background: #fff; padding: 28px; box-shadow: 0 12px 35px rgba(24, 34, 30, .12); }
+    h1 { margin: 0 0 10px; font-size: 26px; }
+    p { margin: 0 0 18px; color: #66706c; line-height: 1.5; }
+    button, a { min-height: 44px; display: inline-flex; align-items: center; justify-content: center; border: 0; border-radius: 7px; background: #176b52; color: #fff; padding: 0 16px; font-weight: 750; text-decoration: none; cursor: pointer; }
+    .muted { margin-top: 14px; font-size: 13px; }
+  </style>
+</head>
+<body>
+  <main class="card">
+    <h1>Refreshing the travel app</h1>
+    <p id="status">Clearing the old offline cache so the latest Dashboard can load.</p>
+    <button id="retry" type="button" hidden>Open latest app</button>
+    <p class="muted">This does not delete your exported files. It only removes this site’s old offline app shell from the browser.</p>
+  </main>
+  <script>
+    const status = document.querySelector('#status');
+    const retry = document.querySelector('#retry');
+    const latestUrl = `./?recovered=${Date.now()}#/dashboard`;
+
+    async function recover() {
+      try {
+        if ('serviceWorker' in navigator) {
+          const registrations = await navigator.serviceWorker.getRegistrations();
+          await Promise.all(registrations.map(registration => registration.unregister()));
+        }
+        if ('caches' in window) {
+          const keys = await caches.keys();
+          await Promise.all(keys.map(key => caches.delete(key)));
+        }
+        sessionStorage.setItem('ukrt:recovered', new Date().toISOString());
+        status.textContent = 'Done. Opening the latest Dashboard now.';
+        location.replace(latestUrl);
+      } catch (error) {
+        status.textContent = `Automatic refresh did not complete: ${error.message}`;
+        retry.hidden = false;
+      }
+    }
+
+    retry.addEventListener('click', () => location.assign(latestUrl));
+    recover();
+  </script>
+</body>
+</html>

@@ -1,8 +1,9 @@
 /** Offline application-shell cache and same-origin runtime request strategy. */
-const VERSION = 'ukrt-2027-v28';
+const VERSION = 'ukrt-2027-v29';
 const APP_SHELL = [
   './',
   './index.html',
+  './recover.html',
   './manifest.webmanifest',
   './css/tokens.css',
   './css/base.css',
@@ -82,12 +83,18 @@ self.addEventListener('fetch', event => {
     return;
   }
 
-  event.respondWith(
-    caches.match(request).then(cached => cached || fetch(request).then(response => {
-      if (!response || response.status !== 200) return response;
-      const copy = response.clone();
-      caches.open(VERSION).then(cache => cache.put(request, copy));
+  if (url.pathname.includes('/src/js/') || url.pathname.includes('/src/css/') || url.pathname.endsWith('/src/manifest.webmanifest')) {
+    event.respondWith(fetch(request).then(response => {
+      if (response.ok) caches.open(VERSION).then(cache => cache.put(request, response.clone()));
       return response;
-    }))
-  );
+    }).catch(() => caches.match(request)));
+    return;
+  }
+
+  event.respondWith(caches.match(request).then(cached => cached || fetch(request).then(response => {
+    if (!response || response.status !== 200) return response;
+    const copy = response.clone();
+    caches.open(VERSION).then(cache => cache.put(request, copy));
+    return response;
+  })));
 });
