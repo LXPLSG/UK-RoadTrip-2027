@@ -25,7 +25,7 @@ Committed snapshots are immutable history. To revert the bundled itinerary, chan
 - Optional external URLs must use `https` where available.
 - Unknown or undecided values use empty strings, `null`, `TBC` or a planning status instead of invented confirmation details.
 
-The active Phase 6 baseline is `data/versions/trip-v0.4.json`; the next itinerary refinement should normally be `trip-v0.5.json`. `trip-v0.3.json` is retained as a compatibility bridge for older cached app shells.
+The active baseline is `data/versions/trip-v0.5.json`; the next itinerary refinement should normally be `trip-v0.6.json`. `trip-v0.3.json` is retained as a compatibility bridge for older cached app shells.
 
 ## Platform Fields
 

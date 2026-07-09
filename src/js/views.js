@@ -45,6 +45,31 @@ function metric(label, value, iconName, tone) {
   return `<article class="metric"><div class="metric-top"><span>${e(label)}</span><span class="metric-icon tone-${tone}">${icon(iconName, 'icon-sm')}</span></div><strong>${e(value)}</strong></article>`;
 }
 
+function dashboardPlanningRows(data) {
+  const groups = [
+    { label: 'Accommodation', iconName: 'hotel', tone: 'green', items: data.places.filter(place => place.type === 'hotel') },
+    { label: 'Restaurants', iconName: 'restaurant', tone: 'coral', items: data.places.filter(place => place.type === 'restaurant') },
+    { label: 'Attractions', iconName: 'attraction', tone: 'sky', items: data.places.filter(place => place.type === 'attraction') },
+    { label: 'Bookings', iconName: 'check', tone: 'purple', items: data.bookings || [] }
+  ];
+  return groups.map(group => {
+    const confirmed = group.items.filter(item => item.status === 'confirmed' || item.status === 'paid').length;
+    const open = Math.max(0, group.items.length - confirmed);
+    return `<div class="mini-row">
+      <span class="mini-row-icon tone-${group.tone}">${icon(group.iconName, 'icon-sm')}</span>
+      <div><strong>${e(group.label)}</strong><span>${group.items.length} saved · ${open} provisional</span></div>
+      ${statusTag(confirmed ? `${confirmed} confirmed` : 'provisional')}
+    </div>`;
+  }).join('');
+}
+
+function dashboardRoute(data) {
+  if (Array.isArray(data.trip.route) && data.trip.route.length) return data.trip.route.join(' → ');
+  const fixedRoute = data.notes?.find(note => /route/i.test(note.title || ''));
+  if (fixedRoute?.body) return fixedRoute.body;
+  return data.days.map(day => day.region).filter(Boolean).filter((region, index, list) => list.indexOf(region) === index).join(' → ');
+}
+
 function renderDashboard(main) {
   const data = store.data;
   const trip = data.trip;
@@ -52,6 +77,7 @@ function renderDashboard(main) {
   const stats = totals(data);
   const budget = calculateBudgetSummary(data);
   const notifications = notificationEngine.list(data).slice(0, 4);
+  const route = dashboardRoute(data);
   const countdown = daysUntil(trip.startDate);
   const remaining = data.checklists.flatMap(group => group.items).filter(item => !item.done);
   const openPlaces = data.places.filter(place => place.status === 'researching').slice(0, 4);
@@ -83,6 +109,20 @@ function renderDashboard(main) {
       <div><p class="page-eyebrow">Day ${data.days.indexOf(day) + 1} · ${e(day.region)}</p><h2>${e(day.title)}</h2><p>${e(day.summary)}</p></div>
       <a class="btn btn-primary" href="#/day/${e(day.id)}">Open day ${icon('arrowRight', 'icon-sm')}</a>
     </section>` : emptyState('calendar', 'No days yet', 'Add itinerary days in your trip JSON.')}
+    <div class="dashboard-grid">
+      <section>
+        <div class="section-header"><h2>Trip essentials</h2></div>
+        <div class="panel mini-list">
+          <div class="mini-row"><span class="mini-row-icon tone-green">${icon('calendar', 'icon-sm')}</span><div><strong>Travel dates</strong><span>${e(formatDateRange(trip.startDate, trip.endDate))}</span></div><strong class="nowrap">${data.days.length} days</strong></div>
+          <div class="mini-row"><span class="mini-row-icon tone-sky">${icon('pin', 'icon-sm')}</span><div><strong>Route</strong><span>${e(route)}</span></div>${statusTag('fixed')}</div>
+          <div class="mini-row"><span class="mini-row-icon tone-purple">${icon('info', 'icon-sm')}</span><div><strong>Trip ID</strong><span>${e(data.activeTripId || trip.id)}</span></div><strong class="nowrap">rev ${Number(data.dataRevision || 0)}</strong></div>
+        </div>
+      </section>
+      <section>
+        <div class="section-header"><h2>Planning status</h2><a class="btn btn-ghost" href="#/places" aria-label="Open saved places">${icon('arrowRight')}</a></div>
+        <div class="panel mini-list">${dashboardPlanningRows(data)}</div>
+      </section>
+    </div>
     <div class="dashboard-grid">
       <section>
         <div class="section-header"><h2>Plan at a glance</h2></div>

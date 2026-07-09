@@ -4,6 +4,13 @@ All notable changes to UK Road Trip 2027 are documented here. The project follow
 
 ## [Unreleased]
 
+## [1.2.3] - 2026-07-09
+
+### Changed
+
+- Made Phase 4 dashboard information explicit with data-driven trip essentials, route, Trip ID, revision and planning-status sections.
+- Added `v0.5` trip snapshot with the fixed route stored in JSON for dashboard display.
+
 ## [1.2.2] - 2026-07-09
 
 ### Fixed
