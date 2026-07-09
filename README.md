@@ -6,8 +6,12 @@ A dependency-free, offline-first Progressive Web App for planning and taking a 1
 
 - Planning dashboard and focused Travel Mode Today view.
 - Editable itinerary, activities, hotels, restaurants and attractions.
+- Reusable travel-management modules for flights, car rental, documents, weather, emergency contacts and companions.
+- Active Trip ID model (`UK-2027`) with a versioned registry ready for future trips.
 - Offline driving guide and saved London Tube journeys.
-- Budget planning, expense tracking, packing, checklists and notes.
+- Shared budget engine for total budget, actual spend, forecast, remaining balance, per-person cost and currency conversion.
+- Notification infrastructure for countdowns, reminders, alerts and future Firebase Cloud Messaging integration.
+- Expense tracking, packing, checklists and notes.
 - Light, dark and System themes with responsive phone, tablet and desktop layouts.
 - Validated JSON import/export, automatic backups and sequential schema migrations.
 - Installable PWA behavior, complete offline reloads and print-ready travel views.
@@ -34,7 +38,9 @@ node tests/validate-data.mjs
 
 `data/versions.json` selects the active immutable snapshot under `data/versions/`. On first launch, the app validates and copies that snapshot to namespaced Local Storage. Later browser edits affect the working copy, so deploying a new snapshot does not silently overwrite a traveler's changes.
 
-To refine the itinerary, copy the active snapshot to the next filename such as `trip-v0.2.json`, update its `dataRevision` and `lastUpdated`, then register it and set `activeVersion` in `data/versions.json`. Revert by selecting an earlier registered version; existing devices can then activate it with **Settings → Restore bundled data**. Existing version files must not be edited after commit.
+To refine the itinerary, copy the active snapshot to the next filename such as `trip-v0.3.json`, update its `dataRevision` and `lastUpdated`, then register it and set `activeVersion` in `data/versions.json`. Revert by selecting an earlier registered version; existing devices can then activate it with **Settings → Restore bundled data**. Existing version files must not be edited after commit.
+
+The current active bundled trip is `UK-2027` in `data/versions/trip-v0.2.json`. Future trips should receive their own stable Trip ID and be added to the same schema rather than changing application code.
 
 Use **Settings → Trip JSON** for direct edits, or import/export a complete JSON backup. Restoring bundled data creates a backup of the current working copy first.
 

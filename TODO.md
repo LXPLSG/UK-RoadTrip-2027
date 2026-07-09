@@ -4,14 +4,15 @@ This file tracks deliberate follow-up work, not defects required for the current
 
 ## Next Release
 
-- Add optional multi-trip storage through a repository adapter.
+- Add full multi-trip switching UI on top of the schema v7 Trip ID registry.
+- Add an IndexedDB repository adapter for large attachments, documents and offline map regions.
 - Add encrypted cloud synchronization after an account model is defined.
-- Add downloadable offline map regions when storage requirements are agreed.
 - Add calendar export for confirmed activities and bookings.
-- Add attachment support through IndexedDB.
+- Add live provider adapters for weather, road closures, flight status and exchange rates.
+- Add Firebase Cloud Messaging delivery after notification permissions and account strategy are defined.
 
 ## Product Decisions Needed
 
 - Confirm the final traveler names, dates and route.
-- Confirm whether budget values should support multiple source currencies.
+- Confirm whether expense entry should support multiple source currencies beyond the current planning converter.
 - Select preferred map and live transit providers for optional online integrations.

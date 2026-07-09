@@ -4,10 +4,22 @@ All notable changes to UK Road Trip 2027 are documented here. The project follow
 
 ## [Unreleased]
 
+## [1.1.0] - 2026-07-09
+
+### Added
+
+- Phase 5 travel platform model with active Trip ID `UK-2027`, trip summaries and reusable JSON-defined module registry.
+- Versioned `v0.2` bundled trip snapshot while preserving `v0.1` as immutable history.
+- Generic travel-management module pages for flights, car rental, travel documents, weather, emergency contacts and travel companions.
+- Shared budget engine for total budget, actual spend, forecast, remaining balance, per-person estimates, category rollups and static currency conversion.
+- Notification infrastructure for price drops, booking windows, cancellation deadlines, countdowns, weather alerts, road closures and reservation reminders, with a future Firebase Cloud Messaging adapter boundary.
+- Reusable UI components for comparison tables, budget cards, status chips, timelines, price cards, booking cards, recommendation badges and rating bars.
+
 ### Changed
 
 - Separated application code under `src/` from frequently edited trip content, assets and documentation.
 - Replaced the mutable bundled trip file with an immutable `v0.1` snapshot and a validated registry for future revisions and rollbacks.
+- Budget and dashboard views now consume shared services instead of duplicating forecast calculations.
 
 ## [1.0.0] - 2026-07-06
 

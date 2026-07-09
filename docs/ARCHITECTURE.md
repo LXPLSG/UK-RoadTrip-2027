@@ -12,11 +12,19 @@ UK Road Trip 2027 is a dependency-free, offline-first Progressive Web App. It us
 - `src/js/navigation.js` defines the shared desktop and mobile navigation registry.
 - `src/js/theme.js` and `src/js/mode.js` independently resolve appearance and Planning/Travel behavior.
 - `src/js/migrations.js` upgrades older working documents before validation and activation.
+- `src/js/budget.js` is the shared budget engine for forecasts, actual spend, remaining balance, per-person cost and currency conversion.
+- `src/js/notifications.js` owns notification rule generation and provides the future Firebase Cloud Messaging adapter boundary.
 - `src/js/views.js` renders domain views and dispatches user intent through the store.
 - `src/js/components.js` contains reusable, domain-neutral UI building blocks.
 - `src/service-worker.js` owns application asset caching and offline navigation.
 
 Views do not access Local Storage directly. Trip-specific content is never embedded in HTML; generic interface labels remain part of the presentation layer.
+
+## Travel Platform Model
+
+Schema v7 introduces `activeTripId`, `trips`, `travelModules`, reusable travel collections and shared engines. `UK-2027` is the current active Trip ID. Module pages are configured by JSON records and rendered through shared card, table, status and price components, so a future trip can add or remove travel-management areas without introducing itinerary content into `src/`.
+
+The current app keeps one active working trip in Local Storage while preserving a multi-trip registry in the document. A later repository adapter can promote this to full multi-trip switching or IndexedDB storage without changing the view/component contracts.
 
 ## Data Flow
 
