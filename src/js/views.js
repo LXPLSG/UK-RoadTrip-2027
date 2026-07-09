@@ -2,11 +2,13 @@
 import { store } from './store.js';
 import { repository } from './repository.js';
 import { icon } from './icons.js';
-import { pageHeader, statusTag, emptyState, openModal, confirmAction, toast, printButton, bindPrint } from './components.js';
+import { pageHeader, statusTag, emptyState, openModal, confirmAction, toast, printButton, bindPrint, bookingCard, budgetCard, comparisonTable, priceCard } from './components.js';
 import { escapeHtml as e, formatDate, formatDateRange, formatMoney, formatDuration, daysUntil, titleCase, uid, formObject, mapUrl, downloadJson } from './utils.js';
 import { themeManager } from './theme.js';
 import { modeManager } from './mode.js';
 import { APP_VERSION } from './config.js';
+import { calculateBudgetSummary, convertCurrency } from './budget.js';
+import { notificationEngine } from './notifications.js';
 
 const typeTone = { hotel: 'green', attraction: 'sky', restaurant: 'coral', transport: 'purple', drive: 'amber', walk: 'green' };
 const typeIcon = type => ({ hotel: 'hotel', attraction: 'attraction', restaurant: 'restaurant', transport: 'transport', drive: 'car', walk: 'walk' })[type] || 'pin';
@@ -36,9 +38,7 @@ function tripPhase(data) {
 function totals(data) {
   const miles = data.days.reduce((sum, day) => sum + Number(day.distanceMiles || 0), 0);
   const driveMinutes = data.days.reduce((sum, day) => sum + Number(day.driveMinutes || 0), 0);
-  const expenses = data.expenses.reduce((sum, expense) => sum + Number(expense.amount || 0), 0);
-  const placeEstimates = data.places.reduce((sum, place) => sum + Number(place.price || 0), 0);
-  return { miles, driveMinutes, spend: expenses + placeEstimates };
+  return { miles, driveMinutes, spend: calculateBudgetSummary(data).forecast };
 }
 
 function metric(label, value, iconName, tone) {
@@ -50,6 +50,8 @@ function renderDashboard(main) {
   const trip = data.trip;
   const day = activeDay(data);
   const stats = totals(data);
+  const budget = calculateBudgetSummary(data);
+  const notifications = notificationEngine.list(data).slice(0, 4);
   const countdown = daysUntil(trip.startDate);
   const remaining = data.checklists.flatMap(group => group.items).filter(item => !item.done);
   const openPlaces = data.places.filter(place => place.status === 'researching').slice(0, 4);
@@ -67,8 +69,13 @@ function renderDashboard(main) {
     <section class="metric-grid" aria-label="Trip summary">
       ${metric('Distance', `${stats.miles.toLocaleString()} mi`, 'road', 'green')}
       ${metric('Driving time', formatDuration(stats.driveMinutes), 'clock', 'amber')}
-      ${metric('Plan estimate', formatMoney(stats.spend, trip.homeCurrency), 'wallet', 'sky')}
+      ${metric('Forecast', formatMoney(stats.spend, trip.homeCurrency), 'wallet', 'sky')}
       ${metric('Still to do', `${remaining.length} tasks`, 'check', 'coral')}
+    </section>
+    <section class="budget-summary" aria-label="Budget dashboard">
+      ${budgetCard({ label: 'Total Budget', value: formatMoney(budget.totalBudget, trip.homeCurrency), meta: `${budget.travelerCount} traveller baseline`, progress: budget.totalBudget ? Math.min(100, budget.forecast / budget.totalBudget * 100) : 0 })}
+      ${budgetCard({ label: 'Actual Spend', value: formatMoney(budget.actualSpend, trip.homeCurrency), meta: 'Paid and entered expenses', tone: 'sky' })}
+      ${budgetCard({ label: 'Remaining', value: formatMoney(Math.abs(budget.remaining), trip.homeCurrency), meta: budget.remaining >= 0 ? 'Available forecast balance' : 'Forecast over budget', tone: budget.remaining >= 0 ? 'green' : 'coral' })}
     </section>
     <div class="section-header"><h2>${countdown > 0 ? 'First up' : 'Current plan'}</h2><a class="btn btn-ghost" href="#/itinerary">Full itinerary ${icon('arrowRight', 'icon-sm')}</a></div>
     ${day ? `<section class="panel next-day">
@@ -91,6 +98,10 @@ function renderDashboard(main) {
         <div class="section-header"><h2>Needs attention</h2><a class="btn btn-ghost" href="#/checklist" aria-label="Open checklist">${icon('arrowRight')}</a></div>
         <div class="panel mini-list">
           ${openPlaces.length ? openPlaces.map(place => `<a class="mini-row" href="#/places?focus=${e(place.id)}"><span class="mini-row-icon tone-amber">${icon(typeIcon(place.type), 'icon-sm')}</span><div><strong>${e(place.name)}</strong><span>${e(place.city)} · ${e(titleCase(place.type))}</span></div>${statusTag(place.status)}</a>`).join('') : '<div class="panel-body muted">All place decisions are settled.</div>'}
+        </div>
+        <div class="section-header"><h2>Notification engine</h2><a class="btn btn-ghost" href="#/settings" aria-label="Open settings">${icon('arrowRight')}</a></div>
+        <div class="panel mini-list">
+          ${notifications.map(item => `<div class="mini-row"><span class="mini-row-icon tone-purple">${icon('alert', 'icon-sm')}</span><div><strong>${e(item.label || item.title)}</strong><span>${e(item.body || item.title)}</span></div>${statusTag(item.status || 'planned')}</div>`).join('')}
         </div>
       </section>
     </div>
@@ -451,35 +462,28 @@ function expenseForm(expense = {}) {
   </div>`;
 }
 
-function budgetEntries(data) {
-  const placeCategory = { hotel: 'Accommodation', attraction: 'Activities', restaurant: 'Food', transport: 'Transport' };
-  return [
-    ...data.expenses.map(expense => ({ ...expense, source: 'ledger' })),
-    ...data.places.filter(place => Number(place.price) > 0 && !data.expenses.some(expense => expense.placeId === place.id)).map(place => ({ id: `place-${place.id}`, category: placeCategory[place.type] || 'Other', description: place.name, amount: Number(place.price), status: place.status, source: 'place' }))
-  ];
-}
-
 function renderBudget(main) {
   const data = store.data;
-  const entries = budgetEntries(data);
-  const planned = entries.reduce((sum, item) => sum + Number(item.amount || 0), 0);
-  const paid = data.expenses.filter(item => item.status === 'paid').reduce((sum, item) => sum + Number(item.amount || 0), 0);
-  const remaining = Number(data.trip.budget || 0) - planned;
-  const percent = Math.min(100, Math.round((planned / Number(data.trip.budget || 1)) * 100));
-  const categories = Object.entries(entries.reduce((acc, item) => { acc[item.category] = (acc[item.category] || 0) + Number(item.amount || 0); return acc; }, {})).sort((a, b) => b[1] - a[1]);
+  const budget = calculateBudgetSummary(data);
+  const percent = Math.min(100, Math.round((budget.forecast / Number(budget.totalBudget || 1)) * 100));
+  const currencies = Object.keys(data.currencyRates?.rates || { [data.trip.homeCurrency]: 1 });
+  const converted = convertCurrency(budget.forecast, data.trip.homeCurrency, currencies.includes('SGD') ? 'SGD' : data.trip.homeCurrency, data.currencyRates);
   main.innerHTML = `<div class="page">
     ${pageHeader('Money', 'Budget without surprises', `All figures in ${data.trip.homeCurrency}. Place estimates and ledger entries update this view automatically.`, `${printButton('Print budget')}<button class="btn btn-primary" id="add-expense">${icon('plus', 'icon-sm')}<span>Add expense</span></button>`)}
     <section class="budget-summary">
-      <article class="panel budget-card"><span>Total budget</span><strong>${formatMoney(data.trip.budget, data.trip.homeCurrency)}</strong><div class="progress-track"><div class="progress-fill" style="width:${percent}%"></div></div></article>
-      <article class="panel budget-card"><span>Plan estimate</span><strong>${formatMoney(planned, data.trip.homeCurrency)}</strong><span>${percent}% of budget</span></article>
-      <article class="panel budget-card"><span>${remaining >= 0 ? 'Unallocated' : 'Over budget'}</span><strong style="color:var(${remaining >= 0 ? '--green' : '--coral'})">${formatMoney(Math.abs(remaining), data.trip.homeCurrency)}</strong><span>${formatMoney(paid, data.trip.homeCurrency)} marked paid</span></article>
+      ${budgetCard({ label: 'Total Budget', value: formatMoney(budget.totalBudget, data.trip.homeCurrency), meta: `${percent}% forecast usage`, progress: percent })}
+      ${budgetCard({ label: 'Actual Spend', value: formatMoney(budget.actualSpend, data.trip.homeCurrency), meta: 'Paid or entered ledger items', tone: 'sky' })}
+      ${budgetCard({ label: 'Forecast', value: formatMoney(budget.forecast, data.trip.homeCurrency), meta: `${formatMoney(converted, currencies.includes('SGD') ? 'SGD' : data.trip.homeCurrency)} converted`, tone: 'purple' })}
+      ${budgetCard({ label: budget.remaining >= 0 ? 'Remaining' : 'Over Budget', value: formatMoney(Math.abs(budget.remaining), data.trip.homeCurrency), meta: `${formatMoney(budget.perPerson, data.trip.homeCurrency)} per person`, tone: budget.remaining >= 0 ? 'green' : 'coral' })}
     </section>
     <div class="dashboard-grid">
       <section><div class="section-header"><h2>Expense ledger</h2></div><div class="panel"><table class="expense-table"><thead><tr><th>Description</th><th>Category</th><th>Status</th><th>Amount</th><th><span class="sr-only">Actions</span></th></tr></thead><tbody>
         ${data.expenses.map(expense => `<tr><td><strong>${e(expense.description)}</strong><br><span class="subtle">${e(formatDate(expense.date))}</span></td><td>${e(expense.category)}</td><td>${statusTag(expense.status)}</td><td>${formatMoney(expense.amount, data.trip.homeCurrency)}</td><td><div class="card-actions"><button class="icon-btn edit-expense" data-id="${e(expense.id)}" aria-label="Edit ${e(expense.description)}">${icon('edit', 'icon-sm')}</button><button class="icon-btn delete-expense" data-id="${e(expense.id)}" aria-label="Delete ${e(expense.description)}">${icon('trash', 'icon-sm')}</button></div></td></tr>`).join('') || '<tr><td colspan="5" class="muted">No ledger entries yet.</td></tr>'}
       </tbody></table></div></section>
-      <section><div class="section-header"><h2>By category</h2></div><div class="panel panel-body stack">${categories.map(([category, amount]) => `<div class="category-bar"><strong>${e(category)}</strong><div class="progress-track"><div class="progress-fill" style="width:${planned ? Math.round(amount / planned * 100) : 0}%;background:var(--sky)"></div></div><span>${formatMoney(amount, data.trip.homeCurrency)}</span></div>`).join('')}</div></section>
+      <section><div class="section-header"><h2>By category</h2></div><div class="panel panel-body stack">${budget.byCategory.map(item => `<div class="category-bar"><strong>${e(item.category)}</strong><div class="progress-track"><div class="progress-fill" style="width:${budget.forecast ? Math.round(item.amount / budget.forecast * 100) : 0}%;background:var(--sky)"></div></div><span>${formatMoney(item.amount, data.trip.homeCurrency)}</span></div>`).join('')}</div></section>
     </div>
+    <div class="section-header"><h2>Forecast sources</h2></div>
+    ${comparisonTable(['Description', 'Category', 'Status', 'Amount', 'Source'], budget.ledger.map(item => ({ Description: item.description, Category: item.category, Status: item.status, Amount: formatMoney(item.amount, data.trip.homeCurrency), Source: titleCase(item.source) })))}
   </div>`;
   main.querySelector('#add-expense').addEventListener('click', () => openModal({ title: 'Add expense', body: expenseForm(), onSubmit: form => {
     const values = formObject(form);
@@ -494,6 +498,65 @@ function renderBudget(main) {
     confirmAction({ title: 'Delete expense?', message: `${expense.description} will be removed from the budget.`, onConfirm: () => store.update(next => { next.expenses = next.expenses.filter(item => item.id !== expense.id); }, 'Expense deleted') });
   }));
   bindPrint(main);
+}
+
+function moduleForRoute(data, routeName) {
+  return (data.travelModules || []).find(module => module.route === routeName);
+}
+
+function moduleItems(data, module) {
+  const collection = data[module.collection] || [];
+  if (module.collection === 'places' && module.type) return collection.filter(item => item.type === module.type);
+  if (module.collection === 'checklists' && module.type) return collection.filter(item => item.type === module.type);
+  return collection;
+}
+
+function itemTitle(item) {
+  return item.title || item.name || item.label || item.description || 'Untitled item';
+}
+
+function moduleDetails(item) {
+  return [
+    { label: 'Provider', value: item.provider || item.type || item.category || item.city || '' },
+    { label: 'Date', value: item.date || item.startDate || item.expiryDate || item.updatedAt?.slice?.(0, 10) || '' },
+    { label: 'Reference', value: item.reference || item.bookingReference || item.reservationReference || item.value || '' },
+    { label: 'Notes', value: item.notes || item.body || '' }
+  ].filter(detail => detail.value);
+}
+
+function renderTravelModule(main, routeName) {
+  const data = store.data;
+  const module = moduleForRoute(data, routeName);
+  if (!module) { renderNotFound(main); return; }
+  const items = moduleItems(data, module);
+  const confirmed = items.filter(item => item.status === 'confirmed' || item.status === 'paid').length;
+  const priced = items.reduce((sum, item) => sum + Number(item.price || item.cost || item.amount || 0), 0);
+  const rows = items.map(item => ({
+    Item: itemTitle(item),
+    Status: item.status || 'planned',
+    Reference: item.reference || item.bookingReference || item.reservationReference || item.value || 'TBC',
+    Notes: item.notes || item.body || ''
+  }));
+  main.innerHTML = `<div class="page">
+    ${pageHeader(module.eyebrow, module.title, module.summary, `<a class="btn" href="#/settings">${icon('edit', 'icon-sm')}<span>Edit JSON</span></a>`)}
+    <section class="module-overview">
+      ${priceCard({ label: 'Saved Items', amount: String(items.length), currency: 'records', detail: 'Loaded from trip JSON' })}
+      ${priceCard({ label: 'Confirmed', amount: String(confirmed), currency: 'records', status: 'current' })}
+      ${priceCard({ label: 'Forecast', amount: formatMoney(priced, data.trip.homeCurrency), currency: data.trip.homeCurrency, detail: 'From item prices' })}
+      ${priceCard({ label: 'Trip ID', amount: data.activeTripId, currency: data.trip.homeCurrency, detail: 'Reusable platform model' })}
+    </section>
+    <div class="place-grid">
+      ${items.map(item => bookingCard({
+        item: { ...item, title: itemTitle(item), status: item.status || 'planned' },
+        iconName: module.icon,
+        tone: module.tone,
+        currency: data.trip.homeCurrency,
+        details: moduleDetails(item)
+      })).join('') || emptyState(module.icon, `${module.title} not populated yet`, 'Add records to the active versioned trip JSON when this part of the plan is ready.')}
+    </div>
+    <div class="section-header"><h2>Comparison</h2><span class="muted">Reusable table component</span></div>
+    ${comparisonTable(['Item', 'Status', 'Reference', 'Notes'], rows)}
+  </div>`;
 }
 
 function renderChecklist(main) {
@@ -568,8 +631,10 @@ function renderSettings(main) {
   const bytes = new Blob([compact]).size;
   const quickLinks = [
     ['hotels', 'Hotels', 'bed'], ['restaurants', 'Restaurants', 'restaurant'], ['attractions', 'Attractions', 'attraction'],
+    ['flights', 'Flights', 'plane'], ['car-rental', 'Car Rental', 'car'], ['documents', 'Documents', 'document'],
     ['driving', 'Driving guide', 'car'], ['tube', 'Tube planner', 'train'], ['budget', 'Budget', 'wallet'],
-    ['packing', 'Packing', 'list'], ['notes', 'Notes', 'note'], ['checklist', 'Checklist', 'check']
+    ['weather', 'Weather', 'weather'], ['packing', 'Packing', 'list'], ['notes', 'Notes', 'note'],
+    ['emergency-contacts', 'Emergency', 'phone'], ['companions', 'Companions', 'users'], ['checklist', 'Checklist', 'check']
   ];
   main.innerHTML = `<div class="page">
     ${pageHeader('Control centre', 'Settings and trip data', 'Manage the experience, working data, backups and installation.')}
@@ -583,7 +648,11 @@ function renderSettings(main) {
       <div class="panel settings-section"><h2>Data health</h2><div class="data-health"><div class="health-item"><span>App</span><strong>v${APP_VERSION}</strong></div><div class="health-item"><span>Schema</span><strong>v${data.schemaVersion}</strong></div><div class="health-item"><span>Working copy</span><strong>${Math.max(1, Math.round(bytes / 1024))} KB</strong></div><div class="health-item"><span>Last saved</span><strong>${e(new Date(data.lastUpdated).toLocaleString('en-GB', { dateStyle: 'medium', timeStyle: 'short' }))}</strong></div></div></div>
     </aside></div>
   </div>`;
-  main.querySelector('#edit-trip').addEventListener('click', () => openModal({ title: 'Edit trip details', body: tripSettingsForm(data.trip), onSubmit: form => { const values = formObject(form); if (values.endDate < values.startDate) { toast('End date must be after the start date'); return false; } store.update(next => Object.assign(next.trip, values, { budget: Number(values.budget), homeCurrency: values.homeCurrency.toUpperCase(), travelers: values.travelers.split(',').map(name => name.trim()).filter(Boolean) })); } }));
+  main.querySelector('#edit-trip').addEventListener('click', () => openModal({ title: 'Edit trip details', body: tripSettingsForm(data.trip), onSubmit: form => { const values = formObject(form); if (values.endDate < values.startDate) { toast('End date must be after the start date'); return false; } store.update(next => {
+    Object.assign(next.trip, values, { budget: Number(values.budget), homeCurrency: values.homeCurrency.toUpperCase(), travelers: values.travelers.split(',').map(name => name.trim()).filter(Boolean) });
+    const summary = next.trips.find(trip => trip.id === next.activeTripId);
+    if (summary) Object.assign(summary, { name: next.trip.name, startDate: next.trip.startDate, endDate: next.trip.endDate, homeCurrency: next.trip.homeCurrency });
+  }); } }));
   main.querySelectorAll('[data-theme-choice]').forEach(button => button.addEventListener('click', () => store.setPreference('theme', button.dataset.themeChoice)));
   main.querySelectorAll('[data-mode-choice]').forEach(button => button.addEventListener('click', () => store.setPreference('mode', button.dataset.modeChoice)));
   main.querySelector('#save-json').addEventListener('click', () => { try { store.replace(JSON.parse(main.querySelector('#json-editor').value), 'JSON saved'); } catch (error) { toast(`Could not save: ${error.message}`, 5000); } });
@@ -599,8 +668,32 @@ function renderNotFound(main) {
 }
 
 export function renderView(main, route) {
-  const renderers = { dashboard: renderDashboard, today: renderToday, itinerary: renderItinerary, day: renderDay, places: renderPlaces, hotels: renderHotels, restaurants: renderRestaurants, attractions: renderAttractions, driving: renderDriving, tube: renderTube, budget: renderBudget, checklist: renderChecklist, packing: renderPacking, notes: renderNotes, settings: renderSettings };
-  (renderers[route.name] || renderNotFound)(main, route.id);
+  const renderers = {
+    dashboard: renderDashboard,
+    today: renderToday,
+    itinerary: renderItinerary,
+    day: renderDay,
+    places: renderPlaces,
+    hotels: renderHotels,
+    restaurants: renderRestaurants,
+    attractions: renderAttractions,
+    driving: renderDriving,
+    tube: renderTube,
+    budget: renderBudget,
+    expenses: renderBudget,
+    checklist: renderChecklist,
+    packing: renderPacking,
+    notes: renderNotes,
+    'travel-notes': renderNotes,
+    flights: renderTravelModule,
+    'car-rental': renderTravelModule,
+    documents: renderTravelModule,
+    weather: renderTravelModule,
+    'emergency-contacts': renderTravelModule,
+    companions: renderTravelModule,
+    settings: renderSettings
+  };
+  (renderers[route.name] || renderNotFound)(main, route.id || route.name);
   main.querySelectorAll('.segment').forEach(button => button.setAttribute('aria-pressed', String(button.classList.contains('active'))));
   main.focus({ preventScroll: true });
 }

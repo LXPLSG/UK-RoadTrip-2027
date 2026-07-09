@@ -161,6 +161,27 @@
 .tag.confirmed { background: var(--green-soft); color: var(--green); }
 .tag.researching { background: var(--amber-soft); color: var(--amber); }
 .tag.planned { background: var(--sky-soft); color: var(--sky); }
+.tag.idea { background: var(--surface-muted); color: var(--text-soft); }
+.tag.paid { background: var(--green-soft); color: var(--green); }
+.tag.cancelled { background: var(--coral-soft); color: var(--coral); }
+.tone-text-green { color: var(--green); }
+.tone-text-amber { color: var(--amber); }
+.tone-text-sky { color: var(--sky); }
+.tone-text-coral { color: var(--coral); }
+.tone-text-purple { color: var(--purple); }
+.recommendation-badge { display: inline-flex; align-items: center; gap: 5px; min-height: 24px; border-radius: 4px; background: var(--green-soft); color: var(--green); padding: 3px 7px; font-size: 10px; font-weight: 800; }
+.rating-bar { width: 92px; height: 7px; overflow: hidden; border-radius: 4px; background: var(--surface-muted); }
+.rating-bar span { display: block; height: 100%; border-radius: inherit; background: var(--amber); }
+.price-card { display: grid; gap: 4px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); padding: 16px; box-shadow: var(--shadow-sm); }
+.price-card span, .price-card small, .price-card p { color: var(--text-soft); font-size: 12px; }
+.price-card strong { font-size: 24px; }
+.price-card p { margin: 4px 0 0; }
+.comparison-table { overflow-x: auto; }
+.comparison-table table { width: 100%; border-collapse: collapse; }
+.comparison-table th, .comparison-table td { border-bottom: 1px solid var(--line); padding: 12px 14px; text-align: left; }
+.comparison-table th { color: var(--text-faint); font-size: 10px; text-transform: uppercase; }
+.booking-card .place-card-foot { min-height: 44px; }
+.module-overview { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; margin-bottom: 18px; }
 .card-actions { display: flex; gap: 3px; }
 .card-actions .icon-btn { width: 34px; height: 34px; border: 0; background: transparent; }
 .card-actions .icon-btn:hover { background: var(--surface-muted); }
@@ -182,7 +203,7 @@
 
 .progress-track { height: 8px; overflow: hidden; border-radius: 4px; background: var(--surface-muted); }
 .progress-fill { height: 100%; border-radius: 4px; background: var(--green); }
-.budget-summary { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+.budget-summary { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; }
 .budget-card { min-height: 125px; padding: 20px; }
 .budget-card > span { color: var(--text-soft); font-size: 12px; }
 .budget-card strong { display: block; margin: 7px 0 15px; font-size: 27px; }
@@ -258,6 +279,8 @@
   .place-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .note-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .metric-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .budget-summary { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .module-overview { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .dashboard-grid, .settings-layout, .today-grid, .driving-layout { grid-template-columns: 1fr; }
 }
 
@@ -311,6 +334,7 @@
   .travel-summary > div { border-right: 0; border-bottom: 1px solid var(--line); }
   .travel-summary > div:last-child { border-bottom: 0; }
   .route-overview { grid-template-columns: 1fr; }
+  .module-overview { grid-template-columns: 1fr; }
   .itinerary-toolbar { align-items: stretch; flex-direction: column; }
   .rule-grid { grid-template-columns: 1fr; }
   .drive-row { grid-template-columns: 48px minmax(0, 1fr) auto; }

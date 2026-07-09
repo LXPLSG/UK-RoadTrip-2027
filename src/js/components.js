@@ -21,6 +21,69 @@ export function statusTag(status = 'planned') {
   return `<span class="tag ${escapeHtml(status)}">${escapeHtml(status)}</span>`;
 }
 
+export function statusChip(status = 'planned') {
+  return statusTag(status);
+}
+
+export function recommendationBadge(label = 'Recommended') {
+  return `<span class="recommendation-badge">${icon('check', 'icon-sm')}${escapeHtml(label)}</span>`;
+}
+
+export function ratingBar(value = 0, max = 5) {
+  const rating = Math.max(0, Math.min(max, Number(value || 0)));
+  const width = max ? Math.round(rating / max * 100) : 0;
+  return `<div class="rating-bar" aria-label="${rating} out of ${max}"><span style="width:${width}%"></span></div>`;
+}
+
+export function budgetCard({ label, value, meta = '', tone = 'green', progress = null }) {
+  return `<article class="panel budget-card">
+    <span>${escapeHtml(label)}</span>
+    <strong class="tone-text-${escapeHtml(tone)}">${escapeHtml(value)}</strong>
+    ${progress === null ? '' : `<div class="progress-track"><div class="progress-fill" style="width:${Math.max(0, Math.min(100, Number(progress)))}%"></div></div>`}
+    ${meta ? `<span>${escapeHtml(meta)}</span>` : ''}
+  </article>`;
+}
+
+export function priceCard({ label, amount, currency, status = '', detail = '' }) {
+  return `<article class="price-card">
+    <span>${escapeHtml(label)}</span>
+    <strong>${escapeHtml(amount)}</strong>
+    <small>${escapeHtml(currency)}${status ? ` · ${escapeHtml(status)}` : ''}</small>
+    ${detail ? `<p>${escapeHtml(detail)}</p>` : ''}
+  </article>`;
+}
+
+export function comparisonTable(columns = [], rows = []) {
+  return `<div class="panel comparison-table"><table>
+    <thead><tr>${columns.map(column => `<th>${escapeHtml(column)}</th>`).join('')}</tr></thead>
+    <tbody>${rows.map(row => `<tr>${columns.map(column => `<td>${escapeHtml(row[column] ?? '')}</td>`).join('')}</tr>`).join('') || `<tr><td colspan="${columns.length}" class="muted">No comparison rows yet.</td></tr>`}</tbody>
+  </table></div>`;
+}
+
+export function timeline(items = []) {
+  return `<section class="panel timeline">${items.map(item => `
+    <div class="day-row">
+      <div class="day-date"><strong>${escapeHtml(item.primary || '')}</strong><span>${escapeHtml(item.secondary || '')}</span></div>
+      <span class="timeline-marker" aria-hidden="true"></span>
+      <div class="day-copy"><h3>${escapeHtml(item.title || '')}</h3><p>${escapeHtml(item.body || '')}</p></div>
+      <div class="day-stats">${item.meta ? `<span>${escapeHtml(item.meta)}</span>` : ''}</div>
+    </div>`).join('') || `<div class="panel-body muted">No timeline entries yet.</div>`}</section>`;
+}
+
+export function bookingCard({ item, iconName = 'pin', tone = 'sky', currency = 'GBP', details = [], actions = '' }) {
+  const price = Number(item.price || item.cost || 0);
+  return `<article class="place-card booking-card">
+    <div class="place-card-head"><span class="place-type-icon tone-${escapeHtml(tone)}">${icon(iconName)}</span>${statusTag(item.status)}</div>
+    <div class="place-card-body">
+      <h3>${escapeHtml(item.title || item.name || item.label || 'Untitled')}</h3>
+      <p>${escapeHtml([item.provider, item.city, item.date, item.reference].filter(Boolean).join(' · ') || item.notes || 'Details TBC')}</p>
+      <div class="hotel-details">${details.map(detail => `<span><small>${escapeHtml(detail.label)}</small>${escapeHtml(detail.value || 'TBC')}</span>`).join('')}</div>
+      ${price ? `<strong>${escapeHtml(new Intl.NumberFormat('en-GB', { style: 'currency', currency }).format(price))}</strong>` : ''}
+    </div>
+    <div class="place-card-foot">${actions || '<span class="muted">Managed in JSON</span>'}</div>
+  </article>`;
+}
+
 export function emptyState(iconName, title, copy) {
   return `<div class="empty-state">${icon(iconName)}<strong>${escapeHtml(title)}</strong><span>${escapeHtml(copy)}</span></div>`;
 }
