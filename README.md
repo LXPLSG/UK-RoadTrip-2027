@@ -43,7 +43,7 @@ node tests/validate-data.mjs
 
 To refine the itinerary, copy the active snapshot to the next filename such as `trip-v0.3.json`, update its `dataRevision` and `lastUpdated`, then register it and set `activeVersion` in `data/versions.json`. Revert by selecting an earlier registered version; existing devices can then activate it with **Settings → Restore bundled data**. Existing version files must not be edited after commit.
 
-The current bundled planning snapshot is `UK-2027` in `data/versions/trip-v0.8.json`; `activeVersion` remains pointed at the legacy-safe baseline for older cached app shells while current clients read `currentVersion`. Future trips should receive their own stable Trip ID and be added to the same schema rather than changing application code.
+The current bundled planning snapshot is `UK-2027` in `data/versions/trip-v0.9.json`; `activeVersion` remains pointed at the legacy-safe baseline for older cached app shells while current clients read `currentVersion`. Future trips should receive their own stable Trip ID and be added to the same schema rather than changing application code.
 
 Use **Settings → Trip JSON** for direct edits, or import/export a complete JSON backup. Restoring bundled data creates a backup of the current working copy first.
 

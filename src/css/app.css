@@ -187,6 +187,13 @@
 .score-row span, .score-row strong { font-size: 11px; }
 .score-row span { color: var(--text-soft); }
 .score-row strong { text-align: right; }
+.hotel-quick-access { display: grid; gap: 10px; }
+.hotel-quick-access .btn.disabled { opacity: .62; pointer-events: none; }
+.nearby-map-list { display: grid; gap: 6px; border-top: 1px solid var(--line); padding-top: 10px; }
+.nearby-map-list p { margin: 0; }
+.nearby-map-list a { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 34px; border-radius: 6px; color: var(--text-soft); font-size: 12px; }
+.nearby-map-list a:hover { color: var(--green); }
+.nearby-map-list strong { display: inline-flex; align-items: center; gap: 4px; color: var(--green); white-space: nowrap; }
 .tag { display: inline-flex; align-items: center; min-height: 23px; border-radius: 4px; padding: 3px 7px; background: var(--surface-muted); color: var(--text-soft); font-size: 10px; font-weight: 800; text-transform: capitalize; }
 .tag.confirmed { background: var(--green-soft); color: var(--green); }
 .tag.researching { background: var(--amber-soft); color: var(--amber); }

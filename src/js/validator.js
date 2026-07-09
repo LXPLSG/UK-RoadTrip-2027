@@ -116,6 +116,10 @@ export function validateTripData(data) {
     if (!option.location || !option.name || !option.overnightPlaceId) errors.push(`hotelOptions[${index}] requires location, name and overnightPlaceId.`);
     if (option.overnightPlaceId && !placeIds.has(option.overnightPlaceId)) errors.push(`hotelOptions[${index}].overnightPlaceId does not exist.`);
     if (!Number.isFinite(Number(option.price || 0)) || Number(option.price || 0) < 0) errors.push(`hotelOptions[${index}].price must be non-negative.`);
+    if (!validWebUrl(option.website) || !validWebUrl(option.bookingUrl)) errors.push(`hotelOptions[${index}] website and bookingUrl must use http or https.`);
+    if (option.lat !== undefined && option.lat !== null && (!Number.isFinite(Number(option.lat)) || Number(option.lat) < -90 || Number(option.lat) > 90)) errors.push(`hotelOptions[${index}].lat is invalid.`);
+    if (option.lng !== undefined && option.lng !== null && (!Number.isFinite(Number(option.lng)) || Number(option.lng) < -180 || Number(option.lng) > 180)) errors.push(`hotelOptions[${index}].lng is invalid.`);
+    (option.nearbyAttractionIds || []).forEach(attractionId => { if (!placeIds.has(attractionId)) errors.push(`hotelOptions[${index}].nearbyAttractionIds includes unknown place ${attractionId}.`); });
     if (option.bookingStatus && !BOOKING_STATUSES.includes(option.bookingStatus)) errors.push(`hotelOptions[${index}].bookingStatus is invalid.`);
     ['parking', 'kitchen', 'laundry'].forEach(key => {
       if (option.features && typeof option.features[key] !== 'boolean') errors.push(`hotelOptions[${index}].features.${key} must be boolean.`);

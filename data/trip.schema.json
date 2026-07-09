@@ -228,6 +228,8 @@
         "id": { "$ref": "#/$defs/id" }, "location": { "type": "string" }, "overnightPlaceId": { "type": "string" },
         "name": { "type": "string", "minLength": 1 }, "area": { "type": "string" }, "role": { "type": "string" }, "status": { "$ref": "#/$defs/status" },
         "price": { "type": "number", "minimum": 0 }, "currency": { "type": "string", "pattern": "^[A-Z]{3}$" },
+        "lat": { "type": ["number", "null"], "minimum": -90, "maximum": 90 }, "lng": { "type": ["number", "null"], "minimum": -180, "maximum": 180 },
+        "nearbyAttractionIds": { "type": "array", "items": { "$ref": "#/$defs/id" } },
         "website": { "type": "string" }, "bookingUrl": { "type": "string" }, "notes": { "type": "string" },
         "bookingStatus": { "type": "string", "enum": ["Researching", "Ready to Book", "Booked", "Cancelled"] },
         "confirmationNumber": { "type": "string" }, "bookedVia": { "type": "string" }, "cancellationDate": { "type": "string" },

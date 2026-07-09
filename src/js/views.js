@@ -444,6 +444,48 @@ function scoreBars(option) {
   }).join('')}</div>`;
 }
 
+function distanceMiles(from, to) {
+  if (![from?.lat, from?.lng, to?.lat, to?.lng].every(value => Number.isFinite(Number(value)))) return null;
+  const toRad = value => Number(value) * Math.PI / 180;
+  const earthMiles = 3958.8;
+  const dLat = toRad(to.lat - from.lat);
+  const dLng = toRad(to.lng - from.lng);
+  const lat1 = toRad(from.lat);
+  const lat2 = toRad(to.lat);
+  const a = Math.sin(dLat / 2) ** 2 + Math.cos(lat1) * Math.cos(lat2) * Math.sin(dLng / 2) ** 2;
+  return earthMiles * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+}
+
+function directionsUrl(from, to) {
+  const origin = Number.isFinite(Number(from?.lat)) && Number.isFinite(Number(from?.lng)) ? `${from.lat},${from.lng}` : `${from.name}, ${from.area || from.location}`;
+  const destination = Number.isFinite(Number(to?.lat)) && Number.isFinite(Number(to?.lng)) ? `${to.lat},${to.lng}` : `${to.name}, ${to.city}`;
+  return `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(origin)}&destination=${encodeURIComponent(destination)}&travelmode=walking`;
+}
+
+function nearbyAttractions(option, data) {
+  const preferred = new Set(option.nearbyAttractionIds || []);
+  const attractions = (data.places || []).filter(place => place.type === 'attraction' && (preferred.has(place.id) || place.city === option.location || place.city === option.area || place.city === 'Cotswolds'));
+  return attractions
+    .map(attraction => ({ ...attraction, distance: distanceMiles(option, attraction) }))
+    .filter(attraction => attraction.distance !== null)
+    .sort((a, b) => a.distance - b.distance)
+    .slice(0, 3);
+}
+
+function hotelQuickAccess(option, data) {
+  const attractions = nearbyAttractions(option, data);
+  return `<div class="hotel-quick-access">
+    <div class="button-row">
+      ${option.website ? `<a class="btn btn-ghost" href="${e(option.website)}" target="_blank" rel="noopener">${icon('external', 'icon-sm')} Official website</a>` : '<span class="btn btn-ghost disabled" aria-disabled="true">Official site TBC</span>'}
+      ${option.bookingUrl ? `<a class="btn btn-ghost" href="${e(option.bookingUrl)}" target="_blank" rel="noopener">${icon('external', 'icon-sm')} Booking page</a>` : ''}
+    </div>
+    <div class="nearby-map-list">
+      <p class="page-eyebrow">Nearby attractions</p>
+      ${attractions.length ? attractions.map(attraction => `<a href="${e(directionsUrl(option, attraction))}" target="_blank" rel="noopener"><span>${e(attraction.name)}</span><strong>${attraction.distance < 0.1 ? '<0.1' : attraction.distance.toFixed(1)} mi ${icon('external', 'icon-sm')}</strong></a>`).join('') : '<span class="muted">Add hotel coordinates to calculate nearby attraction distances.</span>'}
+    </div>
+  </div>`;
+}
+
 function accommodationStopCard(stop, options) {
   const recommended = options[0] || {};
   const score = Number(recommended.score || 0);
@@ -458,7 +500,7 @@ function accommodationStopCard(stop, options) {
   </a>`;
 }
 
-function hotelOptionCard(option, best = false) {
+function hotelOptionCard(option, best = false, data = store.data) {
   const pros = (option.pros || []).slice(0, 2).join(' · ');
   const cons = (option.cons || []).slice(0, 2).join(' · ');
   return `<article class="hotel-option-card ${best ? 'recommended' : ''}">
@@ -469,6 +511,7 @@ function hotelOptionCard(option, best = false) {
       ${scoreBars(option)}
       <p><strong>Pros:</strong> ${e(pros || 'Add pros after research.')}</p>
       <p><strong>Watch:</strong> ${e(cons || 'Add trade-offs after research.')}</p>
+      ${hotelQuickAccess(option, data)}
       <div class="hotel-details"><span><small>Booking Status</small>${e(option.bookingStatus || 'Researching')}</span><span><small>Confirmation Number</small>${e(option.confirmationNumber || 'TBC')}</span><span><small>Booked Via</small>${e(option.bookedVia || 'TBC')}</span><span><small>Cancellation Date</small>${e(option.cancellationDate || 'TBC')}</span><span><small>Payment Status</small>${e(option.paymentStatus || 'TBC')}</span></div>
     </div>
   </article>`;
@@ -510,7 +553,7 @@ function accommodationDetail(main, id) {
       <div><p class="page-eyebrow">Current recommendation</p><h2>${e(recommended?.name || 'TBC')}</h2><p>${e(stop.notes || recommended?.notes || '')}</p><div class="hotel-details"><span><small>Status</small>${e(recommended?.bookingStatus || stop.status || 'Researching')}</span><span><small>Score</small>${Number(recommended?.score || 0)}%</span><span><small>Payment</small>${e(recommended?.paymentStatus || 'TBC')}</span></div></div>
     </section>
     <div class="section-header"><h2>Hotel options</h2><span class="muted">Ratings, scoring and booking tracker.</span></div>
-    <div class="hotel-option-list">${options.map((option, index) => hotelOptionCard(option, index === 0)).join('')}</div>
+    <div class="hotel-option-list">${options.map((option, index) => hotelOptionCard(option, index === 0, data)).join('')}</div>
     <div class="section-header"><h2>Hotel Comparison</h2><span class="muted">Feature comparison and personal scores.</span></div>
     ${comparisonTable(comparison.columns, comparison.rows)}
   </div>`;

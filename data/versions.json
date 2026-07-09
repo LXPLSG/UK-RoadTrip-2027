@@ -2,7 +2,7 @@
   "$schema": "./versions.schema.json",
   "formatVersion": 1,
   "activeVersion": "v0.1",
-  "currentVersion": "v0.8",
+  "currentVersion": "v0.9",
   "versions": [
     {
       "version": "v0.1",
@@ -59,6 +59,13 @@
       "createdAt": "2026-07-09T00:00:00.000Z",
       "dataRevision": 16,
       "summary": "Accommodation drill-down interaction with three-option shortlists for every stop."
+    },
+    {
+      "version": "v0.9",
+      "file": "versions/trip-v0.9.json",
+      "createdAt": "2026-07-09T00:00:00.000Z",
+      "dataRevision": 17,
+      "summary": "Accommodation official website links and nearby attraction map distances."
     }
   ]
 }

@@ -25,7 +25,7 @@ Committed snapshots are immutable history. To revert the bundled itinerary, chan
 - Optional external URLs must use `https` where available.
 - Unknown or undecided values use empty strings, `null`, `TBC` or a planning status instead of invented confirmation details.
 
-The current planning snapshot is `data/versions/trip-v0.8.json`; the next itinerary refinement should normally be `trip-v0.9.json`. `activeVersion` may remain pointed at an older compatibility baseline for cached clients, while current clients read `currentVersion`. `trip-v0.3.json` is retained as a compatibility bridge for older cached app shells.
+The current planning snapshot is `data/versions/trip-v0.9.json`; the next itinerary refinement should normally be `trip-v1.0.json`. `activeVersion` may remain pointed at an older compatibility baseline for cached clients, while current clients read `currentVersion`. `trip-v0.3.json` is retained as a compatibility bridge for older cached app shells.
 
 ## Platform Fields
 
@@ -37,7 +37,7 @@ The current planning snapshot is `data/versions/trip-v0.8.json`; the next itiner
 - `integrations` stores disabled-by-default provider preferences for future adapters.
 - `priceHistory` stores normalized price snapshots from future providers without tying the UI to one vendor.
 - `accommodationStops` stores the top-level stop cards, dates, nights, image and ordered option IDs for the Accommodation page.
-- `hotelOptions` stores per-location accommodation candidates, weighted scores, pros, cons, comparison metadata and booking tracker fields before final hotels are chosen.
+- `hotelOptions` stores per-location accommodation candidates, weighted scores, pros, cons, comparison metadata, booking tracker fields, official website links, coordinates and nearby attraction mappings before final hotels are chosen.
 
 ## Schema Evolution
 

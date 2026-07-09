@@ -4,6 +4,14 @@ All notable changes to UK Road Trip 2027 are documented here. The project follow
 
 ## [Unreleased]
 
+## [1.4.2] - 2026-07-09
+
+### Added
+
+- Added official website quick-access buttons to accommodation hotel options.
+- Added nearby-attraction distance rows with Google Maps directions links for accommodation options.
+- Added `v0.9` trip snapshot with hotel coordinates, official URLs and attraction mappings.
+
 ## [1.4.1] - 2026-07-09
 
 ### Changed
