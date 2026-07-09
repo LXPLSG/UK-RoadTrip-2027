@@ -36,9 +36,13 @@ for (const entry of registry.versions) {
   if (!result.valid) throw new Error(`${entry.version} does not migrate to the active schema: ${result.errors.join('\n')}`);
 }
 
-for (const version of [1, 2, 3, 4, 5, 6]) {
+for (const version of [1, 2, 3, 4, 5, 6, 7]) {
   const fixture = structuredClone(data);
   fixture.schemaVersion = version;
+  if (version < 8) {
+    delete fixture.integrations;
+    delete fixture.priceHistory;
+  }
   if (version < 7) {
     delete fixture.activeTripId;
     delete fixture.trips;

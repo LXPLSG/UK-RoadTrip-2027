@@ -1,7 +1,7 @@
 /** Sequential trip-document migrations that preserve existing local working copies. */
 import { clone } from './utils.js';
 
-export const CURRENT_SCHEMA_VERSION = 7;
+export const CURRENT_SCHEMA_VERSION = 8;
 
 export const PLATFORM_BUDGET_CATEGORIES = Object.freeze([
   'Accommodation',
@@ -65,6 +65,22 @@ function applyPlatformDefaults(data, defaults = {}) {
   return data;
 }
 
+function applyIntegrationDefaults(data, defaults = {}) {
+  data.integrations = data.integrations || defaults.integrations || {
+    enabled: false,
+    defaultProviders: {
+      places: 'google-places',
+      hotels: 'google-hotels',
+      bookings: 'booking-com',
+      weather: 'openweather',
+      maps: 'google-maps',
+      calendar: 'calendar'
+    }
+  };
+  data.priceHistory = Array.isArray(data.priceHistory) ? data.priceHistory : [];
+  return data;
+}
+
 export function migrateTripData(input, defaults) {
   const data = clone(input);
   if (!Number.isInteger(data.schemaVersion) || data.schemaVersion < 1) throw new Error('Trip schema version is missing or invalid.');
@@ -98,5 +114,13 @@ export function migrateTripData(input, defaults) {
     data.schemaVersion = 7;
   }
   if (data.schemaVersion === 7) applyPlatformDefaults(data, defaults);
+  if (data.schemaVersion === 7) {
+    applyIntegrationDefaults(data, defaults);
+    data.schemaVersion = 8;
+  }
+  if (data.schemaVersion === 8) {
+    applyPlatformDefaults(data, defaults);
+    applyIntegrationDefaults(data, defaults);
+  }
   return data;
 }

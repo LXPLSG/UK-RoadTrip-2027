@@ -1,7 +1,7 @@
 {
   "$schema": "./versions.schema.json",
   "formatVersion": 1,
-  "activeVersion": "v0.2",
+  "activeVersion": "v0.3",
   "versions": [
     {
       "version": "v0.1",
@@ -16,6 +16,13 @@
       "createdAt": "2026-07-09T00:00:00.000Z",
       "dataRevision": 10,
       "summary": "Phase 5 travel platform data model with reusable module placeholders."
+    },
+    {
+      "version": "v0.3",
+      "file": "versions/trip-v0.3.json",
+      "createdAt": "2026-07-09T00:00:00.000Z",
+      "dataRevision": 11,
+      "summary": "Phase 6 integration architecture with provider adapters, CMS boundary and price history model."
     }
   ]
 }
