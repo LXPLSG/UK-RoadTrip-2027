@@ -14,6 +14,8 @@ UK Road Trip 2027 is a dependency-free, offline-first Progressive Web App. It us
 - `src/js/migrations.js` upgrades older working documents before validation and activation.
 - `src/js/budget.js` is the shared budget engine for forecasts, actual spend, remaining balance, per-person cost and currency conversion.
 - `src/js/notifications.js` owns notification rule generation and provides the future Firebase Cloud Messaging adapter boundary.
+- `src/js/integrations/` contains provider-neutral contracts, planned adapters and the provider registry for future API integrations.
+- `src/js/accommodation.js`, `src/js/price-history.js` and `src/js/admin-cms.js` provide domain service boundaries for accommodation comparison, provider price snapshots and future CMS drafting.
 - `src/js/views.js` renders domain views and dispatches user intent through the store.
 - `src/js/components.js` contains reusable, domain-neutral UI building blocks.
 - `src/service-worker.js` owns application asset caching and offline navigation.
@@ -22,9 +24,13 @@ Views do not access Local Storage directly. Trip-specific content is never embed
 
 ## Travel Platform Model
 
-Schema v7 introduces `activeTripId`, `trips`, `travelModules`, reusable travel collections and shared engines. `UK-2027` is the current active Trip ID. Module pages are configured by JSON records and rendered through shared card, table, status and price components, so a future trip can add or remove travel-management areas without introducing itinerary content into `src/`.
+Schema v7 introduces `activeTripId`, `trips`, `travelModules`, reusable travel collections and shared engines. Schema v8 adds future integration settings and normalized price history. `UK-2027` is the current active Trip ID. Module pages are configured by JSON records and rendered through shared card, table, status and price components, so a future trip can add or remove travel-management areas without introducing itinerary content into `src/`.
 
 The current app keeps one active working trip in Local Storage while preserving a multi-trip registry in the document. A later repository adapter can promote this to full multi-trip switching or IndexedDB storage without changing the view/component contracts.
+
+## Provider Swapping
+
+Future integrations are selected by capability through `ProviderRegistry`. A view or service should request a capability such as `hotels.compare`, `weather.forecast` or `calendar.event`; it should not know whether the backing provider is Google Hotels, Booking.com, OpenWeather or Calendar. All Phase 6 adapters are architecture-only and return offline-safe empty results until live provider classes are implemented.
 
 ## Data Flow
 

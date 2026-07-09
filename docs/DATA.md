@@ -25,7 +25,7 @@ Committed snapshots are immutable history. To revert the bundled itinerary, chan
 - Optional external URLs must use `https` where available.
 - Unknown or undecided values use empty strings, `null`, `TBC` or a planning status instead of invented confirmation details.
 
-The active Phase 5 baseline is `data/versions/trip-v0.2.json`; the next itinerary refinement should normally be `trip-v0.3.json`.
+The active Phase 6 baseline is `data/versions/trip-v0.3.json`; the next itinerary refinement should normally be `trip-v0.4.json`.
 
 ## Platform Fields
 
@@ -34,9 +34,11 @@ The active Phase 5 baseline is `data/versions/trip-v0.2.json`; the next itinerar
 - `travelModules` defines generic module pages such as flights, car rental, documents, weather, emergency contacts and companions.
 - `flights`, `carRentals`, `travelDocuments`, `weather`, `travelCompanions` and `notifications` are reusable collections that can be populated over time.
 - `currencyRates` supports the shared budget converter. Bundled rates are static planning values, not live financial data.
+- `integrations` stores disabled-by-default provider preferences for future adapters.
+- `priceHistory` stores normalized price snapshots from future providers without tying the UI to one vendor.
 
 ## Schema Evolution
 
 `schemaVersion` changes only when document structure changes. `dataRevision` increments for each bundled content snapshot. The human-readable `v0.x` identifier records itinerary history and is managed by the registry. Future schema migrations must be sequential, deterministic and backed up before execution.
 
-Schema version 2 adds `drivingGuide`; version 3 adds `tubePlan`; version 4 adds budget categories; version 5 types checklist groups; version 6 adds categorized notes; version 7 adds the travel platform model, Trip ID registry, reusable modules, shared budget categories, currency rates and notification infrastructure. Older working copies are migrated sequentially using reviewed defaults bundled with the application.
+Schema version 2 adds `drivingGuide`; version 3 adds `tubePlan`; version 4 adds budget categories; version 5 types checklist groups; version 6 adds categorized notes; version 7 adds the travel platform model, Trip ID registry, reusable modules, shared budget categories, currency rates and notification infrastructure; version 8 adds future integration provider settings and price history. Older working copies are migrated sequentially using reviewed defaults bundled with the application.

@@ -11,6 +11,8 @@ A dependency-free, offline-first Progressive Web App for planning and taking a 1
 - Offline driving guide and saved London Tube journeys.
 - Shared budget engine for total budget, actual spend, forecast, remaining balance, per-person cost and currency conversion.
 - Notification infrastructure for countdowns, reminders, alerts and future Firebase Cloud Messaging integration.
+- Architecture-only adapter layer for future Google Places, Google Hotels, Booking.com, Expedia, Hotels.com, Airbnb, OpenWeather, Google Maps and Calendar integrations.
+- Admin CMS draft/publish boundary and normalized price-history model for future provider imports.
 - Expense tracking, packing, checklists and notes.
 - Light, dark and System themes with responsive phone, tablet and desktop layouts.
 - Validated JSON import/export, automatic backups and sequential schema migrations.
@@ -40,7 +42,7 @@ node tests/validate-data.mjs
 
 To refine the itinerary, copy the active snapshot to the next filename such as `trip-v0.3.json`, update its `dataRevision` and `lastUpdated`, then register it and set `activeVersion` in `data/versions.json`. Revert by selecting an earlier registered version; existing devices can then activate it with **Settings → Restore bundled data**. Existing version files must not be edited after commit.
 
-The current active bundled trip is `UK-2027` in `data/versions/trip-v0.2.json`. Future trips should receive their own stable Trip ID and be added to the same schema rather than changing application code.
+The current active bundled trip is `UK-2027` in `data/versions/trip-v0.3.json`. Future trips should receive their own stable Trip ID and be added to the same schema rather than changing application code.
 
 Use **Settings → Trip JSON** for direct edits, or import/export a complete JSON backup. Restoring bundled data creates a backup of the current working copy first.
 
@@ -65,6 +67,8 @@ Use the print action on the itinerary, day, driving guide or budget. Application
 
 - `docs/ARCHITECTURE.md` explains module boundaries and data flow.
 - `docs/DATA.md` documents editing and schema migration conventions.
+- `docs/INTEGRATIONS.md` documents the future provider adapter architecture.
+- `docs/ADMIN_CMS.md` documents the draft/publish boundary for future CMS work.
 - `docs/PERFORMANCE.md` defines the production performance budget.
 - `docs/ACCESSIBILITY.md` records the WCAG-oriented review and verification checklist.
 - `docs/REVIEW.md` records production code-review findings and residual boundaries.

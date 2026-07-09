@@ -4,6 +4,19 @@ All notable changes to UK Road Trip 2027 are documented here. The project follow
 
 ## [Unreleased]
 
+## [1.2.0] - 2026-07-09
+
+### Added
+
+- Phase 6 architecture-only provider adapter layer for Google Places, Google Hotels, Booking.com, Expedia, Hotels.com, Airbnb, OpenWeather, Google Maps and Calendar.
+- Provider registry and capability contracts so future integrations can be swapped without UI component changes.
+- Schema v8 with disabled-by-default integration provider preferences and normalized price-history storage.
+- `v0.3` immutable trip snapshot preserving previous `v0.1` and `v0.2` history.
+- Accommodation-domain selectors for hotel comparison and booking tracking.
+- Price-history utilities for future provider snapshots and trend calculation.
+- Admin CMS draft/publish boundary for future authenticated content management.
+- Future integration and Admin CMS documentation.
+
 ## [1.1.0] - 2026-07-09
 
 ### Added
