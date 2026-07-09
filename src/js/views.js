@@ -9,7 +9,7 @@ import { modeManager } from './mode.js';
 import { APP_VERSION } from './config.js';
 import { calculateBudgetSummary, convertCurrency } from './budget.js';
 import { notificationEngine } from './notifications.js';
-import { hotelComparisonRows, hotelOptionsByLocation } from './accommodation.js';
+import { accommodationOptionsForStop, accommodationStops, hotelComparisonRows, hotelOptionsByLocation } from './accommodation.js';
 
 const typeTone = { hotel: 'green', attraction: 'sky', restaurant: 'coral', transport: 'purple', drive: 'amber', walk: 'green' };
 const typeIcon = type => ({ hotel: 'hotel', attraction: 'attraction', restaurant: 'restaurant', transport: 'transport', drive: 'car', walk: 'walk' })[type] || 'pin';
@@ -423,7 +423,40 @@ function removePlace(place) {
 }
 
 function hotelOptionCriteria(option) {
-  return Object.entries(option.scores || {}).map(([key, value]) => `<span><small>${e(titleCase(key))}</small>${Number(value || 0)}/5</span>`).join('');
+  const preferred = ['overall', 'value', 'comfort', 'parking', 'breakfast', 'kitchen', 'laundry', 'family', 'transport', 'loyaltyBenefits'];
+  const label = key => key === 'loyaltyBenefits' ? 'Loyalty Benefits' : titleCase(key);
+  return preferred.filter(key => key in (option.scores || {})).map(key => `<span><small>${e(label(key))}</small>${Number(option.scores[key] || 0)}/10</span>`).join('');
+}
+
+function accommodationChip(label = 'Researching') {
+  const slug = label.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+  return `<span class="tag ${e(slug)}">${e(label)}</span>`;
+}
+
+function scoreBars(option) {
+  const rows = [
+    ['overall', 'Overall'], ['value', 'Value'], ['comfort', 'Comfort'], ['parking', 'Parking'], ['breakfast', 'Breakfast'],
+    ['kitchen', 'Kitchen'], ['laundry', 'Laundry'], ['family', 'Family'], ['transport', 'Transport'], ['loyaltyBenefits', 'Loyalty']
+  ];
+  return `<div class="score-bars">${rows.map(([key, label]) => {
+    const value = Math.max(0, Math.min(10, Number(option.scores?.[key] || 0)));
+    return `<div class="score-row"><span>${e(label)}</span><div class="progress-track"><div class="progress-fill" style="width:${value * 10}%"></div></div><strong>${value.toFixed(value % 1 ? 1 : 0)}</strong></div>`;
+  }).join('')}</div>`;
+}
+
+function accommodationStopCard(stop, options) {
+  const recommended = options[0] || {};
+  const score = Number(recommended.score || 0);
+  const bookingUrl = recommended.bookingUrl || recommended.website || '';
+  return `<article class="accommodation-stop-card panel">
+    <img src="${e(stop.image || '../assets/images/accommodation-default.svg')}" alt="" loading="lazy" decoding="async">
+    <div class="accommodation-stop-body">
+      <div class="accommodation-stop-top"><div><p class="page-eyebrow">${e(stop.dateLabel || '')}</p><h3>${e(stop.location)}</h3></div>${accommodationChip(recommended.bookingStatus || stop.status || 'Researching')}</div>
+      <div class="hotel-details"><span><small>Nights</small>${Number(stop.nights || 0)}</span><span><small>Recommended</small>${e(recommended.name || 'TBC')}</span><span><small>Score</small>${score}%</span></div>
+      <p>${e(stop.notes || recommended.notes || 'Notes TBC')}</p>
+      ${bookingUrl ? `<a class="btn btn-primary" href="${e(bookingUrl)}" target="_blank" rel="noopener">Book ${icon('external', 'icon-sm')}</a>` : '<button class="btn btn-primary" type="button" disabled>Booking TBC</button>'}
+    </div>
+  </article>`;
 }
 
 function hotelOptionCard(option, best = false) {
@@ -432,32 +465,58 @@ function hotelOptionCard(option, best = false) {
   return `<article class="hotel-option-card ${best ? 'recommended' : ''}">
     <div class="hotel-option-score"><strong>${Number(option.score || 0)}</strong><span>score</span></div>
     <div class="hotel-option-copy">
-      <div class="hotel-option-head"><div><h3>${e(option.name)}</h3><p>${e(option.area || option.location)}</p></div>${best ? '<span class="recommendation-badge">Best current fit</span>' : statusTag(option.status)}</div>
+      <div class="hotel-option-head"><div><h3>${e(option.name)}</h3><p>${e(option.area || option.location)} · ${e(option.role || (best ? 'Recommended' : 'Alternative'))}</p></div>${best ? '<span class="recommendation-badge">Recommended</span>' : accommodationChip(option.bookingStatus || option.status)}</div>
       <div class="hotel-details">${hotelOptionCriteria(option)}</div>
+      ${scoreBars(option)}
       <p><strong>Pros:</strong> ${e(pros || 'Add pros after research.')}</p>
       <p><strong>Watch:</strong> ${e(cons || 'Add trade-offs after research.')}</p>
-      ${Number(option.price) ? `<strong>${formatMoney(option.price, option.currency || 'GBP')}</strong>` : '<span class="muted">Price TBC</span>'}
+      <div class="hotel-details"><span><small>Booking Status</small>${e(option.bookingStatus || 'Researching')}</span><span><small>Confirmation Number</small>${e(option.confirmationNumber || 'TBC')}</span><span><small>Booked Via</small>${e(option.bookedVia || 'TBC')}</span><span><small>Cancellation Date</small>${e(option.cancellationDate || 'TBC')}</span><span><small>Payment Status</small>${e(option.paymentStatus || 'TBC')}</span></div>
     </div>
   </article>`;
+}
+
+function accommodationComparisonRows(options) {
+  const columns = ['Item', ...options.map(option => option.role || option.name)];
+  const read = (option, key, fallback = 'TBC') => option.features?.[key] ?? fallback;
+  const yesNo = value => value === true ? 'Yes' : value === false ? 'No' : value || 'TBC';
+  const rows = [
+    { label: 'Hotel', values: options.map(option => option.name) },
+    { label: 'Parking', values: options.map(option => yesNo(read(option, 'parking'))) },
+    { label: 'Breakfast', values: options.map(option => read(option, 'breakfast')) },
+    { label: 'Kitchen', values: options.map(option => yesNo(read(option, 'kitchen'))) },
+    { label: 'Laundry', values: options.map(option => yesNo(read(option, 'laundry'))) },
+    { label: 'Family Friendly', values: options.map(option => read(option, 'familyFriendly', option.scores?.family || 'TBC')) },
+    { label: 'Walk Score', values: options.map(option => read(option, 'walkScore', option.scores?.transport || 'TBC')) },
+    { label: 'My Score', values: options.map(option => read(option, 'myScore', option.scores?.overall || 'TBC')) }
+  ];
+  return {
+    columns,
+    rows: rows.map(row => Object.fromEntries(columns.map((column, index) => [column, index === 0 ? row.label : row.values[index - 1]])))
+  };
 }
 
 function renderHotels(main) {
   const data = store.data;
   const hotels = data.places.filter(place => place.type === 'hotel');
   const linkedNights = data.days.filter(day => day.overnightPlaceId).length;
-  const confirmed = hotels.filter(place => place.status === 'confirmed').length;
-  const optionGroups = hotelOptionsByLocation(data);
-  const optionCount = Object.values(optionGroups).flat().length;
-  const comparisonRows = hotelComparisonRows(data).map(row => ({ Location: row.city, Option: row.name, Score: row.reference, Parking: row.parking, Nights: row.nights, Status: titleCase(row.status) }));
+  const stops = accommodationStops(data);
+  const stopOptionPairs = stops.map(stop => ({ stop, options: accommodationOptionsForStop(data, stop) }));
+  const allOptions = stopOptionPairs.flatMap(pair => pair.options);
+  const ready = allOptions.filter(option => ['Ready to Book', 'Booked'].includes(option.bookingStatus)).length;
   main.innerHTML = `<div class="page">
-    ${pageHeader('Accommodation', 'Hotel selection by location', `${linkedNights} itinerary nights linked · ${optionCount} comparison options`, `<button class="btn btn-primary" id="add-hotel">${icon('plus', 'icon-sm')}<span>Add hotel</span></button>`)}
-    <section class="route-overview">${metric('Locations', `${Object.keys(optionGroups).length || hotels.length}`, 'hotel', 'green')}${metric('Options', `${optionCount}`, 'list', 'sky')}${metric('Confirmed', `${confirmed}`, 'check', 'purple')}</section>
-    ${Object.entries(optionGroups).length ? `<section class="stack">${Object.entries(optionGroups).map(([location, options]) => `<div>
-      <div class="section-header"><h2>${e(location)}</h2><span class="muted">${options.length} options · top score ${Number(options[0]?.score || 0)}</span></div>
-      <div class="hotel-option-list">${options.map((option, index) => hotelOptionCard(option, index === 0)).join('')}</div>
-    </div>`).join('')}</section>
-    <div class="section-header"><h2>Hotel comparison</h2><span class="muted">Scores are weighted from location, parking, value, comfort and flexibility.</span></div>
-    ${comparisonTable(['Location', 'Option', 'Score', 'Parking', 'Nights', 'Status'], comparisonRows)}` : emptyState('hotel', 'No hotel options yet', 'Add hotelOptions in the trip JSON to compare stays by location.')}
+    ${pageHeader('Accommodation', 'Accommodation planning centre', `${linkedNights} itinerary nights linked · ${allOptions.length} hotel options`, `<button class="btn btn-primary" id="add-hotel">${icon('plus', 'icon-sm')}<span>Add hotel</span></button>`)}
+    <section class="route-overview">${metric('Stops', `${stops.length}`, 'hotel', 'green')}${metric('Hotel options', `${allOptions.length}`, 'list', 'sky')}${metric('Ready/booked', `${ready}`, 'check', 'purple')}</section>
+    <div class="section-header"><h2>Accommodation Dashboard</h2><span class="muted">One card per overnight stop.</span></div>
+    ${stops.length ? `<section class="accommodation-dashboard">${stopOptionPairs.map(pair => accommodationStopCard(pair.stop, pair.options)).join('')}</section>` : emptyState('hotel', 'No accommodation stops yet', 'Add accommodationStops in the trip JSON.')}
+    ${stopOptionPairs.map(({ stop, options }) => {
+      const comparison = accommodationComparisonRows(options);
+      return `<section class="accommodation-destination">
+        <div class="section-header"><h2>${e(stop.location)}</h2><span class="muted">${e(stop.dateLabel || '')} · ${Number(stop.nights || 0)} nights</span></div>
+        <div class="hotel-option-list">${options.map((option, index) => hotelOptionCard(option, index === 0)).join('') || emptyState('hotel', 'No hotel options yet', 'Add options for this accommodation stop.')}</div>
+        <div class="section-header"><h2>Hotel Comparison</h2><span class="muted">Feature comparison and personal scores.</span></div>
+        ${comparisonTable(comparison.columns, comparison.rows)}
+      </section>`;
+    }).join('')}
     <div class="section-header"><h2>Linked overnight placeholders</h2><span class="muted">Used by itinerary days until a final hotel is selected.</span></div>
     <div class="place-grid">${hotels.map(hotel => {
       const nights = data.days.filter(day => day.overnightPlaceId === hotel.id);
@@ -745,6 +804,7 @@ export function renderView(main, route) {
     day: renderDay,
     places: renderPlaces,
     hotels: renderHotels,
+    accommodation: renderHotels,
     restaurants: renderRestaurants,
     attractions: renderAttractions,
     driving: renderDriving,

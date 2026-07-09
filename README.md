@@ -6,7 +6,7 @@ A dependency-free, offline-first Progressive Web App for planning and taking a 1
 
 - Planning dashboard and focused Travel Mode Today view.
 - Editable itinerary, activities, hotels, restaurants and attractions.
-- Hotel-selection workspace with per-location options, weighted scoring and comparison tables.
+- Accommodation planning centre with stop cards, hotel images, hotel comparison tables, weighted scoring and booking tracker fields.
 - Reusable travel-management modules for flights, car rental, documents, weather, emergency contacts and companions.
 - Active Trip ID model (`UK-2027`) with a versioned registry ready for future trips.
 - Offline driving guide and saved London Tube journeys.
@@ -43,7 +43,7 @@ node tests/validate-data.mjs
 
 To refine the itinerary, copy the active snapshot to the next filename such as `trip-v0.3.json`, update its `dataRevision` and `lastUpdated`, then register it and set `activeVersion` in `data/versions.json`. Revert by selecting an earlier registered version; existing devices can then activate it with **Settings → Restore bundled data**. Existing version files must not be edited after commit.
 
-The current bundled planning snapshot is `UK-2027` in `data/versions/trip-v0.6.json`; `activeVersion` remains pointed at the legacy-safe baseline for older cached app shells while current clients read `currentVersion`. Future trips should receive their own stable Trip ID and be added to the same schema rather than changing application code.
+The current bundled planning snapshot is `UK-2027` in `data/versions/trip-v0.7.json`; `activeVersion` remains pointed at the legacy-safe baseline for older cached app shells while current clients read `currentVersion`. Future trips should receive their own stable Trip ID and be added to the same schema rather than changing application code.
 
 Use **Settings → Trip JSON** for direct edits, or import/export a complete JSON backup. Restoring bundled data creates a backup of the current working copy first.
 

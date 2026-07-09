@@ -4,6 +4,15 @@ All notable changes to UK Road Trip 2027 are documented here. The project follow
 
 ## [Unreleased]
 
+## [1.4.0] - 2026-07-09
+
+### Added
+
+- Added the top-level Accommodation menu and accommodation planning centre.
+- Added `v0.7` trip snapshot with accommodation stops for Bristol, Cotswolds, Windermere, Edinburgh, York and London.
+- Added stop cards with images, date ranges, nights, recommendation score, current booking status, booking action and notes.
+- Added per-destination hotel comparison tables, ten-part recommendation score bars and booking tracker fields.
+
 ## [1.3.0] - 2026-07-09
 
 ### Added

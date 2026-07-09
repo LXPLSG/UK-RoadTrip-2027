@@ -25,7 +25,7 @@ Committed snapshots are immutable history. To revert the bundled itinerary, chan
 - Optional external URLs must use `https` where available.
 - Unknown or undecided values use empty strings, `null`, `TBC` or a planning status instead of invented confirmation details.
 
-The current planning snapshot is `data/versions/trip-v0.6.json`; the next itinerary refinement should normally be `trip-v0.7.json`. `activeVersion` may remain pointed at an older compatibility baseline for cached clients, while current clients read `currentVersion`. `trip-v0.3.json` is retained as a compatibility bridge for older cached app shells.
+The current planning snapshot is `data/versions/trip-v0.7.json`; the next itinerary refinement should normally be `trip-v0.8.json`. `activeVersion` may remain pointed at an older compatibility baseline for cached clients, while current clients read `currentVersion`. `trip-v0.3.json` is retained as a compatibility bridge for older cached app shells.
 
 ## Platform Fields
 
@@ -36,10 +36,11 @@ The current planning snapshot is `data/versions/trip-v0.6.json`; the next itiner
 - `currencyRates` supports the shared budget converter. Bundled rates are static planning values, not live financial data.
 - `integrations` stores disabled-by-default provider preferences for future adapters.
 - `priceHistory` stores normalized price snapshots from future providers without tying the UI to one vendor.
-- `hotelOptions` stores per-location accommodation candidates, weighted scores, pros, cons and comparison metadata before final hotels are chosen.
+- `accommodationStops` stores the top-level stop cards, dates, nights, image and ordered option IDs for the Accommodation page.
+- `hotelOptions` stores per-location accommodation candidates, weighted scores, pros, cons, comparison metadata and booking tracker fields before final hotels are chosen.
 
 ## Schema Evolution
 
 `schemaVersion` changes only when document structure changes. `dataRevision` increments for each bundled content snapshot. The human-readable `v0.x` identifier records itinerary history and is managed by the registry. Future schema migrations must be sequential, deterministic and backed up before execution.
 
-Schema version 2 adds `drivingGuide`; version 3 adds `tubePlan`; version 4 adds budget categories; version 5 types checklist groups; version 6 adds categorized notes; version 7 adds the travel platform model, Trip ID registry, reusable modules, shared budget categories, currency rates and notification infrastructure; version 8 adds future integration provider settings and price history; version 9 adds hotel-selection options and scoring. Older working copies are migrated sequentially using reviewed defaults bundled with the application.
+Schema version 2 adds `drivingGuide`; version 3 adds `tubePlan`; version 4 adds budget categories; version 5 types checklist groups; version 6 adds categorized notes; version 7 adds the travel platform model, Trip ID registry, reusable modules, shared budget categories, currency rates and notification infrastructure; version 8 adds future integration provider settings and price history; version 9 adds hotel-selection options and scoring; version 10 adds accommodation stops, expanded scoring, comparison features and booking tracker fields. Older working copies are migrated sequentially using reviewed defaults bundled with the application.

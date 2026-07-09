@@ -4,7 +4,7 @@ export const NAVIGATION_ITEMS = Object.freeze([
   { route: 'today', label: 'Today', icon: 'calendar', mobile: true },
   { route: 'itinerary', label: 'Itinerary', icon: 'calendar', mobile: true },
   { route: 'places', label: 'Places', icon: 'pin', mobile: true },
-  { route: 'hotels', label: 'Hotels', icon: 'bed', mobile: false },
+  { route: 'accommodation', label: 'Accommodation', icon: 'bed', mobile: false },
   { route: 'restaurants', label: 'Restaurants', icon: 'restaurant', mobile: false },
   { route: 'flights', label: 'Flights', icon: 'plane', mobile: false },
   { route: 'car-rental', label: 'Car Rental', icon: 'car', mobile: false },
@@ -23,7 +23,9 @@ export const NAVIGATION_ITEMS = Object.freeze([
 ]);
 
 export function navigationRoute(routeName) {
-  return routeName === 'day' ? 'itinerary' : routeName;
+  if (routeName === 'day') return 'itinerary';
+  if (routeName === 'hotels') return 'accommodation';
+  return routeName;
 }
 
 export function navigationItems({ mobile = false } = {}) {

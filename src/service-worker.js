@@ -1,5 +1,5 @@
 /** Offline application-shell cache and same-origin runtime request strategy. */
-const VERSION = 'ukrt-2027-v30';
+const VERSION = 'ukrt-2027-v31';
 const APP_SHELL = [
   './',
   './index.html',
@@ -36,6 +36,7 @@ const APP_SHELL = [
   '../data/versions.schema.json',
   '../data/trip.schema.json',
   '../assets/images/highlands-road.jpg',
+  '../assets/images/accommodation-default.svg',
   '../assets/icons/icon-192.png',
   '../assets/icons/icon-512.png'
 ];

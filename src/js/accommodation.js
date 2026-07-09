@@ -7,9 +7,21 @@ export function accommodationItems(data) {
 
 export function hotelOptionScore(option) {
   const scores = option.scores || {};
-  const weights = { location: .28, parking: .22, value: .22, comfort: .18, flexibility: .10 };
+  if (Number.isFinite(Number(scores.overall))) return Math.round(Number(scores.overall) * 10);
+  const weights = { value: .16, comfort: .16, parking: .10, breakfast: .08, kitchen: .10, laundry: .08, family: .12, transport: .12, loyaltyBenefits: .08 };
   const weighted = Object.entries(weights).reduce((sum, [key, weight]) => sum + Number(scores[key] || 0) * weight, 0);
-  return Math.round(weighted / 5 * 100);
+  return Math.round(weighted * 10);
+}
+
+export function accommodationStops(data) {
+  return Array.isArray(data.accommodationStops) ? data.accommodationStops : [];
+}
+
+export function accommodationOptionsForStop(data, stop) {
+  const options = (data.hotelOptions || []).filter(option => (stop.optionIds || []).includes(option.id));
+  return options
+    .map(option => ({ ...option, score: hotelOptionScore(option) }))
+    .sort((a, b) => (stop.optionIds || []).indexOf(a.id) - (stop.optionIds || []).indexOf(b.id));
 }
 
 export function hotelOptionsByLocation(data) {

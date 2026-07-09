@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 540" role="img" aria-label="Stylised accommodation exterior">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#dbe9e4"/>
+      <stop offset="1" stop-color="#f4efe3"/>
+    </linearGradient>
+    <linearGradient id="hill" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#176b52"/>
+      <stop offset="1" stop-color="#6f8f7f"/>
+    </linearGradient>
+  </defs>
+  <rect width="960" height="540" fill="url(#sky)"/>
+  <path d="M0 370c110-76 210-90 326-43 118 48 210 34 330-50 103-72 210-79 304-24v287H0Z" fill="url(#hill)" opacity=".24"/>
+  <path d="M0 424c150-58 274-51 390 20 94 57 203 63 328 17 83-31 162-34 242-10v89H0Z" fill="#176b52" opacity=".18"/>
+  <g transform="translate(246 150)">
+    <path d="M52 270V126L234 34l182 92v144Z" fill="#fff" stroke="#d2d8d4" stroke-width="8"/>
+    <path d="M32 136 234 34l202 102" fill="none" stroke="#176b52" stroke-width="22" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M92 270v-86h76v86M242 270v-76h106v76" fill="#e8f1ed" stroke="#176b52" stroke-width="8"/>
+    <path d="M226 124h62v48h-62zM92 124h58v44H92zM320 124h58v44h-58z" fill="#d9ece5" stroke="#176b52" stroke-width="8"/>
+    <path d="M52 270h364" stroke="#176b52" stroke-width="10" stroke-linecap="round"/>
+  </g>
+  <circle cx="792" cy="114" r="46" fill="#e7b45b" opacity=".75"/>
+</svg>

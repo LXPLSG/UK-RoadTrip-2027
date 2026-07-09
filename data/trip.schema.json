@@ -3,9 +3,9 @@
   "$id": "https://uk-road-trip.local/schemas/trip.schema.json",
   "title": "Travel platform trip document",
   "type": "object",
-  "required": ["schemaVersion", "dataRevision", "lastUpdated", "activeTripId", "trips", "trip", "drivingGuide", "tubePlan", "budgetCategories", "currencyRates", "integrations", "travelModules", "noteCategories", "notes", "days", "places", "bookings", "expenses", "checklists", "contacts", "flights", "carRentals", "travelDocuments", "weather", "travelCompanions", "notifications", "priceHistory", "hotelOptions"],
+  "required": ["schemaVersion", "dataRevision", "lastUpdated", "activeTripId", "trips", "trip", "drivingGuide", "tubePlan", "budgetCategories", "currencyRates", "integrations", "travelModules", "noteCategories", "notes", "days", "places", "bookings", "expenses", "checklists", "contacts", "flights", "carRentals", "travelDocuments", "weather", "travelCompanions", "notifications", "priceHistory", "accommodationStops", "hotelOptions"],
   "properties": {
-    "schemaVersion": { "const": 9 },
+    "schemaVersion": { "const": 10 },
     "dataRevision": { "type": "integer", "minimum": 1 },
     "lastUpdated": { "type": "string", "format": "date-time" },
     "activeTripId": { "$ref": "#/$defs/id" },
@@ -32,6 +32,7 @@
     "travelCompanions": { "type": "array", "items": { "$ref": "#/$defs/travelItem" } },
     "notifications": { "type": "array", "items": { "$ref": "#/$defs/notification" } },
     "priceHistory": { "type": "array", "items": { "$ref": "#/$defs/pricePoint" } },
+    "accommodationStops": { "type": "array", "items": { "$ref": "#/$defs/accommodationStop" } },
     "hotelOptions": { "type": "array", "items": { "$ref": "#/$defs/hotelOption" } }
   },
   "additionalProperties": false,
@@ -208,23 +209,53 @@
       },
       "additionalProperties": false
     },
+    "accommodationStop": {
+      "type": "object",
+      "required": ["id", "location", "dateLabel", "startDate", "endDate", "nights", "image", "status", "optionIds", "notes"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" }, "location": { "type": "string" }, "dateLabel": { "type": "string" },
+        "startDate": { "type": "string", "format": "date" }, "endDate": { "type": "string", "format": "date" },
+        "nights": { "type": "integer", "minimum": 1 }, "image": { "type": "string" }, "status": { "type": "string" },
+        "primaryOptionId": { "$ref": "#/$defs/id" }, "optionIds": { "type": "array", "items": { "$ref": "#/$defs/id" }, "minItems": 1 },
+        "notes": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
     "hotelOption": {
       "type": "object",
       "required": ["id", "location", "overnightPlaceId", "name", "status", "scores", "pros", "cons"],
       "properties": {
         "id": { "$ref": "#/$defs/id" }, "location": { "type": "string" }, "overnightPlaceId": { "type": "string" },
-        "name": { "type": "string", "minLength": 1 }, "area": { "type": "string" }, "status": { "$ref": "#/$defs/status" },
+        "name": { "type": "string", "minLength": 1 }, "area": { "type": "string" }, "role": { "type": "string" }, "status": { "$ref": "#/$defs/status" },
         "price": { "type": "number", "minimum": 0 }, "currency": { "type": "string", "pattern": "^[A-Z]{3}$" },
         "website": { "type": "string" }, "bookingUrl": { "type": "string" }, "notes": { "type": "string" },
+        "bookingStatus": { "type": "string", "enum": ["Researching", "Ready to Book", "Booked", "Cancelled"] },
+        "confirmationNumber": { "type": "string" }, "bookedVia": { "type": "string" }, "cancellationDate": { "type": "string" },
+        "paymentStatus": { "type": "string" },
+        "features": {
+          "type": "object",
+          "required": ["parking", "breakfast", "kitchen", "laundry", "familyFriendly", "walkScore", "myScore"],
+          "properties": {
+            "parking": { "type": "boolean" }, "breakfast": { "type": "string" }, "kitchen": { "type": "boolean" },
+            "laundry": { "type": "boolean" }, "familyFriendly": { "type": "number", "minimum": 0, "maximum": 10 },
+            "walkScore": { "type": "number", "minimum": 0, "maximum": 10 }, "myScore": { "type": "number", "minimum": 0, "maximum": 10 }
+          },
+          "additionalProperties": false
+        },
         "scores": {
           "type": "object",
-          "required": ["location", "parking", "value", "comfort", "flexibility"],
+          "required": ["overall", "value", "comfort", "parking", "breakfast", "kitchen", "laundry", "family", "transport", "loyaltyBenefits"],
           "properties": {
-            "location": { "type": "number", "minimum": 0, "maximum": 5 },
-            "parking": { "type": "number", "minimum": 0, "maximum": 5 },
-            "value": { "type": "number", "minimum": 0, "maximum": 5 },
-            "comfort": { "type": "number", "minimum": 0, "maximum": 5 },
-            "flexibility": { "type": "number", "minimum": 0, "maximum": 5 }
+            "overall": { "type": "number", "minimum": 0, "maximum": 10 },
+            "value": { "type": "number", "minimum": 0, "maximum": 10 },
+            "comfort": { "type": "number", "minimum": 0, "maximum": 10 },
+            "parking": { "type": "number", "minimum": 0, "maximum": 10 },
+            "breakfast": { "type": "number", "minimum": 0, "maximum": 10 },
+            "kitchen": { "type": "number", "minimum": 0, "maximum": 10 },
+            "laundry": { "type": "number", "minimum": 0, "maximum": 10 },
+            "family": { "type": "number", "minimum": 0, "maximum": 10 },
+            "transport": { "type": "number", "minimum": 0, "maximum": 10 },
+            "loyaltyBenefits": { "type": "number", "minimum": 0, "maximum": 10 }
           },
           "additionalProperties": false
         },

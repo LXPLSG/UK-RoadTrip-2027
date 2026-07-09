@@ -1,8 +1,10 @@
 /** Structural and semantic validation for complete trip documents. */
 import { CURRENT_SCHEMA_VERSION } from './migrations.js';
 
-const REQUIRED_ARRAYS = ['trips', 'days', 'places', 'bookings', 'expenses', 'checklists', 'contacts', 'flights', 'carRentals', 'travelDocuments', 'weather', 'travelCompanions', 'notifications', 'travelModules', 'priceHistory', 'hotelOptions'];
+const REQUIRED_ARRAYS = ['trips', 'days', 'places', 'bookings', 'expenses', 'checklists', 'contacts', 'flights', 'carRentals', 'travelDocuments', 'weather', 'travelCompanions', 'notifications', 'travelModules', 'priceHistory', 'accommodationStops', 'hotelOptions'];
 const REQUIRED_BUDGET_CATEGORIES = ['Accommodation', 'Flights', 'Car Rental', 'Fuel', 'Parking', 'Food', 'Shopping', 'Activities', 'Miscellaneous'];
+const HOTEL_SCORE_KEYS = ['overall', 'value', 'comfort', 'parking', 'breakfast', 'kitchen', 'laundry', 'family', 'transport', 'loyaltyBenefits'];
+const BOOKING_STATUSES = ['Researching', 'Ready to Book', 'Booked', 'Cancelled'];
 
 function validDate(value) {
   return /^\d{4}-\d{2}-\d{2}$/.test(value || '') && !Number.isNaN(new Date(`${value}T12:00:00Z`).getTime());
@@ -98,16 +100,33 @@ export function validateTripData(data) {
   uniqueIds(data.travelCompanions || [], 'travelCompanions', errors);
   uniqueIds(data.notifications || [], 'notifications', errors);
   uniqueIds(data.priceHistory || [], 'priceHistory', errors);
+  uniqueIds(data.accommodationStops || [], 'accommodationStops', errors);
   uniqueIds(data.hotelOptions || [], 'hotelOptions', errors);
   (data.expenses || []).forEach((expense, index) => { if (!validDate(expense.date) || !Number.isFinite(Number(expense.amount)) || Number(expense.amount) < 0) errors.push(`expenses[${index}] has an invalid date or amount.`); if (!data.budgetCategories?.includes(expense.category)) errors.push(`expenses[${index}].category is not configured.`); });
   (data.priceHistory || []).forEach((point, index) => { if (!point.itemId || !point.providerId || !point.currency || !Number.isFinite(Number(point.amount)) || Number(point.amount) < 0) errors.push(`priceHistory[${index}] requires itemId, providerId, currency and a non-negative amount.`); });
+  const hotelOptionIds = new Set((data.hotelOptions || []).map(option => option.id));
+  (data.accommodationStops || []).forEach((stop, index) => {
+    if (!stop.location || !stop.dateLabel || !validDate(stop.startDate) || !validDate(stop.endDate)) errors.push(`accommodationStops[${index}] requires location and valid dates.`);
+    if (!Number.isInteger(Number(stop.nights)) || Number(stop.nights) < 1) errors.push(`accommodationStops[${index}].nights must be at least 1.`);
+    if (!Array.isArray(stop.optionIds) || !stop.optionIds.length) errors.push(`accommodationStops[${index}].optionIds must not be empty.`);
+    (stop.optionIds || []).forEach(optionId => { if (!hotelOptionIds.has(optionId)) errors.push(`accommodationStops[${index}].optionIds includes unknown hotel option ${optionId}.`); });
+    if (stop.primaryOptionId && !hotelOptionIds.has(stop.primaryOptionId)) errors.push(`accommodationStops[${index}].primaryOptionId does not exist.`);
+  });
   (data.hotelOptions || []).forEach((option, index) => {
     if (!option.location || !option.name || !option.overnightPlaceId) errors.push(`hotelOptions[${index}] requires location, name and overnightPlaceId.`);
     if (option.overnightPlaceId && !placeIds.has(option.overnightPlaceId)) errors.push(`hotelOptions[${index}].overnightPlaceId does not exist.`);
     if (!Number.isFinite(Number(option.price || 0)) || Number(option.price || 0) < 0) errors.push(`hotelOptions[${index}].price must be non-negative.`);
-    ['location', 'parking', 'value', 'comfort', 'flexibility'].forEach(key => {
+    if (option.bookingStatus && !BOOKING_STATUSES.includes(option.bookingStatus)) errors.push(`hotelOptions[${index}].bookingStatus is invalid.`);
+    ['parking', 'kitchen', 'laundry'].forEach(key => {
+      if (option.features && typeof option.features[key] !== 'boolean') errors.push(`hotelOptions[${index}].features.${key} must be boolean.`);
+    });
+    ['familyFriendly', 'walkScore', 'myScore'].forEach(key => {
+      const value = Number(option.features?.[key] || 0);
+      if (!Number.isFinite(value) || value < 0 || value > 10) errors.push(`hotelOptions[${index}].features.${key} must be between 0 and 10.`);
+    });
+    HOTEL_SCORE_KEYS.forEach(key => {
       const score = Number(option.scores?.[key] || 0);
-      if (!Number.isFinite(score) || score < 0 || score > 5) errors.push(`hotelOptions[${index}].scores.${key} must be between 0 and 5.`);
+      if (!Number.isFinite(score) || score < 0 || score > 10) errors.push(`hotelOptions[${index}].scores.${key} must be between 0 and 10.`);
     });
   });
   (data.notes || []).forEach((note, index) => { if (!data.noteCategories?.includes(note.category)) errors.push(`notes[${index}].category is not configured.`); if (note.dayId && !dayIds.has(note.dayId)) errors.push(`notes[${index}].dayId does not exist.`); });
