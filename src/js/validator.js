@@ -1,7 +1,7 @@
 /** Structural and semantic validation for complete trip documents. */
 import { CURRENT_SCHEMA_VERSION } from './migrations.js';
 
-const REQUIRED_ARRAYS = ['trips', 'days', 'places', 'bookings', 'expenses', 'checklists', 'contacts', 'flights', 'carRentals', 'travelDocuments', 'weather', 'travelCompanions', 'notifications', 'travelModules', 'priceHistory'];
+const REQUIRED_ARRAYS = ['trips', 'days', 'places', 'bookings', 'expenses', 'checklists', 'contacts', 'flights', 'carRentals', 'travelDocuments', 'weather', 'travelCompanions', 'notifications', 'travelModules', 'priceHistory', 'hotelOptions'];
 const REQUIRED_BUDGET_CATEGORIES = ['Accommodation', 'Flights', 'Car Rental', 'Fuel', 'Parking', 'Food', 'Shopping', 'Activities', 'Miscellaneous'];
 
 function validDate(value) {
@@ -98,8 +98,18 @@ export function validateTripData(data) {
   uniqueIds(data.travelCompanions || [], 'travelCompanions', errors);
   uniqueIds(data.notifications || [], 'notifications', errors);
   uniqueIds(data.priceHistory || [], 'priceHistory', errors);
+  uniqueIds(data.hotelOptions || [], 'hotelOptions', errors);
   (data.expenses || []).forEach((expense, index) => { if (!validDate(expense.date) || !Number.isFinite(Number(expense.amount)) || Number(expense.amount) < 0) errors.push(`expenses[${index}] has an invalid date or amount.`); if (!data.budgetCategories?.includes(expense.category)) errors.push(`expenses[${index}].category is not configured.`); });
   (data.priceHistory || []).forEach((point, index) => { if (!point.itemId || !point.providerId || !point.currency || !Number.isFinite(Number(point.amount)) || Number(point.amount) < 0) errors.push(`priceHistory[${index}] requires itemId, providerId, currency and a non-negative amount.`); });
+  (data.hotelOptions || []).forEach((option, index) => {
+    if (!option.location || !option.name || !option.overnightPlaceId) errors.push(`hotelOptions[${index}] requires location, name and overnightPlaceId.`);
+    if (option.overnightPlaceId && !placeIds.has(option.overnightPlaceId)) errors.push(`hotelOptions[${index}].overnightPlaceId does not exist.`);
+    if (!Number.isFinite(Number(option.price || 0)) || Number(option.price || 0) < 0) errors.push(`hotelOptions[${index}].price must be non-negative.`);
+    ['location', 'parking', 'value', 'comfort', 'flexibility'].forEach(key => {
+      const score = Number(option.scores?.[key] || 0);
+      if (!Number.isFinite(score) || score < 0 || score > 5) errors.push(`hotelOptions[${index}].scores.${key} must be between 0 and 5.`);
+    });
+  });
   (data.notes || []).forEach((note, index) => { if (!data.noteCategories?.includes(note.category)) errors.push(`notes[${index}].category is not configured.`); if (note.dayId && !dayIds.has(note.dayId)) errors.push(`notes[${index}].dayId does not exist.`); });
   if (!validWebUrl(data.drivingGuide?.sourceUrl) || !validWebUrl(data.tubePlan?.sourceUrl)) errors.push('Guide source URLs must use http or https.');
   return { valid: errors.length === 0, errors };

@@ -4,6 +4,14 @@ All notable changes to UK Road Trip 2027 are documented here. The project follow
 
 ## [Unreleased]
 
+## [1.3.0] - 2026-07-09
+
+### Added
+
+- Added schema v9 hotel-selection data with per-location accommodation options, weighted scores, pros, cons and comparison fields.
+- Added the Hotels page selection workspace so each stay location shows shortlist options, best-current-fit scoring and a comparison table before the linked overnight placeholders.
+- Added `v0.6` trip snapshot with 24 provisional hotel options across the UK route.
+
 ## [1.2.4] - 2026-07-09
 
 ### Fixed

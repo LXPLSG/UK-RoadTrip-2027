@@ -24,7 +24,7 @@ Views do not access Local Storage directly. Trip-specific content is never embed
 
 ## Travel Platform Model
 
-Schema v7 introduces `activeTripId`, `trips`, `travelModules`, reusable travel collections and shared engines. Schema v8 adds future integration settings and normalized price history. `UK-2027` is the current active Trip ID. Module pages are configured by JSON records and rendered through shared card, table, status and price components, so a future trip can add or remove travel-management areas without introducing itinerary content into `src/`.
+Schema v7 introduces `activeTripId`, `trips`, `travelModules`, reusable travel collections and shared engines. Schema v8 adds future integration settings and normalized price history. Schema v9 adds hotel-selection options so accommodation shortlists, scores and trade-offs live in data rather than view code. `UK-2027` is the current active Trip ID. Module pages are configured by JSON records and rendered through shared card, table, status and price components, so a future trip can add or remove travel-management areas without introducing itinerary content into `src/`.
 
 The current app keeps one active working trip in Local Storage while preserving a multi-trip registry in the document. A later repository adapter can promote this to full multi-trip switching or IndexedDB storage without changing the view/component contracts.
 

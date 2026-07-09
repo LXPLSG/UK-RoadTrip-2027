@@ -2,7 +2,7 @@
   "$schema": "./versions.schema.json",
   "formatVersion": 1,
   "activeVersion": "v0.1",
-  "currentVersion": "v0.5",
+  "currentVersion": "v0.6",
   "versions": [
     {
       "version": "v0.1",
@@ -38,6 +38,13 @@
       "createdAt": "2026-07-09T00:00:00.000Z",
       "dataRevision": 13,
       "summary": "Phase 4 dashboard visibility update with explicit trip route and planning status data."
+    },
+    {
+      "version": "v0.6",
+      "file": "versions/trip-v0.6.json",
+      "createdAt": "2026-07-09T00:00:00.000Z",
+      "dataRevision": 14,
+      "summary": "Hotel selection workspace with per-location options, scoring and comparison data."
     }
   ]
 }

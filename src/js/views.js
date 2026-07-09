@@ -9,6 +9,7 @@ import { modeManager } from './mode.js';
 import { APP_VERSION } from './config.js';
 import { calculateBudgetSummary, convertCurrency } from './budget.js';
 import { notificationEngine } from './notifications.js';
+import { hotelComparisonRows, hotelOptionsByLocation } from './accommodation.js';
 
 const typeTone = { hotel: 'green', attraction: 'sky', restaurant: 'coral', transport: 'purple', drive: 'amber', walk: 'green' };
 const typeIcon = type => ({ hotel: 'hotel', attraction: 'attraction', restaurant: 'restaurant', transport: 'transport', drive: 'car', walk: 'walk' })[type] || 'pin';
@@ -421,14 +422,43 @@ function removePlace(place) {
   }, 'Place deleted');
 }
 
+function hotelOptionCriteria(option) {
+  return Object.entries(option.scores || {}).map(([key, value]) => `<span><small>${e(titleCase(key))}</small>${Number(value || 0)}/5</span>`).join('');
+}
+
+function hotelOptionCard(option, best = false) {
+  const pros = (option.pros || []).slice(0, 2).join(' · ');
+  const cons = (option.cons || []).slice(0, 2).join(' · ');
+  return `<article class="hotel-option-card ${best ? 'recommended' : ''}">
+    <div class="hotel-option-score"><strong>${Number(option.score || 0)}</strong><span>score</span></div>
+    <div class="hotel-option-copy">
+      <div class="hotel-option-head"><div><h3>${e(option.name)}</h3><p>${e(option.area || option.location)}</p></div>${best ? '<span class="recommendation-badge">Best current fit</span>' : statusTag(option.status)}</div>
+      <div class="hotel-details">${hotelOptionCriteria(option)}</div>
+      <p><strong>Pros:</strong> ${e(pros || 'Add pros after research.')}</p>
+      <p><strong>Watch:</strong> ${e(cons || 'Add trade-offs after research.')}</p>
+      ${Number(option.price) ? `<strong>${formatMoney(option.price, option.currency || 'GBP')}</strong>` : '<span class="muted">Price TBC</span>'}
+    </div>
+  </article>`;
+}
+
 function renderHotels(main) {
   const data = store.data;
   const hotels = data.places.filter(place => place.type === 'hotel');
   const linkedNights = data.days.filter(day => day.overnightPlaceId).length;
   const confirmed = hotels.filter(place => place.status === 'confirmed').length;
+  const optionGroups = hotelOptionsByLocation(data);
+  const optionCount = Object.values(optionGroups).flat().length;
+  const comparisonRows = hotelComparisonRows(data).map(row => ({ Location: row.city, Option: row.name, Score: row.reference, Parking: row.parking, Nights: row.nights, Status: titleCase(row.status) }));
   main.innerHTML = `<div class="page">
-    ${pageHeader('Accommodation', 'Hotels and overnight stays', `${linkedNights} itinerary nights linked · ${confirmed} confirmed`, `<button class="btn btn-primary" id="add-hotel">${icon('plus', 'icon-sm')}<span>Add hotel</span></button>`)}
-    <section class="route-overview">${metric('Properties', `${hotels.length}`, 'hotel', 'green')}${metric('Linked nights', `${linkedNights}`, 'calendar', 'sky')}${metric('Confirmed', `${confirmed}`, 'check', 'purple')}</section>
+    ${pageHeader('Accommodation', 'Hotel selection by location', `${linkedNights} itinerary nights linked · ${optionCount} comparison options`, `<button class="btn btn-primary" id="add-hotel">${icon('plus', 'icon-sm')}<span>Add hotel</span></button>`)}
+    <section class="route-overview">${metric('Locations', `${Object.keys(optionGroups).length || hotels.length}`, 'hotel', 'green')}${metric('Options', `${optionCount}`, 'list', 'sky')}${metric('Confirmed', `${confirmed}`, 'check', 'purple')}</section>
+    ${Object.entries(optionGroups).length ? `<section class="stack">${Object.entries(optionGroups).map(([location, options]) => `<div>
+      <div class="section-header"><h2>${e(location)}</h2><span class="muted">${options.length} options · top score ${Number(options[0]?.score || 0)}</span></div>
+      <div class="hotel-option-list">${options.map((option, index) => hotelOptionCard(option, index === 0)).join('')}</div>
+    </div>`).join('')}</section>
+    <div class="section-header"><h2>Hotel comparison</h2><span class="muted">Scores are weighted from location, parking, value, comfort and flexibility.</span></div>
+    ${comparisonTable(['Location', 'Option', 'Score', 'Parking', 'Nights', 'Status'], comparisonRows)}` : emptyState('hotel', 'No hotel options yet', 'Add hotelOptions in the trip JSON to compare stays by location.')}
+    <div class="section-header"><h2>Linked overnight placeholders</h2><span class="muted">Used by itinerary days until a final hotel is selected.</span></div>
     <div class="place-grid">${hotels.map(hotel => {
       const nights = data.days.filter(day => day.overnightPlaceId === hotel.id);
       return `<article class="place-card hotel-card"><div class="place-card-head"><span class="place-type-icon tone-green">${icon('hotel')}</span>${statusTag(hotel.status)}</div><div class="place-card-body"><h3>${e(hotel.name)}</h3><p>${e(hotel.city)} · ${nights.length} ${nights.length === 1 ? 'night' : 'nights'}</p><div class="hotel-details"><span><small>Address</small>${e(hotel.address || 'TBC')}</span><span><small>Parking</small>${e(hotel.parking || 'TBC')}</span><span><small>Reference</small>${e(hotel.bookingReference || 'TBC')}</span></div>${Number(hotel.price) ? `<strong>${formatMoney(hotel.price, data.trip.homeCurrency)}</strong>` : ''}</div><div class="place-card-foot"><a class="btn btn-ghost" href="${e(mapUrl(hotel))}" target="_blank" rel="noopener">${icon('pin', 'icon-sm')} Map</a><div class="card-actions"><button class="icon-btn edit-hotel" data-id="${e(hotel.id)}" aria-label="Edit ${e(hotel.name)}">${icon('edit', 'icon-sm')}</button><button class="icon-btn delete-hotel" data-id="${e(hotel.id)}" aria-label="Delete ${e(hotel.name)}">${icon('trash', 'icon-sm')}</button></div></div></article>`;
