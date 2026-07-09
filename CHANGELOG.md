@@ -4,6 +4,14 @@ All notable changes to UK Road Trip 2027 are documented here. The project follow
 
 ## [Unreleased]
 
+## [1.4.1] - 2026-07-09
+
+### Changed
+
+- Made Accommodation stop cards open a focused detail view for the selected stop.
+- Added three-option accommodation shortlists for every stop in `v0.8`.
+- Moved option cards, scoring bars, comparison table and booking tracker fields into the stop detail level.
+
 ## [1.4.0] - 2026-07-09
 
 ### Added

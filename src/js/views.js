@@ -447,16 +447,15 @@ function scoreBars(option) {
 function accommodationStopCard(stop, options) {
   const recommended = options[0] || {};
   const score = Number(recommended.score || 0);
-  const bookingUrl = recommended.bookingUrl || recommended.website || '';
-  return `<article class="accommodation-stop-card panel">
+  return `<a class="accommodation-stop-card panel" href="#/accommodation/${e(stop.id)}" aria-label="Open ${e(stop.location)} accommodation options">
     <img src="${e(stop.image || '../assets/images/accommodation-default.svg')}" alt="" loading="lazy" decoding="async">
     <div class="accommodation-stop-body">
       <div class="accommodation-stop-top"><div><p class="page-eyebrow">${e(stop.dateLabel || '')}</p><h3>${e(stop.location)}</h3></div>${accommodationChip(recommended.bookingStatus || stop.status || 'Researching')}</div>
       <div class="hotel-details"><span><small>Nights</small>${Number(stop.nights || 0)}</span><span><small>Recommended</small>${e(recommended.name || 'TBC')}</span><span><small>Score</small>${score}%</span></div>
       <p>${e(stop.notes || recommended.notes || 'Notes TBC')}</p>
-      ${bookingUrl ? `<a class="btn btn-primary" href="${e(bookingUrl)}" target="_blank" rel="noopener">Book ${icon('external', 'icon-sm')}</a>` : '<button class="btn btn-primary" type="button" disabled>Booking TBC</button>'}
+      <span class="btn btn-primary">Open options ${icon('arrowRight', 'icon-sm')}</span>
     </div>
-  </article>`;
+  </a>`;
 }
 
 function hotelOptionCard(option, best = false) {
@@ -495,7 +494,30 @@ function accommodationComparisonRows(options) {
   };
 }
 
-function renderHotels(main) {
+function accommodationDetail(main, id) {
+  const data = store.data;
+  const stops = accommodationStops(data);
+  const stop = stops.find(item => item.id === id);
+  if (!stop) { renderNotFound(main); return; }
+  const options = accommodationOptionsForStop(data, stop);
+  const comparison = accommodationComparisonRows(options);
+  const recommended = options[0];
+  main.innerHTML = `<div class="page">
+    <nav class="day-pagination" aria-label="Accommodation navigation"><a href="#/accommodation">${icon('arrowLeft', 'icon-sm')} Accommodation</a><span></span></nav>
+    ${pageHeader('Accommodation', `${stop.location} options`, `${e(stop.dateLabel || '')} · ${Number(stop.nights || 0)} nights · ${options.length} hotel options`, recommended?.bookingUrl ? `<a class="btn btn-primary" href="${e(recommended.bookingUrl)}" target="_blank" rel="noopener">Book recommended ${icon('external', 'icon-sm')}</a>` : '')}
+    <section class="panel accommodation-detail-hero">
+      <img src="${e(stop.image || '../assets/images/accommodation-default.svg')}" alt="" loading="lazy" decoding="async">
+      <div><p class="page-eyebrow">Current recommendation</p><h2>${e(recommended?.name || 'TBC')}</h2><p>${e(stop.notes || recommended?.notes || '')}</p><div class="hotel-details"><span><small>Status</small>${e(recommended?.bookingStatus || stop.status || 'Researching')}</span><span><small>Score</small>${Number(recommended?.score || 0)}%</span><span><small>Payment</small>${e(recommended?.paymentStatus || 'TBC')}</span></div></div>
+    </section>
+    <div class="section-header"><h2>Hotel options</h2><span class="muted">Ratings, scoring and booking tracker.</span></div>
+    <div class="hotel-option-list">${options.map((option, index) => hotelOptionCard(option, index === 0)).join('')}</div>
+    <div class="section-header"><h2>Hotel Comparison</h2><span class="muted">Feature comparison and personal scores.</span></div>
+    ${comparisonTable(comparison.columns, comparison.rows)}
+  </div>`;
+}
+
+function renderHotels(main, id = null) {
+  if (id) { accommodationDetail(main, id); return; }
   const data = store.data;
   const hotels = data.places.filter(place => place.type === 'hotel');
   const linkedNights = data.days.filter(day => day.overnightPlaceId).length;
@@ -508,15 +530,6 @@ function renderHotels(main) {
     <section class="route-overview">${metric('Stops', `${stops.length}`, 'hotel', 'green')}${metric('Hotel options', `${allOptions.length}`, 'list', 'sky')}${metric('Ready/booked', `${ready}`, 'check', 'purple')}</section>
     <div class="section-header"><h2>Accommodation Dashboard</h2><span class="muted">One card per overnight stop.</span></div>
     ${stops.length ? `<section class="accommodation-dashboard">${stopOptionPairs.map(pair => accommodationStopCard(pair.stop, pair.options)).join('')}</section>` : emptyState('hotel', 'No accommodation stops yet', 'Add accommodationStops in the trip JSON.')}
-    ${stopOptionPairs.map(({ stop, options }) => {
-      const comparison = accommodationComparisonRows(options);
-      return `<section class="accommodation-destination">
-        <div class="section-header"><h2>${e(stop.location)}</h2><span class="muted">${e(stop.dateLabel || '')} · ${Number(stop.nights || 0)} nights</span></div>
-        <div class="hotel-option-list">${options.map((option, index) => hotelOptionCard(option, index === 0)).join('') || emptyState('hotel', 'No hotel options yet', 'Add options for this accommodation stop.')}</div>
-        <div class="section-header"><h2>Hotel Comparison</h2><span class="muted">Feature comparison and personal scores.</span></div>
-        ${comparisonTable(comparison.columns, comparison.rows)}
-      </section>`;
-    }).join('')}
     <div class="section-header"><h2>Linked overnight placeholders</h2><span class="muted">Used by itinerary days until a final hotel is selected.</span></div>
     <div class="place-grid">${hotels.map(hotel => {
       const nights = data.days.filter(day => day.overnightPlaceId === hotel.id);
@@ -823,7 +836,8 @@ export function renderView(main, route) {
     companions: renderTravelModule,
     settings: renderSettings
   };
-  (renderers[route.name] || renderNotFound)(main, route.id || route.name);
+  const argument = ['accommodation', 'hotels'].includes(route.name) ? route.id : (route.id || route.name);
+  (renderers[route.name] || renderNotFound)(main, argument);
   main.querySelectorAll('.segment').forEach(button => button.setAttribute('aria-pressed', String(button.classList.contains('active'))));
   main.focus({ preventScroll: true });
 }

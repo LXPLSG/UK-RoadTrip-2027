@@ -25,7 +25,7 @@ Committed snapshots are immutable history. To revert the bundled itinerary, chan
 - Optional external URLs must use `https` where available.
 - Unknown or undecided values use empty strings, `null`, `TBC` or a planning status instead of invented confirmation details.
 
-The current planning snapshot is `data/versions/trip-v0.7.json`; the next itinerary refinement should normally be `trip-v0.8.json`. `activeVersion` may remain pointed at an older compatibility baseline for cached clients, while current clients read `currentVersion`. `trip-v0.3.json` is retained as a compatibility bridge for older cached app shells.
+The current planning snapshot is `data/versions/trip-v0.8.json`; the next itinerary refinement should normally be `trip-v0.9.json`. `activeVersion` may remain pointed at an older compatibility baseline for cached clients, while current clients read `currentVersion`. `trip-v0.3.json` is retained as a compatibility bridge for older cached app shells.
 
 ## Platform Fields
 
