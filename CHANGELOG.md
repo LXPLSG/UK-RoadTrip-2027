@@ -4,6 +4,13 @@ All notable changes to UK Road Trip 2027 are documented here. The project follow
 
 ## [Unreleased]
 
+## [1.2.2] - 2026-07-09
+
+### Fixed
+
+- Added a `v0.3` compatibility bridge for older cached app shells that had already cached a registry pointing to `trip-v0.3.json`.
+- Moved the current schema-8 Phase 6 snapshot to `v0.4` so current clients keep the integration architecture while stale clients can recover and update.
+
 ## [1.2.1] - 2026-07-09
 
 ### Fixed

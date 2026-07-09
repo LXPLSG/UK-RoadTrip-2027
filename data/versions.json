@@ -2,7 +2,7 @@
   "$schema": "./versions.schema.json",
   "formatVersion": 1,
   "activeVersion": "v0.1",
-  "currentVersion": "v0.3",
+  "currentVersion": "v0.4",
   "versions": [
     {
       "version": "v0.1",
@@ -23,6 +23,13 @@
       "file": "versions/trip-v0.3.json",
       "createdAt": "2026-07-09T00:00:00.000Z",
       "dataRevision": 11,
+      "summary": "Phase 6 compatibility bridge for cached app shells; migrates forward in current clients."
+    },
+    {
+      "version": "v0.4",
+      "file": "versions/trip-v0.4.json",
+      "createdAt": "2026-07-09T00:00:00.000Z",
+      "dataRevision": 12,
       "summary": "Phase 6 integration architecture with provider adapters, CMS boundary and price history model."
     }
   ]

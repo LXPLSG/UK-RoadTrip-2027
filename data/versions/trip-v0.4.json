@@ -1,6 +1,6 @@
 {
-  "schemaVersion": 6,
-  "dataRevision": 11,
+  "schemaVersion": 8,
+  "dataRevision": 12,
   "lastUpdated": "2026-07-09T00:00:00.000Z",
   "trip": {
     "id": "UK-2027",
