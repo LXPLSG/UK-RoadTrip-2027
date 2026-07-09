@@ -1,17 +1,21 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://uk-road-trip.local/schemas/trip.schema.json",
-  "title": "UK Road Trip document",
+  "title": "Travel platform trip document",
   "type": "object",
-  "required": ["schemaVersion", "dataRevision", "lastUpdated", "trip", "drivingGuide", "tubePlan", "budgetCategories", "noteCategories", "notes", "days", "places", "bookings", "expenses", "checklists", "contacts"],
+  "required": ["schemaVersion", "dataRevision", "lastUpdated", "activeTripId", "trips", "trip", "drivingGuide", "tubePlan", "budgetCategories", "currencyRates", "travelModules", "noteCategories", "notes", "days", "places", "bookings", "expenses", "checklists", "contacts", "flights", "carRentals", "travelDocuments", "weather", "travelCompanions", "notifications"],
   "properties": {
-    "schemaVersion": { "const": 6 },
+    "schemaVersion": { "const": 7 },
     "dataRevision": { "type": "integer", "minimum": 1 },
     "lastUpdated": { "type": "string", "format": "date-time" },
+    "activeTripId": { "$ref": "#/$defs/id" },
+    "trips": { "type": "array", "items": { "$ref": "#/$defs/tripSummary" }, "minItems": 1 },
     "trip": { "$ref": "#/$defs/trip" },
     "drivingGuide": { "$ref": "#/$defs/drivingGuide" },
     "tubePlan": { "$ref": "#/$defs/tubePlan" },
     "budgetCategories": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "type": "string", "minLength": 1 } },
+    "currencyRates": { "$ref": "#/$defs/currencyRates" },
+    "travelModules": { "type": "array", "items": { "$ref": "#/$defs/travelModule" }, "minItems": 1 },
     "noteCategories": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "type": "string", "minLength": 1 } },
     "notes": { "type": "array", "items": { "$ref": "#/$defs/note" } },
     "days": { "type": "array", "items": { "$ref": "#/$defs/day" }, "minItems": 1 },
@@ -19,12 +23,46 @@
     "bookings": { "type": "array", "items": { "$ref": "#/$defs/booking" } },
     "expenses": { "type": "array", "items": { "$ref": "#/$defs/expense" } },
     "checklists": { "type": "array", "items": { "$ref": "#/$defs/checklist" } },
-    "contacts": { "type": "array", "items": { "$ref": "#/$defs/contact" } }
+    "contacts": { "type": "array", "items": { "$ref": "#/$defs/contact" } },
+    "flights": { "type": "array", "items": { "$ref": "#/$defs/travelItem" } },
+    "carRentals": { "type": "array", "items": { "$ref": "#/$defs/travelItem" } },
+    "travelDocuments": { "type": "array", "items": { "$ref": "#/$defs/travelItem" } },
+    "weather": { "type": "array", "items": { "$ref": "#/$defs/travelItem" } },
+    "travelCompanions": { "type": "array", "items": { "$ref": "#/$defs/travelItem" } },
+    "notifications": { "type": "array", "items": { "$ref": "#/$defs/notification" } }
   },
   "additionalProperties": false,
   "$defs": {
-    "id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$" },
+    "id": { "type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9-]*$" },
     "status": { "type": "string", "enum": ["idea", "researching", "planned", "confirmed", "paid", "cancelled"] },
+    "tripSummary": {
+      "type": "object",
+      "required": ["id", "name", "startDate", "endDate", "homeCurrency", "status"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" }, "name": { "type": "string" }, "startDate": { "type": "string", "format": "date" },
+        "endDate": { "type": "string", "format": "date" }, "homeCurrency": { "type": "string", "pattern": "^[A-Z]{3}$" }, "status": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "currencyRates": {
+      "type": "object",
+      "required": ["base", "rates", "lastUpdated"],
+      "properties": {
+        "base": { "type": "string", "pattern": "^[A-Z]{3}$" },
+        "rates": { "type": "object", "additionalProperties": { "type": "number", "exclusiveMinimum": 0 } },
+        "lastUpdated": { "type": "string", "format": "date-time" }
+      },
+      "additionalProperties": false
+    },
+    "travelModule": {
+      "type": "object",
+      "required": ["id", "route", "title", "eyebrow", "collection", "icon", "tone", "summary"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" }, "route": { "$ref": "#/$defs/id" }, "title": { "type": "string" }, "eyebrow": { "type": "string" },
+        "collection": { "type": "string" }, "type": { "type": "string" }, "icon": { "type": "string" }, "tone": { "type": "string" }, "summary": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
     "drivingGuide": {
       "type": "object",
       "required": ["units", "emergencyNumber", "lastReviewed", "sourceUrl", "rules"],
@@ -125,6 +163,27 @@
     "contact": {
       "type": "object", "required": ["id", "label", "value", "type"],
       "properties": { "id": { "$ref": "#/$defs/id" }, "label": { "type": "string" }, "value": { "type": "string" }, "type": { "type": "string", "enum": ["phone", "email", "text"] } },
+      "additionalProperties": false
+    },
+    "travelItem": {
+      "type": "object",
+      "required": ["id", "title", "status"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" }, "title": { "type": "string", "minLength": 1 }, "provider": { "type": "string" },
+        "from": { "type": "string" }, "to": { "type": "string" }, "date": { "type": "string" }, "time": { "type": "string" },
+        "pickup": { "type": "string" }, "dropoff": { "type": "string" }, "startDate": { "type": "string" }, "endDate": { "type": "string" },
+        "expiryDate": { "type": "string" }, "reference": { "type": "string" }, "status": { "$ref": "#/$defs/status" },
+        "price": { "type": "number", "minimum": 0 }, "notes": { "type": "string" }
+      },
+      "additionalProperties": true
+    },
+    "notification": {
+      "type": "object",
+      "required": ["id", "type", "title", "body", "status"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" }, "type": { "type": "string" }, "title": { "type": "string" }, "body": { "type": "string" },
+        "dueDate": { "type": "string" }, "status": { "$ref": "#/$defs/status" }
+      },
       "additionalProperties": false
     }
   }

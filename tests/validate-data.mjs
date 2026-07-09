@@ -18,8 +18,7 @@ for (const entry of registry.versions) {
   if (!entry.file.includes(entry.version)) throw new Error(`Version filename does not match ${entry.version}.`);
   versionIds.add(entry.version);
   const snapshot = JSON.parse(fs.readFileSync(`data/${entry.file}`, 'utf8'));
-  const result = validateTripData(snapshot);
-  if (!result.valid) throw new Error(`${entry.version}: ${result.errors.join('\n')}`);
+  if (!Number.isInteger(snapshot.schemaVersion) || snapshot.schemaVersion < 1) throw new Error(`${entry.version} has an invalid schemaVersion.`);
   if (snapshot.dataRevision !== entry.dataRevision) throw new Error(`${entry.version} dataRevision does not match the registry.`);
 }
 
@@ -30,9 +29,28 @@ const data = JSON.parse(fs.readFileSync(`data/${active.file}`, 'utf8'));
 const current = validateTripData(data);
 if (!current.valid) throw new Error(current.errors.join('\n'));
 
-for (const version of [1, 2, 3, 4, 5]) {
+for (const entry of registry.versions) {
+  const snapshot = JSON.parse(fs.readFileSync(`data/${entry.file}`, 'utf8'));
+  const migrated = migrateTripData(snapshot, data);
+  const result = validateTripData(migrated);
+  if (!result.valid) throw new Error(`${entry.version} does not migrate to the active schema: ${result.errors.join('\n')}`);
+}
+
+for (const version of [1, 2, 3, 4, 5, 6]) {
   const fixture = structuredClone(data);
   fixture.schemaVersion = version;
+  if (version < 7) {
+    delete fixture.activeTripId;
+    delete fixture.trips;
+    delete fixture.currencyRates;
+    delete fixture.travelModules;
+    delete fixture.flights;
+    delete fixture.carRentals;
+    delete fixture.travelDocuments;
+    delete fixture.weather;
+    delete fixture.travelCompanions;
+    delete fixture.notifications;
+  }
   if (version < 6) { delete fixture.noteCategories; delete fixture.notes; }
   if (version < 5) fixture.checklists.forEach(group => delete group.type);
   if (version < 4) delete fixture.budgetCategories;

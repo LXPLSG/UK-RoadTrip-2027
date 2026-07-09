@@ -1,7 +1,8 @@
 /** Structural and semantic validation for complete trip documents. */
 import { CURRENT_SCHEMA_VERSION } from './migrations.js';
 
-const REQUIRED_ARRAYS = ['days', 'places', 'bookings', 'expenses', 'checklists', 'contacts'];
+const REQUIRED_ARRAYS = ['trips', 'days', 'places', 'bookings', 'expenses', 'checklists', 'contacts', 'flights', 'carRentals', 'travelDocuments', 'weather', 'travelCompanions', 'notifications', 'travelModules'];
+const REQUIRED_BUDGET_CATEGORIES = ['Accommodation', 'Flights', 'Car Rental', 'Fuel', 'Parking', 'Food', 'Shopping', 'Activities', 'Miscellaneous'];
 
 function validDate(value) {
   return /^\d{4}-\d{2}-\d{2}$/.test(value || '') && !Number.isNaN(new Date(`${value}T12:00:00Z`).getTime());
@@ -31,16 +32,34 @@ export function validateTripData(data) {
   ['id', 'name', 'startDate', 'endDate', 'homeCurrency'].forEach(key => {
     if (!data.trip?.[key]) errors.push(`trip.${key} is required.`);
   });
+  if (!data.activeTripId) errors.push('activeTripId is required.');
   if (data.trip && (!validDate(data.trip.startDate) || !validDate(data.trip.endDate) || data.trip.endDate < data.trip.startDate)) errors.push('Trip dates must be valid and end on or after the start date.');
   if (data.trip && (!Number.isFinite(Number(data.trip.budget)) || Number(data.trip.budget) < 0)) errors.push('trip.budget must be a non-negative number.');
   REQUIRED_ARRAYS.forEach(key => {
     if (!Array.isArray(data[key])) errors.push(`${key} must be an array.`);
   });
+  if (Array.isArray(data.trips)) {
+    uniqueIds(data.trips, 'trips', errors);
+    if (data.activeTripId && !data.trips.some(trip => trip.id === data.activeTripId)) errors.push('activeTripId must match a trip in trips.');
+    data.trips.forEach((trip, index) => {
+      if (!trip.name || !validDate(trip.startDate) || !validDate(trip.endDate)) errors.push(`trips[${index}] requires a name and valid dates.`);
+      if (trip.endDate < trip.startDate) errors.push(`trips[${index}] endDate must be on or after startDate.`);
+    });
+  }
   if (!data.drivingGuide || !Array.isArray(data.drivingGuide.rules)) errors.push('drivingGuide.rules must be an array.');
   if (!data.tubePlan || !Array.isArray(data.tubePlan.journeys)) errors.push('tubePlan.journeys must be an array.');
   if (!Array.isArray(data.budgetCategories) || !data.budgetCategories.length) errors.push('budgetCategories must be a non-empty array.');
+  REQUIRED_BUDGET_CATEGORIES.forEach(category => { if (!data.budgetCategories?.includes(category)) errors.push(`budgetCategories must include ${category}.`); });
+  if (!data.currencyRates || typeof data.currencyRates !== 'object' || !data.currencyRates.base || typeof data.currencyRates.rates !== 'object') errors.push('currencyRates requires base and rates.');
   if (Array.isArray(data.checklists) && data.checklists.some(group => !['planning', 'packing'].includes(group.type))) errors.push('Every checklist requires a planning or packing type.');
   if (!Array.isArray(data.noteCategories) || !Array.isArray(data.notes)) errors.push('noteCategories and notes must be arrays.');
+  if (Array.isArray(data.travelModules)) {
+    uniqueIds(data.travelModules, 'travelModules', errors);
+    data.travelModules.forEach((module, index) => {
+      ['route', 'title', 'collection', 'icon', 'tone'].forEach(key => { if (!module[key]) errors.push(`travelModules[${index}].${key} is required.`); });
+      if (module.collection && !Array.isArray(data[module.collection])) errors.push(`travelModules[${index}].collection must refer to an array.`);
+    });
+  }
   if (Array.isArray(data.days)) {
     uniqueIds(data.days, 'days', errors);
     const activityIds = new Set();
@@ -69,6 +88,12 @@ export function validateTripData(data) {
   uniqueIds(data.expenses || [], 'expenses', errors);
   uniqueIds(data.checklists || [], 'checklists', errors);
   uniqueIds(data.notes || [], 'notes', errors);
+  uniqueIds(data.flights || [], 'flights', errors);
+  uniqueIds(data.carRentals || [], 'carRentals', errors);
+  uniqueIds(data.travelDocuments || [], 'travelDocuments', errors);
+  uniqueIds(data.weather || [], 'weather', errors);
+  uniqueIds(data.travelCompanions || [], 'travelCompanions', errors);
+  uniqueIds(data.notifications || [], 'notifications', errors);
   (data.expenses || []).forEach((expense, index) => { if (!validDate(expense.date) || !Number.isFinite(Number(expense.amount)) || Number(expense.amount) < 0) errors.push(`expenses[${index}] has an invalid date or amount.`); if (!data.budgetCategories?.includes(expense.category)) errors.push(`expenses[${index}].category is not configured.`); });
   (data.notes || []).forEach((note, index) => { if (!data.noteCategories?.includes(note.category)) errors.push(`notes[${index}].category is not configured.`); if (note.dayId && !dayIds.has(note.dayId)) errors.push(`notes[${index}].dayId does not exist.`); });
   if (!validWebUrl(data.drivingGuide?.sourceUrl) || !validWebUrl(data.tubePlan?.sourceUrl)) errors.push('Guide source URLs must use http or https.');

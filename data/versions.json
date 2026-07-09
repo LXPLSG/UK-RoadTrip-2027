@@ -1,7 +1,7 @@
 {
   "$schema": "./versions.schema.json",
   "formatVersion": 1,
-  "activeVersion": "v0.1",
+  "activeVersion": "v0.2",
   "versions": [
     {
       "version": "v0.1",
@@ -9,6 +9,13 @@
       "createdAt": "2026-07-06",
       "dataRevision": 9,
       "summary": "Initial complete 15-day UK itinerary with provisional places and planning data."
+    },
+    {
+      "version": "v0.2",
+      "file": "versions/trip-v0.2.json",
+      "createdAt": "2026-07-09T00:00:00.000Z",
+      "dataRevision": 10,
+      "summary": "Phase 5 travel platform data model with reusable module placeholders."
     }
   ]
 }
