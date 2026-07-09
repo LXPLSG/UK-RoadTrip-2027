@@ -553,7 +553,7 @@ function accommodationDetail(main, id) {
       <div><p class="page-eyebrow">Current recommendation</p><h2>${e(recommended?.name || 'TBC')}</h2><p>${e(stop.notes || recommended?.notes || '')}</p><div class="hotel-details"><span><small>Status</small>${e(recommended?.bookingStatus || stop.status || 'Researching')}</span><span><small>Score</small>${Number(recommended?.score || 0)}%</span><span><small>Payment</small>${e(recommended?.paymentStatus || 'TBC')}</span></div></div>
     </section>
     <div class="section-header"><h2>Hotel options</h2><span class="muted">Ratings, scoring and booking tracker.</span></div>
-    <div class="hotel-option-list">${options.map((option, index) => hotelOptionCard(option, index === 0, data)).join('')}</div>
+    <div class="hotel-option-list accommodation-option-grid">${options.map((option, index) => hotelOptionCard(option, index === 0, data)).join('')}</div>
     <div class="section-header"><h2>Hotel Comparison</h2><span class="muted">Feature comparison and personal scores.</span></div>
     ${comparisonTable(comparison.columns, comparison.rows)}
   </div>`;

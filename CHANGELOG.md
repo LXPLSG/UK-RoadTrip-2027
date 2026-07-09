@@ -4,6 +4,12 @@ All notable changes to UK Road Trip 2027 are documented here. The project follow
 
 ## [Unreleased]
 
+## [1.4.3] - 2026-07-09
+
+### Changed
+
+- Changed accommodation detail pages to show the three hotel score cards side by side on desktop.
+
 ## [1.4.2] - 2026-07-09
 
 ### Added

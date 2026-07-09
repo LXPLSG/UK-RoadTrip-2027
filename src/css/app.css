@@ -172,9 +172,12 @@
 .accommodation-detail-hero h2 { margin-top: 0; }
 .accommodation-detail-hero p { color: var(--text-soft); }
 .hotel-option-list { display: grid; gap: 12px; }
+.accommodation-option-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); align-items: start; }
 .hotel-option-card { min-width: 0; display: grid; grid-template-columns: 86px minmax(0, 1fr); gap: 14px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); padding: 16px; box-shadow: var(--shadow-sm); }
+.accommodation-option-grid .hotel-option-card { grid-template-columns: 1fr; align-content: start; }
 .hotel-option-card.recommended { border-color: color-mix(in srgb, var(--green), var(--line) 45%); }
 .hotel-option-score { width: 72px; height: 72px; display: grid; place-content: center; border-radius: 8px; background: var(--green-soft); color: var(--green); text-align: center; }
+.accommodation-option-grid .hotel-option-score { width: 100%; height: auto; min-height: 64px; }
 .hotel-option-score strong { display: block; font-size: 26px; line-height: 1; }
 .hotel-option-score span { display: block; margin-top: 3px; font-size: 10px; font-weight: 800; text-transform: uppercase; }
 .hotel-option-copy { min-width: 0; display: grid; gap: 10px; }
@@ -183,6 +186,7 @@
 .hotel-option-head h3 { margin: 0 0 3px; overflow-wrap: anywhere; }
 .hotel-option-head p { margin: 0; color: var(--text-soft); font-size: 12px; }
 .score-bars { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px 12px; }
+.accommodation-option-grid .score-bars { grid-template-columns: 1fr; }
 .score-row { display: grid; grid-template-columns: 82px minmax(60px, 1fr) 28px; align-items: center; gap: 8px; min-width: 0; }
 .score-row span, .score-row strong { font-size: 11px; }
 .score-row span { color: var(--text-soft); }
@@ -321,6 +325,7 @@
   .budget-summary { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .module-overview { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .accommodation-dashboard { grid-template-columns: 1fr; }
+  .accommodation-option-grid { grid-template-columns: 1fr; }
   .dashboard-grid, .settings-layout, .today-grid, .driving-layout { grid-template-columns: 1fr; }
 }
 
